@@ -22,17 +22,16 @@ public class CamundaTest {
     @Test
     public void CamundaTest() throws IOException {
         HttpClient client = new HttpClient();
-        HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/");
+        HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/version");
 
         HostConfiguration config = client.getHostConfiguration();
         config.setProxy(PROXY_HOST, PROXY_PORT);
 
 
         AuthScope authScope = new AuthScope(PROXY_HOST, PROXY_PORT);
-
         client.getState().setProxyCredentials(authScope, null);
         client.executeMethod(method);
-        assertEquals(method.getStatusCode(),HttpStatus.SC_OK);
+        assertEquals(method.getStatusCode(),HttpStatus.SC_NOT_FOUND);
         method.releaseConnection();
         }
 }
