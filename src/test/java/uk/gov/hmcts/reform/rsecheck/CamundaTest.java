@@ -21,4 +21,13 @@ public class CamundaTest {
         assertEquals(method.getStatusCode(),HttpStatus.SC_OK,"");
         method.releaseConnection();
     }
+
+    @Test
+    public void camundaVersionTest() throws IOException {
+        HttpClient client = new HttpClient();
+        HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/engine-rest/version");
+        client.executeMethod(method);
+        assertEquals(method.getResponseBodyAsString(),"\"version\": \"7.13.3-ee\"","");
+        method.releaseConnection();
+    }
 }
