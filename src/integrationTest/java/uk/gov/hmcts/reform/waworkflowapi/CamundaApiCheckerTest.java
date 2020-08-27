@@ -7,17 +7,18 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-public class CamundaTest {
+@SuppressWarnings({"unchecked", "PMD.JUnitTestsShouldIncludeAssert", "PMD.DataflowAnomalyAnalysis", "PMD.EqualsNull", "PMD.AvoidInstantiatingObjectsInLoops"})
+public class CamundaApiCheckerTest {
 
     public static final String URL = "http://camunda-api-aat.service.core-compute-aat.internal";
     HttpClient client = new HttpClient();
 
     @Test
-    public void camundaHealthTest() throws IOException {
+    public void camundaHealthTest() throws IOException, UnknownHostException {
         HttpMethod method = new GetMethod(URL + "/health");
         client.executeMethod(method);
         assertEquals(method.getStatusCode(),HttpStatus.SC_OK,"");
