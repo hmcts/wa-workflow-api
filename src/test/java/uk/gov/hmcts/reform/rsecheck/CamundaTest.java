@@ -17,9 +17,9 @@ public class CamundaTest {
     @Test
     public void CamundaTest() throws IOException {
         HttpClient client = new HttpClient();
-        HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/engine-rest");
+        HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/health");
         client.executeMethod(method);
-        assertEquals(method.getStatusCode(),HttpStatus.SC_NOT_FOUND);
+        assertEquals(method.getStatusCode(),HttpStatus.SC_OK);
         method.releaseConnection();
         }
 }
