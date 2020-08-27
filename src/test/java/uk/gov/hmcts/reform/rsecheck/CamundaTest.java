@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CamundaTest {
 
-
     @Test
-    public void CamundaTest() throws IOException {
+    public void camundaHealthTest() throws IOException {
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/health");
         client.executeMethod(method);
+        System.out.println(method);
         assertEquals(method.getStatusCode(),HttpStatus.SC_OK);
         method.releaseConnection();
-        }
+    }
 }
