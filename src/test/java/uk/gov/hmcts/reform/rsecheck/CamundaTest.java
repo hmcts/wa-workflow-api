@@ -29,7 +29,7 @@ public class CamundaTest {
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(URL + "/engine-rest/version");
         client.executeMethod(method);
-        assertEquals(method.getResponseBodyAsString(),"version\": \"7.13.3-ee","");
+        assertEquals(method.getResponseBodyAsString(),"{\"version\": \"7.13.3-ee\"}","");
         method.releaseConnection();
     }
 }
