@@ -18,8 +18,7 @@ public class CamundaTest {
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod("http://camunda-api-aat.service.core-compute-aat.internal/health");
         client.executeMethod(method);
-        System.out.println(method);
-        assertEquals(method.getStatusCode(),HttpStatus.SC_OK);
+        assertEquals(method.getStatusCode(),HttpStatus.SC_OK,"");
         method.releaseConnection();
     }
 }
