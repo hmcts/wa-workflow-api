@@ -1,10 +1,9 @@
-package uk.gov.hmcts.reform.rsecheck;
+package uk.gov.hmcts.reform.waworkflowapi.config;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
