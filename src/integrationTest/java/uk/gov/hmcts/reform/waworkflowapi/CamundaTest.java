@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.config;
+package uk.gov.hmcts.reform.waworkflowapi;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
