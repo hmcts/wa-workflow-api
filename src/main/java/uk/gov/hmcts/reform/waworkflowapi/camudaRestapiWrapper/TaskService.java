@@ -1,21 +1,42 @@
 package uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper;
 
-import com.microsoft.applicationinsights.core.dependencies.http.HttpResponse;
-import com.microsoft.applicationinsights.core.dependencies.http.client.HttpClient;
-import com.microsoft.applicationinsights.core.dependencies.http.client.methods.HttpGet;
-import com.microsoft.applicationinsights.core.dependencies.http.impl.client.HttpClientBuilder;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class TaskService {
 
+    private static final String PROXY_HOST = "proxyout.reform.hmcts.net";
+    private static final int PROXY_PORT = 8080;
     private static final String URL = "http://camunda-api-demo.service.core-compute-demo.internal/engine-rest";
 
-    public void getTaskByID(String id) throws IOException {
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = client.execute(new HttpGet(URL+"/task/"+id));
-        System.out.println(response);
+    public String getTaskByID(String id)  {
+        HttpClient client = new HttpClient();
+        HttpMethod method = new GetMethod(URL+"/task/"+id);
+        HostConfiguration config = client.getHostConfiguration();
+        config.setProxy(PROXY_HOST, PROXY_PORT);
+
+        AuthScope authScope = new AuthScope(PROXY_HOST, PROXY_PORT);
+        client.getState().setProxyCredentials(authScope, null);
+        try {
+            client.executeMethod(method);
+
+            if (method.getStatusCode() == HttpStatus.SC_OK) {
+                return method.getResponseBodyAsString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            method.releaseConnection();
+        }
+        return null;
     }
 }
