@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper.TaskService;
+import uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper.GetCamundaTaskService;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -13,12 +13,12 @@ import static org.mockito.Mockito.mock;
 class GetTaskServiceTest {
 
     @Mock
-    private TaskService taskService;
+    private GetCamundaTaskService taskService;
 
 
     @BeforeEach
     void setUp() {
-        taskService = mock(TaskService.class);
+        taskService = mock(GetCamundaTaskService.class);
         Mockito.when(taskService.getTaskByID("SomeId")).thenReturn("test object string");
 
     }

@@ -1,18 +1,15 @@
 package uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper;
 
-import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 @Service
-public class TaskService {
+public class GetCamundaTaskService {
 
 //    private static final String PROXY_HOST = "proxyout.reform.hmcts.net";
 //    private static final int PROXY_PORT = 8080;
