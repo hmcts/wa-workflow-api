@@ -14,18 +14,17 @@ import java.io.InputStream;
 @Service
 public class TaskService {
 
-    private static final String PROXY_HOST = "proxyout.reform.hmcts.net";
-    private static final int PROXY_PORT = 8080;
-    private static final String URL = "http://camunda-api-demo.service.core-compute-demo.internal/engine-rest";
-
+//    private static final String PROXY_HOST = "proxyout.reform.hmcts.net";
+//    private static final int PROXY_PORT = 8080;
+    private static final String URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest";
     public String getTaskByID(String id)  {
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(URL+"/task/"+id);
-        HostConfiguration config = client.getHostConfiguration();
-        config.setProxy(PROXY_HOST, PROXY_PORT);
+//        HostConfiguration config = client.getHostConfiguration();
+//        config.setProxy(PROXY_HOST, PROXY_PORT);
 
-        AuthScope authScope = new AuthScope(PROXY_HOST, PROXY_PORT);
-        client.getState().setProxyCredentials(authScope, null);
+//        AuthScope authScope = new AuthScope(PROXY_HOST, PROXY_PORT);
+//        client.getState().setProxyCredentials(authScope, null);
         try {
             client.executeMethod(method);
 
