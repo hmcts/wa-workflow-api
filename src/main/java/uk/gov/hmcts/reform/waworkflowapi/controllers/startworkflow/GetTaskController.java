@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper.TaskService;
+import uk.gov.hmcts.reform.waworkflowapi.models.ExUITaskAttributtes;
 import uk.gov.hmcts.reform.waworkflowapi.models.Task;
 
 
@@ -19,9 +20,13 @@ public class GetTaskController {
     private final Logger log = LoggerFactory.getLogger(GetTaskController.class);
 
     @GetMapping(path = "/task/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
-    public Task getTask(@PathVariable(value = "id", required = true) String id) {
+    public ExUITaskAttributtes getTask(@PathVariable(value = "id", required = true) String id) {
+        log.info(taskService.getTaskByID(id));
         Gson response = new Gson();
         Task task = response.fromJson(taskService.getTaskByID(id), Task.class);
-        return task;
+        ExUITaskAttributtes exUITaskAttributtes = new ExUITaskAttributtes();
+        exUITaskAttributtes.setCaseDefinitionId(task.getCaseDefinitionId());
+        exUITaskAttributtes.setTaskName(task.getName());
+        return exUITaskAttributtes;
     }
 }
