@@ -20,7 +20,7 @@ class GetCamundaTaskByIdTest {
     private MockMvc mockMvc;
 
     @Test
-    void TaskByIdTest() throws Exception {
+    void taskByIdTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                             .get("/task/025c59e3-dbe2-11ea-81e2-661816095024")
                             .accept(MediaType.APPLICATION_JSON))
