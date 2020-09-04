@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dmnStringValue;
@@ -10,11 +12,11 @@ public class ProcessVariables {
     private final DmnValue group;
     private final DmnValue dueDate;
 
-    public ProcessVariables(String ccdId, Task task, String group, String dueDate) {
+    public ProcessVariables(String ccdId, Task task, String group, ZonedDateTime dueDate) {
         this.ccdId = dmnStringValue(ccdId);
         this.task = dmnStringValue(task.getId());
         this.group = dmnStringValue(group);
-        this.dueDate = dmnStringValue(dueDate);
+        this.dueDate = dmnStringValue(dueDate.format(DateTimeFormatter.ISO_INSTANT));
     }
 
     public DmnValue getCcdId() {
