@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.GetCamundaTaskService;
 import uk.gov.hmcts.reform.waworkflowapi.models.Task;
 
+import java.io.IOException;
+
 
 @RestController
 @SuppressWarnings("PMD.UnnecessaryLocalBeforeReturn")
@@ -22,7 +24,7 @@ public class GetTaskController {
     private final Logger log = LoggerFactory.getLogger(GetTaskController.class);
 
     @GetMapping(path = "/task/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
-    public Task getTask(@PathVariable(value = "id", required = true) String id) {
+    public Task getTask(@PathVariable(value = "id", required = true) String id) throws IOException {
         log.info(taskService.getTaskByID(id));
         Gson response = new Gson();
         Task task = response.fromJson(taskService.getTaskByID(id), Task.class);
