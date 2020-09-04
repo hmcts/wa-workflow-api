@@ -13,13 +13,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings("PMD.JUnitAssertionsShouldIncludeMessage")
 class GetCamundaTaskByIdTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void getTasmByIdTest() throws Exception {
+    void TaskByIdTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                             .get("/task/025c59e3-dbe2-11ea-81e2-661816095024")
                             .accept(MediaType.APPLICATION_JSON))
