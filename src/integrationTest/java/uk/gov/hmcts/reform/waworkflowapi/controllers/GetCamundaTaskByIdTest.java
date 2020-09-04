@@ -27,4 +27,3 @@ class GetCamundaTaskByIdTest {
             .andExpect(status().isOk());
     }
 }
-
