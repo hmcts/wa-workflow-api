@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.models;
 
+@SuppressWarnings({"PMD.TooManyFields", "PMD.ShortClassName", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
 public class Task {
 
     private String id;

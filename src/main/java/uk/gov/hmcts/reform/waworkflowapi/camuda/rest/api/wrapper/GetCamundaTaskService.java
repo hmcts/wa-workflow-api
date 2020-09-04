@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
+@SuppressWarnings("PMD.AvoidPrintStackTrace")
 public class GetCamundaTaskService {
 
 

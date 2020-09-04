@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.waworkflowapi.models.Task;
 
 
 @RestController
+@SuppressWarnings("PMD.UnnecessaryLocalBeforeReturn")
 public class GetTaskController {
 
     @Autowired

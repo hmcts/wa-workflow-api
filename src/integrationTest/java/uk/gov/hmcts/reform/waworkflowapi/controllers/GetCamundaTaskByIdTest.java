@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@SuppressWarnings("PMD.JUnitAssertionsShouldIncludeMessage")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 class GetCamundaTaskByIdTest {
 
     @Autowired
