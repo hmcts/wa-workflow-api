@@ -31,7 +31,7 @@ public class CamundaCreateTaskTest {
     public static final String PROCESS_OVERDUE_TASK = "processOverdueTask";
     private static final String EXPECTED_GROUP = "TCW";
     private static final ZonedDateTime DUE_DATE = ZonedDateTime.now().plusDays(7);
-    private static final String DUE_DATE_STRING = DUE_DATE.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    private static final String DUE_DATE_STRING = DUE_DATE.format(DateTimeFormatter.ISO_INSTANT);
     public static final Date DUE_DATE_DATE = Date.from(DUE_DATE.toInstant());
 
     @Rule

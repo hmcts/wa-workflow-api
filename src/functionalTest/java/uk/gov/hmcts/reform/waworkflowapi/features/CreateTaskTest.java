@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.features.something;
+package uk.gov.hmcts.reform.waworkflowapi.features;
 
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.eclipse.jetty.http.HttpStatus;
@@ -12,7 +12,7 @@ import static net.serenitybdd.rest.SerenityRest.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.appealSubmittedCreateTaskRequest;
-import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.appealSubmittedCreateTaskRequestWithDueDate;
+import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.requestRespondentEvidenceTaskRequest;
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.unmappedCreateTaskRequest;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
@@ -71,7 +71,7 @@ public class CreateTaskTest {
         given()
             .relaxedHTTPSValidation()
             .contentType(APPLICATION_JSON_VALUE)
-            .body(appealSubmittedCreateTaskRequestWithDueDate(caseId)).log().body()
+            .body(requestRespondentEvidenceTaskRequest(caseId)).log().body()
             .baseUri(testUrl)
             .basePath("tasks")
             .when()
@@ -101,7 +101,7 @@ public class CreateTaskTest {
             .get()
             .prettyPeek()
             .then()
-            .body("[0].groupId", is("TCW"));
+            .body("[0].groupId", is("external"));
     }
 
     @Test
