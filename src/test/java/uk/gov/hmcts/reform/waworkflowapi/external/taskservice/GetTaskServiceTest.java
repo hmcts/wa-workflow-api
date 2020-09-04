@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -28,4 +29,11 @@ class GetTaskServiceTest {
     String response = taskService.getTaskByID("SomeId");
     assertEquals(response, "test object string");
   }
+
+
+    @Test
+    void getsATaskBasedOnIdNotFound() {
+        String response = taskService.getTaskByID("WrongId");
+        assertNull(response);
+    }
 }
