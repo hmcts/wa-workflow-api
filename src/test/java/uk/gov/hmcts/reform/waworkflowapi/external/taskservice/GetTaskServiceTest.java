@@ -20,7 +20,7 @@ class GetTaskServiceTest {
     @BeforeEach
     void setUp() {
         taskService = mock(GetCamundaTaskService.class);
-         Mockito.when(taskService.getTaskByID("SomeId"))
+        Mockito.when(taskService.getTaskByID("SomeId"))
             .thenReturn("test object string");
     }
 
