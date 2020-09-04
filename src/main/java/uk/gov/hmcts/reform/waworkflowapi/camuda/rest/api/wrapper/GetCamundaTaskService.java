@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 @SuppressWarnings("PMD.AvoidPrintStackTrace")
 public class GetCamundaTaskService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GetCamundaTaskService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GetCamundaTaskService.class);
 
     private static final String URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest";
 
@@ -30,7 +30,7 @@ public class GetCamundaTaskService {
                 return method.getResponseBodyAsString();
             }
         } catch (IOException e) {
-            logger.error(MessageFormat.format("Exception: {0}", e));
+            LOGGER.error(MessageFormat.format("Exception: {0}", e.toString()));
         } finally {
             method.releaseConnection();
         }
