@@ -4,11 +4,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 
 @Service
 @SuppressWarnings("PMD.AvoidPrintStackTrace")
@@ -28,7 +26,7 @@ public class GetCamundaTaskService {
                 return method.getResponseBodyAsString();
             }
         } catch (IOException e) {
-            throw new IOException(e.toString());
+                throw new IOException(e.toString());
         } finally {
             method.releaseConnection();
         }
