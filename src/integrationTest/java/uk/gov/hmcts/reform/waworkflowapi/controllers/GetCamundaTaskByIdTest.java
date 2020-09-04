@@ -15,15 +15,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 public class GetCamundaTaskByIdTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  void getTasmByIdTest() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders
+    @Test
+    void getTasmByIdTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
                           .get("/task/025c59e3-dbe2-11ea-81e2-661816095024")
                           .accept(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk());
-  }
+            .andExpect(status().isOk());
+    }
 }
 
