@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper.GetCamundaTaskService;
+import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.GetCamundaTaskService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

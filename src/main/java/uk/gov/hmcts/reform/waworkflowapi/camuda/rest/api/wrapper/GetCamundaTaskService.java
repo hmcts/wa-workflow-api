@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.camudaRestapiWrapper;
+package uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
