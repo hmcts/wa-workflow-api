@@ -27,7 +27,7 @@ class GetTaskServiceTest {
   @Test
   void getsATaskBasedOnId() {
     String response = taskService.getTaskByID("SomeId");
-    assertEquals(response, "test object string");
+    assertEquals("test object string", response);
   }
 
 
