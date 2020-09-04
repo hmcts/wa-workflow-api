@@ -4,7 +4,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,10 @@ import java.text.MessageFormat;
 @SuppressWarnings("PMD.AvoidPrintStackTrace")
 public class GetCamundaTaskService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetCamundaTaskService.class);
 
     private static final String URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest";
 
-    public String getTaskByID(String id) {
+    public String getTaskByID(String id) throws IOException {
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(URL + "/task/" + id);
 
@@ -30,7 +28,7 @@ public class GetCamundaTaskService {
                 return method.getResponseBodyAsString();
             }
         } catch (IOException e) {
-            LOGGER.error(MessageFormat.format("Exception: {0}", e.toString()));
+            throw new IOException(e.toString());
         } finally {
             method.releaseConnection();
         }
