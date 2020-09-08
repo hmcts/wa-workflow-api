@@ -7,8 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.CamundaTaskService;
-import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.GetTaskController;
-import uk.gov.hmcts.reform.waworkflowapi.models.Task;
+import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.CamundaTaskServiceWrapper;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -16,25 +15,26 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("PMD.JUnitAssertionsShouldIncludeMessage")
 @RunWith(MockitoJUnitRunner.class)
-class GetTaskServiceTest {
+class CamundaGetTaskByIdServiceTest {
 
     @InjectMocks
-    private GetTaskController taskController;
+    CamundaTaskService camundaTaskService;
 
     @MockBean
-    CamundaTaskService camundaTaskService;
+    private CamundaTaskServiceWrapper camundaTaskServiceWrapper;
+
 
     @BeforeEach
     void setUp() {
-        camundaTaskService = mock(CamundaTaskService.class);
-        taskController = new GetTaskController(camundaTaskService);
+        camundaTaskServiceWrapper = mock(CamundaTaskServiceWrapper.class);
+        camundaTaskService = new CamundaTaskService(camundaTaskServiceWrapper);
     }
 
     @Test
     void createsATask() {
-        when(taskController.getTask("TestId")).thenReturn(new Task());
-        Task task = taskController.getTask("TestId");
-        when(camundaTaskService.getTask("TestId")).thenReturn(new Task());
-        assertEquals(task.getClass(), Task.class);
+        when(camundaTaskService.getTask("TestId")).thenReturn("testString");
+        String task = camundaTaskService.getTask("TestId");
+        when(camundaTaskServiceWrapper.getTask("TestId")).thenReturn("testString");
+        assertEquals(task, "testString");
     }
 }

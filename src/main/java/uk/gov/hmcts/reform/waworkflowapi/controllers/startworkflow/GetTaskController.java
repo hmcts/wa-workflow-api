@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.CamundaTaskService;
-import uk.gov.hmcts.reform.waworkflowapi.models.Task;
 
 @RestController
 @SuppressWarnings("PMD.UnnecessaryLocalBeforeReturn")
@@ -20,7 +19,7 @@ public class GetTaskController {
     }
 
     @GetMapping(path = "/task/{task-id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Task getTask(@PathVariable("task-id") String id)  {
+    public String getTask(@PathVariable("task-id") String id)  {
         return camundaTaskService.getTask(id);
     }
 

@@ -18,7 +18,7 @@ public class GetTaskSerenityTest {
         given()
             .relaxedHTTPSValidation()
             .contentType("application/json")
-            .pathParam("task-id","025c59e3-dbe2-11ea-81e2-661816095024")
+            .pathParam("task-id","78c9fc54-f1fb-11ea-a751-527f3fb68fa8")
             .baseUri(testUrl)
             .when()
             .get("task/{task-id}")
