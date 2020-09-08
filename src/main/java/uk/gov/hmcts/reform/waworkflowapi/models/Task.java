@@ -1,6 +1,11 @@
 package uk.gov.hmcts.reform.waworkflowapi.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @SuppressWarnings({"PMD.TooManyFields", "PMD.ShortClassName", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
+@Getter
+@Setter
 public class Task {
 
     private String id;
@@ -26,89 +31,5 @@ public class Task {
     private String tenantId;
 
     public Task() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAssignee() {
-        return assignee;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public String getDue() {
-        return due;
-    }
-
-    public String getFollowUp() {
-        return followUp;
-    }
-
-    public String getDelegationState() {
-        return delegationState;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getExecutionId() {
-        return executionId;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getParentTaskId() {
-        return parentTaskId;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public String getProcessDefinitionId() {
-        return processDefinitionId;
-    }
-
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public String getTaskDefinitionKey() {
-        return taskDefinitionKey;
-    }
-
-    public String getCaseExecutionId() {
-        return caseExecutionId;
-    }
-
-    public String getCaseInstanceId() {
-        return caseInstanceId;
-    }
-
-    public String getCaseDefinitionId() {
-        return caseDefinitionId;
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public String getFormKey() {
-        return formKey;
-    }
-
-    public String getTenantId() {
-        return tenantId;
     }
 }

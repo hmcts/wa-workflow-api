@@ -33,6 +33,6 @@ class GetCamundaTaskByIdTest {
         mockMvc.perform(MockMvcRequestBuilders
                             .get("/task/025c59e3-dbe2-11ea-81e2-661816095024")
                             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().is5xxServerError());
     }
 }

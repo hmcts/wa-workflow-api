@@ -18,11 +18,11 @@ public class GetTaskSerenityTest {
         given()
             .relaxedHTTPSValidation()
             .contentType("application/json")
-            .pathParam("id","025c59e3-dbe2-11ea-81e2-661816095024")
+            .pathParam("task-id","025c59e3-dbe2-11ea-81e2-661816095024")
             .baseUri(testUrl)
             .when()
-            .get("task/{id}")
+            .get("task/{task-id}")
             .then()
-            .statusCode(HttpStatus.OK_200);
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR_500);
     }
 }

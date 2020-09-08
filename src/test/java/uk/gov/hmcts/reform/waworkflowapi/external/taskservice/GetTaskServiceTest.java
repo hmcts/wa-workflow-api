@@ -1,59 +1,40 @@
 package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
-import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.GetCamundaTaskService;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import uk.gov.hmcts.reform.waworkflowapi.camuda.rest.api.wrapper.CamundaTaskService;
+import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.GetTaskController;
+import uk.gov.hmcts.reform.waworkflowapi.models.Task;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({"PMD.JUnitAssertionsShouldIncludeMessage","PMD.UnusedLocalVariable","PMD.DataflowAnomalyAnalysis"})
+@SuppressWarnings("PMD.JUnitAssertionsShouldIncludeMessage")
+@RunWith(MockitoJUnitRunner.class)
 class GetTaskServiceTest {
 
-    private static final String TEST_ID = "SomeId";
-    private static final String TEST_RESPONSE = "test object string";
+    @InjectMocks
+    private GetTaskController taskController;
 
-    private GetCamundaTaskService taskService;
+    @MockBean
+    CamundaTaskService camundaTaskService;
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
-    @Test
-    void getsATaskBasedOnId() throws IOException {
-        taskService = mock(GetCamundaTaskService.class);
-        when(taskService.getTaskByID(TEST_ID))
-            .thenReturn(TEST_RESPONSE);
-        String response = taskService.getTaskByID(TEST_ID);
-        assertEquals(TEST_RESPONSE, response);
+    @BeforeEach
+    void setUp() {
+        camundaTaskService = mock(CamundaTaskService.class);
+        taskController = new GetTaskController(camundaTaskService);
     }
 
     @Test
-    void getsATaskBasedOnIdNotFound() {
-        assertThrows(NullPointerException.class, () -> {
-            String response = taskService.getTaskByID("WrongId");
-            exception.expect(IOException.class);
-        });
-    }
-
-    @Test
-    void getsATaskBasedOnIdNotFoundWithMock() {
-        assertThrows(IOException.class, () -> {
-            HttpClient httpClient = mock(HttpClient.class);
-            HttpMethod httpMethod = mock(GetMethod.class);
-            when(httpMethod.getStatusCode()).thenReturn(HttpStatus.SC_BAD_GATEWAY);
-            when(httpClient.executeMethod(httpMethod)).thenReturn(404);
-            when(httpMethod.getResponseBodyAsString()).thenReturn("");
-            GetCamundaTaskService taskService = new GetCamundaTaskService();
-            taskService.getTaskByID(null);
-        });
+    void createsATask() {
+        when(taskController.getTask("TestId")).thenReturn(new Task());
+        Task task = taskController.getTask("TestId");
+        when(camundaTaskService.getTask("TestId")).thenReturn(new Task());
+        assertEquals(task.getClass(), Task.class);
     }
 }
