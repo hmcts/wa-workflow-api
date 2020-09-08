@@ -32,10 +32,11 @@ class DueDateServiceTest {
 
     @Test
     void haveToSetEitherADueDateOrHaveWorkingDays() {
+        TaskToCreate taskToCreate = new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP);
         assertThrows(IllegalStateException.class, () -> {
             underTest.calculateDueDate(
                 null,
-                new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP)
+                taskToCreate
             );
         });
 

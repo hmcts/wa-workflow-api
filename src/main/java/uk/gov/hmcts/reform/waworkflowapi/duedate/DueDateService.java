@@ -28,7 +28,11 @@ public class DueDateService {
                 "Should either have a due date or have got the working days allowed for task"
             );
         }
-        return addWorkingDays(dateService.now(), workingDaysAllowed);
+        return addWorkingDays(workingDaysAllowed);
+    }
+
+    public ZonedDateTime addWorkingDays(int numberOfDays) {
+        return addWorkingDays(dateService.now(), numberOfDays);
     }
 
     private ZonedDateTime addWorkingDays(ZonedDateTime startDate, int numberOfDays) {
