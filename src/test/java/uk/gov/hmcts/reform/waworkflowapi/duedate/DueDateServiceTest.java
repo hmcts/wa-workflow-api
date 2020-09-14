@@ -39,7 +39,6 @@ class DueDateServiceTest {
                 taskToCreate
             );
         });
-
     }
 
     @Test
@@ -55,107 +54,66 @@ class DueDateServiceTest {
 
     @Test
     void calculateDueDateAllWorkingDays() {
-        int leadTimeDays = 2;
-        ZonedDateTime now = ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(now);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault()),
+                         2, ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault()).plusDays(2)
         );
-
-        assertThat(calculatedDueDate, is(now.plusDays(leadTimeDays)));
     }
 
     @Test
     void calculateDueDateWhenFallInAWeekend() {
-        int leadTimeDays = 2;
-        ZonedDateTime now = ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(now);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault()), 2,
+                         ZonedDateTime.of(2020, 9, 7, 1, 2, 3, 4, ZoneId.systemDefault())
         );
-
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 7, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
     }
 
     @Test
     void calculateDueDateWhenStraddlesAWeekend() {
-        int leadTimeDays = 4;
-        ZonedDateTime now = ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(now);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault()), 4,
+                         ZonedDateTime.of(2020, 9, 9, 1, 2, 3, 4, ZoneId.systemDefault())
         );
-
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 9, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
     }
 
     @Test
     void calculateDueDateWhichStraddlesMultipleWeekends() {
-        int leadTimeDays = 10;
-        ZonedDateTime now = ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(now);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault()), 10,
+                         ZonedDateTime.of(2020, 9, 17, 1, 2, 3, 4, ZoneId.systemDefault())
         );
-
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 17, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
     }
 
     @Test
     void calculateDueDateWhichFallsOnAWeekend() {
-        int leadTimeDays = 10;
-        ZonedDateTime now = ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(now);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault()), 10,
+                         ZonedDateTime.of(2020, 9, 17, 1, 2, 3, 4, ZoneId.systemDefault())
         );
-
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 17, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
     }
 
     @Test
     void calculateDueDateWhichFallsOnAHoliday() {
-        int leadTimeDays = 2;
-        ZonedDateTime startDay = ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault());
-        dateService.setCurrentDateTime(startDay);
-        when(holidayService.isHoliday(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault()))).thenReturn(true);
-
-        ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
-            null,
-            new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
+        when(holidayService.isHoliday(ZonedDateTime.of(2020, 9, 3, 1, 2, 3, 4, ZoneId.systemDefault())))
+            .thenReturn(true);
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault()), 2,
+                         ZonedDateTime.of(2020, 9, 4, 1, 2, 3, 4, ZoneId.systemDefault())
         );
-
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 4, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
     }
 
     @Test
     void calculateDueDateWhichStraddlesAHoliday() {
-        int leadTimeDays = 2;
-        ZonedDateTime startDay = ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault());
+        when(holidayService.isHoliday(ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault()).plusDays(1)))
+            .thenReturn(true);
+        checkWorkingDays(ZonedDateTime.of(2020, 9, 1, 1, 2, 3, 4, ZoneId.systemDefault()), 2,
+                         ZonedDateTime.of(2020, 9, 4, 1, 2, 3, 4, ZoneId.systemDefault())
+        );
+    }
+
+    private void checkWorkingDays(ZonedDateTime startDay, int leadTimeDays, ZonedDateTime expectedDueDate) {
         dateService.setCurrentDateTime(startDay);
-        when(holidayService.isHoliday(startDay.plusDays(1))).thenReturn(true);
 
         ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
             null,
             new TaskToCreate(PROCESS_APPLICATION, TCW_GROUP, leadTimeDays)
         );
 
-        ZonedDateTime theFollowingMonday = ZonedDateTime.of(2020, 9, 4, 1, 2, 3, 4, ZoneId.systemDefault());
-        assertThat(calculatedDueDate, is(theFollowingMonday));
+        assertThat(calculatedDueDate, is(expectedDueDate));
     }
+
 }
