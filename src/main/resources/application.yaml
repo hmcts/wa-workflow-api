@@ -33,25 +33,40 @@ govUkHolidays:
 #If you use a database then uncomment below lines and update db properties accordingly
 spring:
   application:
-    name: Spring Boot Template
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}${DB_OPTIONS:}
-#    username: ${DB_USER_NAME}
-#    password: ${DB_PASSWORD}
-#    properties:
-#      charSet: UTF-8
-#    hikari:
-#      minimumIdle: 2
-#      maximumPoolSize: 10
-#      idleTimeout: 10000
-#      poolName: {to-be-defined}HikariCP
-#      maxLifetime: 7200000
-#      connectionTimeout: 30000
-#  jpa:
-#    properties:
-#      hibernate:
-#        jdbc:
-#          lob:
-#            # silence the 'wall-of-text' - unnecessary exception throw about blob types
-#            non_contextual_creation: true
+    name: wa-workflow-api
+  main:
+   allow-bean-definition-overriding: true
+
+security:
+  anonymousPaths:
+    - "/"
+    - "/health"
+    - "/health/liveness"
+    - "/loggers/**"
+    - "/swagger-ui.html"
+    - "/swagger-resources/**"
+    - "/v2/api-docs"
+    - "/webjars/springfox-swagger-ui/**"
+    - "/favicon.ico"
+  authorisedServices:
+    - "wa_task_configuration_api"
+    - "wa_task_management_api"
+
+auth:
+  idam:
+    client:
+      baseUrl: ${IDAM_URL:http://sidam-api}
+      detailsUri: "/details"
+      id: ${WA_IDAM_CLIENT_ID:wa}
+      secret: ${WA_IDAM_SECRET:something}
+      redirectUri: ${WA_IDAM_REDIRECT_URI:http://localhost}
+  provider:
+    service:
+      client:
+        baseUrl: ${S2S_URL:http://service-auth-provider-api}
+
+idam:
+  s2s-auth:
+    url: ${S2S_URL:http://service-auth-provider-api}
+    secret: ${S2S_SECRET_WORKFLOW:AAAAAAAAAAAAAAAC}
+    name: ${WA_S2S_NAME:wa_workflow_api}
