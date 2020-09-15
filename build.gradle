@@ -166,7 +166,7 @@ sonarqube {
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
-    property "sonar.exclusions", "src/testUtils/java/uk/gov/hmcts/reform/waworkflowapi/api/**"
+    property "sonar.exclusions", "src/testUtils/java/uk/gov/hmcts/reform/waworkflowapi/**"
   }
 }
 
@@ -270,8 +270,8 @@ dependencies {
   testCompile group: 'com.google.guava', name: 'guava-testlib', version: '29.0-jre'
   testCompile group: 'com.jparams', name: 'to-string-verifier', version: '1.4.8'
 
-
   testUtilsImplementation sourceSets.main.runtimeClasspath
+  testUtilsImplementation sourceSets.test.runtimeClasspath
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath
