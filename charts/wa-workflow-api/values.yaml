@@ -14,7 +14,4 @@ java:
       secrets:
         - testsecret
         - AppInsightsInstrumentationKey
-    s2s:
-      resourceGroup: rpe-service-auth-provider
-      secrets:
-        - microservicekey-wa-workflow-api
+        - s2s-secret-workflow-api
