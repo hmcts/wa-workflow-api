@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import uk.gov.hmcts.reform.waworkflowapi.SpringBootIntegrationBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.advice.ErrorLogger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,11 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest
-@AutoConfigureMockMvc
-@ContextConfiguration(classes = {RootController.class, ErrorLogger.class})
-@ActiveProfiles("integration")
-class GetWelcomeTest {
+class GetWelcomeTest extends SpringBootIntegrationBaseTest {
 
     @Autowired
     private MockMvc mockMvc;
