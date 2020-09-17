@@ -16,10 +16,8 @@ def component = "workflow-api"
 
 def secrets = [
   'wa-${env}' : [
+    secret('s2s-secret-workflow-api', 'S2S_SECRET_WORKFLOW_API'),
 
-  ],
-  's2s-${env}': [
-    secret('microservicekey-wa-workflow-api', 'WA_S2S_SECRET_WORKFLOW'),
   ]
 ]
 
