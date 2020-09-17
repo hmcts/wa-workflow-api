@@ -42,6 +42,7 @@ security:
     - "/"
     - "/health"
     - "/health/liveness"
+    - "/health/readiness"
     - "/loggers/**"
     - "/swagger-ui.html"
     - "/swagger-resources/**"
