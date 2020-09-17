@@ -174,8 +174,7 @@ public class CreateTaskTest {
                     .body("size()", is(2))
                     .body("[0].name", is("Process Task"))
                     .body("[0].due", startsWith(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)))
-                    .body("[1].name", is("Process overdue task"))
-                    .body("[1].due", startsWith(dueDate.plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE)));
+                    .body("[1].name", is("Process overdue task"));
 
                 return true;
             }
