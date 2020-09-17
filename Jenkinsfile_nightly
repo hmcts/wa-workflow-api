@@ -15,11 +15,11 @@ def product = "wa"
 def component = "workflow-api"
 
 def secrets = [
-  'wa-${env}': [
-    secret('idam-client-id', 'IA_IDAM_CLIENT_ID'),
-    secret('idam-secret', 'IA_IDAM_SECRET'),
-    secret('s2s-secret-workflow', 'WA_S2S_SECRET_WORKFLOW'),
-    secret('s2s-microservice-workflow', 'WA_S2S_MICROSERVICE_WORKFLOW')
+  'wa-${env}' : [
+
+  ],
+  's2s-${env}': [
+    secret('microservicekey-wa-workflow-api', 'WA_S2S_SECRET_WORKFLOW'),
   ]
 ]
 
