@@ -11,7 +11,7 @@ import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
-
+    
     @Value("${targets.instance}")
     private String testUrl;
 
@@ -53,22 +53,6 @@ public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
 
         assertThat(response)
             .contains("UP");
-    }
-
-    @Test
-    public void should_not_allow_requests_without_valid_service_authorisation_and_return_403_response_code() {
-
-        String invalidServiceToken = "invalid";
-
-        authenticatedEndpoints.forEach(endpoint ->
-                                           SerenityRest
-                                               .given()
-                                               .header("ServiceAuthorization", invalidServiceToken)
-                                               .when()
-                                               .get(endpoint)
-                                               .then()
-                                               .statusCode(HttpStatus.FORBIDDEN.value())
-        );
     }
 
 }
