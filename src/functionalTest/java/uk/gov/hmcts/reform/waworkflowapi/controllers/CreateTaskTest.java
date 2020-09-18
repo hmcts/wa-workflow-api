@@ -58,7 +58,6 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
                 .getValue(SERVICE_AUTHORIZATION);
     }
 
-
     @Test
     public void should_not_allow_requests_without_valid_service_authorisation_and_return_403_response_code() {
 
