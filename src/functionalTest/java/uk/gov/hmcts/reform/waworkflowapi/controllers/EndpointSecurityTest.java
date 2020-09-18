@@ -4,26 +4,16 @@ import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
-import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.waworkflowapi.config.ServiceTokenGeneratorConfiguration.SERVICE_AUTHORIZATION;
 
 public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
 
-    private final List<String> authenticatedEndpoints = asList("/tasks");
-
     @Value("${targets.instance}")
     private String testUrl;
-    @Autowired
-    private AuthorizationHeadersProvider authorizationHeadersProvider;
 
     @Before
     public void setUp() {
@@ -63,22 +53,6 @@ public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
 
         assertThat(response)
             .contains("UP");
-    }
-
-    @Test
-    public void should_allow_requests_with_valid_service_authorisation_and_return_200_response_code() {
-
-        String validServiceToken = authorizationHeadersProvider.getAuthorizationHeaders().getValue(SERVICE_AUTHORIZATION);
-
-        authenticatedEndpoints.forEach(endpoint ->
-                                           SerenityRest
-                                               .given()
-                                               .header("ServiceAuthorization", validServiceToken)
-                                               .when()
-                                               .get(endpoint)
-                                               .then()
-                                               .statusCode(HttpStatus.OK.value())
-        );
     }
 
     @Test
