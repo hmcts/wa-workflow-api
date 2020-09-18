@@ -51,8 +51,6 @@ security:
     - "/favicon.ico"
   authorisedServices:
     - "wa_workflow_api"
-    - "wa_task_configuration_api"
-    - "wa_task_management_api"
 
 auth:
   provider:
