@@ -2,6 +2,10 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  s2s-secret = "${data.azurerm_key_vault_secret.source_s2s_secret.value}"
+}
+
 data "azurerm_key_vault" "wa_key_vault" {
   name                = "${var.product}-${var.env}"
   resource_group_name = "${var.product}-${var.env}"
