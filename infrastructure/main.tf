@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 locals {
-  s2s-secret = "${data.azurerm_key_vault_secret.s2s_secret.value}"
+  S2S_SECRET_WORKFLOW_API = "${data.azurerm_key_vault_secret.s2s_secret.value}"
 }
 
 data "azurerm_key_vault" "wa_key_vault" {
