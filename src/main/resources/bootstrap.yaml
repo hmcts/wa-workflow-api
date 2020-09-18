@@ -7,4 +7,4 @@ spring:
       aliases:
         testsecret: AN_ALIASED_VALUE
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
-        s2s-secret: S2S_SECRET
+        s2s-secret: S2S_SECRET_WORKFLOW_API
