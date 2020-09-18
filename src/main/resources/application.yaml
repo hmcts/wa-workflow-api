@@ -50,7 +50,7 @@ security:
     - "/webjars/springfox-swagger-ui/**"
     - "/favicon.ico"
   authorisedServices:
-    - "wa-workflow-api"
+    - "wa_workflow_api"
     - "wa_task_configuration_api"
     - "wa_task_management_api"
 
