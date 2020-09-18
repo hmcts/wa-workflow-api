@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 locals {
-  s2s-secret = "${data.azurerm_key_vault_secret.source_s2s_secret.value}"
+  s2s-secret = "${data.azurerm_key_vault_secret.s2s_secret.value}"
 }
 
 data "azurerm_key_vault" "wa_key_vault" {
@@ -16,13 +16,7 @@ data "azurerm_key_vault" "s2s_key_vault" {
   resource_group_name = "rpe-service-auth-provider-${var.env}"
 }
 
-data "azurerm_key_vault_secret" "source_s2s_secret" {
+data "azurerm_key_vault_secret" "s2s_secret" {
   key_vault_id = data.azurerm_key_vault.s2s_key_vault.id
   name         = "microservicekey-wa-workflow-api"
-}
-
-resource "azurerm_key_vault_secret" "s2s_secret" {
-  key_vault_id = data.azurerm_key_vault.wa_key_vault.id
-  name         = "s2s-secret"
-  value        = "${data.azurerm_key_vault_secret.source_s2s_secret.value}"
 }
