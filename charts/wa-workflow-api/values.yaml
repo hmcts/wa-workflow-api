@@ -14,4 +14,6 @@ java:
       secrets:
         - testsecret
         - AppInsightsInstrumentationKey
-        - s2s-secret-workflow-api
+    s2s:
+      secrets:
+        - microservicekey-wa-workflow-api
