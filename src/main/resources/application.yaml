@@ -54,13 +54,6 @@ security:
     - "wa_task_management_api"
 
 auth:
-  idam:
-    client:
-      baseUrl: ${IDAM_URL:http://sidam-api}
-      detailsUri: "/details"
-      id: ${WA_IDAM_CLIENT_ID:wa}
-      secret: ${WA_IDAM_SECRET:something}
-      redirectUri: ${WA_IDAM_REDIRECT_URI:http://localhost}
   provider:
     service:
       client:
@@ -72,3 +65,8 @@ idam:
     secret: ${S2S_SECRET_WORKFLOW_API:AAAAAAAAAAAAAAAC}
     name: ${S2S_NAME_WORKFLOW_API:wa_workflow_api}
 
+credentials:
+  wa:
+    system:
+      user: ${WA_SYSTEM_USERNAME:system-user}
+      password: ${WA_SYSTEM_PASSWORD:system-password}

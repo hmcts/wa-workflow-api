@@ -9,8 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
-import uk.gov.hmcts.reform.auth.checker.core.user.User;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.AuthCheckerServiceAndUserFilter;
+import uk.gov.hmcts.reform.auth.checker.spring.serviceonly.AuthCheckerServiceOnlyFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +23,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final List<String> anonymousPaths = new ArrayList<>();
     private final RequestAuthorizer<Service> serviceRequestAuthorizer;
-    private final RequestAuthorizer<User> userRequestAuthorizer;
     private final AuthenticationManager authenticationManager;
 
     public SecurityConfiguration(
-        RequestAuthorizer<User> userRequestAuthorizer,
         RequestAuthorizer<Service> serviceRequestAuthorizer,
         AuthenticationManager authenticationManager
     ) {
         super();
-        this.userRequestAuthorizer = userRequestAuthorizer;
         this.serviceRequestAuthorizer = serviceRequestAuthorizer;
         this.authenticationManager = authenticationManager;
     }
@@ -54,13 +50,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        AuthCheckerServiceAndUserFilter authCheckerServiceAndUserFilter =
-            new AuthCheckerServiceAndUserFilter(serviceRequestAuthorizer, userRequestAuthorizer);
+        AuthCheckerServiceOnlyFilter authCheckerServiceOnlyFilter = new AuthCheckerServiceOnlyFilter(
+            serviceRequestAuthorizer);
 
-        authCheckerServiceAndUserFilter.setAuthenticationManager(authenticationManager);
+        authCheckerServiceOnlyFilter.setAuthenticationManager(authenticationManager);
 
         http
-            .addFilter(authCheckerServiceAndUserFilter)
+            .addFilter(authCheckerServiceOnlyFilter)
             .sessionManagement().sessionCreationPolicy(STATELESS)
             .and()
             .csrf().disable()
