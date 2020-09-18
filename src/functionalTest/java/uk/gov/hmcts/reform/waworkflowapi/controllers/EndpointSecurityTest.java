@@ -11,7 +11,7 @@ import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
-    
+
     @Value("${targets.instance}")
     private String testUrl;
 
