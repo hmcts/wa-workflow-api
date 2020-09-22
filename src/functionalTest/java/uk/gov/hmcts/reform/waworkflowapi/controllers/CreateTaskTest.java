@@ -3,12 +3,8 @@ package uk.gov.hmcts.reform.waworkflowapi.controllers;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequest;
 import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
@@ -30,9 +26,6 @@ import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.unm
 import static uk.gov.hmcts.reform.waworkflowapi.api.TransitionBuilder.aTransition;
 import static uk.gov.hmcts.reform.waworkflowapi.config.ServiceTokenGeneratorConfiguration.SERVICE_AUTHORIZATION;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("functional")
 public class CreateTaskTest extends SpringBootFunctionalBaseTest {
 
 

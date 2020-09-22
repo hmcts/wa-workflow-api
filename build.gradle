@@ -272,11 +272,6 @@ dependencies {
   testCompile group: 'com.google.guava', name: 'guava-testlib', version: '29.0-jre'
   testCompile group: 'com.jparams', name: 'to-string-verifier', version: '1.4.8'
 
-  testUtilsImplementation sourceSets.main.runtimeClasspath
-  testUtilsImplementation sourceSets.test.runtimeClasspath
-
-  integrationTestImplementation sourceSets.main.runtimeClasspath
-  integrationTestImplementation sourceSets.test.runtimeClasspath
   //for testing Camunda config will move out of this project
   integrationTestImplementation group: 'org.camunda.bpm.dmn', name: 'camunda-engine-dmn', version: "${versions.camunda}"
   integrationTestImplementation group: 'org.camunda.bpm.assert', name: 'camunda-bpm-assert', version: '7.0.0'
@@ -288,13 +283,20 @@ dependencies {
   testCompile group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
   testCompile group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: versions.sonarPitest
 
+
+  testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+  testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+  testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+  testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+  testCompile "org.junit.vintage:junit-vintage-engine:${versions.junit}"
+
+  testUtilsImplementation sourceSets.main.runtimeClasspath
+  testUtilsImplementation sourceSets.test.runtimeClasspath
+
+  integrationTestImplementation sourceSets.main.runtimeClasspath
+  integrationTestImplementation sourceSets.test.runtimeClasspath
+
   functionalTestImplementation sourceSets.main.runtimeClasspath
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
-  functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-  functionalTestImplementation sourceSets.main.runtimeClasspath
-  functionalTestImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
   functionalTestImplementation sourceSets.test.runtimeClasspath
 
   smokeTestImplementation sourceSets.main.runtimeClasspath
