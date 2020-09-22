@@ -33,7 +33,7 @@ govUkHolidays:
 #If you use a database then uncomment below lines and update db properties accordingly
 spring:
   application:
-    name: wa-workflow-api
+    name: WA workflow api
   main:
    allow-bean-definition-overriding: true
 
