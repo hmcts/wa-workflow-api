@@ -28,7 +28,29 @@
           <text>"appealType"</text>
         </outputEntry>
         <outputEntry id="LiteralExpression_0t707ev">
-          <text>case.data.appealType + ""</text>
+          <text>case.data.appealType</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0r3u9cf">
+        <inputEntry id="UnaryTests_1bqxdqr">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0etwrk3">
+          <text>"staffLocation"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_05korws">
+          <text>case.data.staffLocation</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_06fd9qz">
+        <inputEntry id="UnaryTests_0slfog9">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0kun6mv">
+          <text>"staffLocationID"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0jj1wzo">
+          <text>case.data. staffLocationID</text>
         </outputEntry>
       </rule>
     </decisionTable>
