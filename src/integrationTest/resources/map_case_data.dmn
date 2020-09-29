@@ -50,7 +50,7 @@
           <text>"staffLocationID"</text>
         </outputEntry>
         <outputEntry id="LiteralExpression_0jj1wzo">
-          <text>case.data. staffLocationID</text>
+          <text>case.data.staffLocationId</text>
         </outputEntry>
       </rule>
     </decisionTable>
