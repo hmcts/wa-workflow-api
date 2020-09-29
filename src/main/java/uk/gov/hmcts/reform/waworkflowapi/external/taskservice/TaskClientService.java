@@ -50,8 +50,10 @@ public class TaskClientService {
         throw new IllegalStateException("Should have exactly one task for transition");
     }
 
-    public void createTask(String ccdId, TaskToCreate taskToCreate, ZonedDateTime dueDate) {
+    public void createTask(ServiceDetails serviceDetails, String ccdId, TaskToCreate taskToCreate, ZonedDateTime dueDate) {
         ProcessVariables processVariables = new ProcessVariables(
+            serviceDetails.getJurisdiction(),
+            serviceDetails.getCaseType(),
             ccdId,
             taskToCreate.getTask(),
             taskToCreate.getGroup(),

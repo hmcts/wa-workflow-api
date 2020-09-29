@@ -105,12 +105,17 @@ class TaskClientServiceTest {
         String ccdId = "ccd_id";
         String group = "TCW";
         ZonedDateTime dueDate = ZonedDateTime.now().plusDays(2);
-        underTest.createTask(ccdId, new TaskToCreate(PROCESS_APPLICATION, group), dueDate);
+        underTest.createTask(serviceDetails, ccdId, new TaskToCreate(PROCESS_APPLICATION, group), dueDate);
 
         Mockito.verify(camundaClient).sendMessage(
             new SendMessageRequest(
                 "createTaskMessage",
-                new ProcessVariables(ccdId, PROCESS_APPLICATION, group, dueDate)
+                new ProcessVariables(serviceDetails.getJurisdiction(),
+                                     serviceDetails.getCaseType(),
+                                     ccdId,
+                                     PROCESS_APPLICATION,
+                                     group,
+                                     dueDate)
             )
         );
     }

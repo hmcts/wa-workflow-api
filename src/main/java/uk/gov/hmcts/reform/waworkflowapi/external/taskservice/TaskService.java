@@ -30,7 +30,7 @@ public class TaskService {
 
         return taskOptional.map(taskToCreate -> {
             ZonedDateTime calculatedDueDate = dueDateService.calculateDueDate(dueDate, taskToCreate);
-            taskClientService.createTask(caseId, taskToCreate, calculatedDueDate);
+            taskClientService.createTask(serviceDetails, caseId, taskToCreate, calculatedDueDate);
 
             return true;
         }).orElse(false);

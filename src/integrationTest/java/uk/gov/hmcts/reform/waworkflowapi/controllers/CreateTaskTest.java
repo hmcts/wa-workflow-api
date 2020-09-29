@@ -78,6 +78,8 @@ class CreateTaskTest {
             new SendMessageRequest(
                 "createTaskMessage",
                 new ProcessVariables(
+                    "IA",
+                    "Asylum",
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
@@ -103,6 +105,8 @@ class CreateTaskTest {
             new SendMessageRequest(
                 "createTaskMessage",
                 new ProcessVariables(
+                    "IA",
+                    "Asylum",
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
