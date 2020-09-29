@@ -39,7 +39,7 @@ import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dm
 import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.Task.PROCESS_APPLICATION;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class CreateTaskTest {
 
     @Autowired
@@ -51,7 +51,8 @@ class CreateTaskTest {
     @Autowired
     private DueDateService dueDateService;
 
-    @MockBean DateService dateService;
+    @MockBean
+    private DateService dateService;
 
     @DisplayName("Should create task with default due date and 201 response")
     @Test
@@ -60,7 +61,7 @@ class CreateTaskTest {
         when(dateService.now()).thenReturn(now);
 
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequest("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(createGetTaskResponse());
         mockMvc.perform(
             post("/tasks")
@@ -90,7 +91,7 @@ class CreateTaskTest {
     @Test
     void createsTaskForTransitionAndDueDate() throws Exception {
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequestWithDueDate("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(createGetTaskResponse());
         mockMvc.perform(
             post("/tasks")
@@ -115,7 +116,7 @@ class CreateTaskTest {
     @Test
     void doesNotCreateTaskForTransition() throws Exception {
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequest("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(emptyList());
         mockMvc.perform(
             post("/tasks")

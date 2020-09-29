@@ -139,6 +139,8 @@ public class CreateTaskTest {
     public void transitionCreateOverdueTask() {
         ZonedDateTime dueDate = ZonedDateTime.now();
         CreateTaskRequest createTaskRequest = aCreateTaskRequest()
+            .withJurisdiction("IA")
+            .withCaseType("Asylum")
             .withCaseId(caseId)
             .withTransition(
                 aTransition()
