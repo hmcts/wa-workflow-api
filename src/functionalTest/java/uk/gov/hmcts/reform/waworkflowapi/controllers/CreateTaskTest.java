@@ -35,6 +35,9 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
     @Value("${targets.camunda}")
     private String camundaUrl;
 
+    @Value("${idam.s2s-auth.secret}") String secret;
+    @Value("${idam.s2s-auth.name}") String microService;
+
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
 
@@ -44,6 +47,11 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
 
     @Before
     public void setUp() {
+
+        System.out.println("===============");
+        System.out.println("TEST");
+        System.out.println(secret);
+        System.out.println(microService);
         caseId = UUID.randomUUID().toString();
         serviceAuthorizationToken =
             authorizationHeadersProvider
