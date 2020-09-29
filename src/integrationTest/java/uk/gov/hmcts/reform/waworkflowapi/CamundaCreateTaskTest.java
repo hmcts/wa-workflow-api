@@ -95,10 +95,16 @@ public class CamundaCreateTaskTest {
     }
 
     @Test
-    @Deployment(resources = {"create_task.bpmn", "getOverdueTask.dmn"})
+    @Deployment(resources = {"create_task.bpmn", "getOverdueTask_IA_Asylum.dmn"})
     public void overdueAndOverdueTaskIsCreated() {
         ProcessInstance processInstance = startCreateTaskProcess(
-            of("taskId", "provideRespondentEvidence", "group", EXPECTED_GROUP, "dueDate", DUE_DATE_STRING)
+            of(
+                "jurisdiction", "IA",
+                "caseType", "Asylum",
+                "taskId", "provideRespondentEvidence",
+                "group", EXPECTED_GROUP,
+                "dueDate", DUE_DATE_STRING
+            )
         );
 
         assertThat(processInstance).isStarted()
@@ -129,10 +135,16 @@ public class CamundaCreateTaskTest {
     }
 
     @Test
-    @Deployment(resources = {"create_task.bpmn", "getOverdueTask.dmn"})
+    @Deployment(resources = {"create_task.bpmn", "getOverdueTask_IA_Asylum.dmn"})
     public void overdueAndOverdueTaskIsNotCreated() {
         ProcessInstance processInstance = startCreateTaskProcess(
-            of("taskId", "anotherTask", "group", EXPECTED_GROUP, "dueDate", DUE_DATE_STRING)
+            of(
+                "jurisdiction", "IA",
+                "caseType", "Asylum",
+                "taskId", "anotherTask",
+                "group", EXPECTED_GROUP,
+                "dueDate", DUE_DATE_STRING
+            )
         );
 
         assertThat(processInstance).isStarted()
