@@ -52,7 +52,7 @@ class TaskServiceTest {
         boolean createdTask = underTest.createTask(serviceDetails, someTransition, someCcdId, this.dueDate);
 
         assertThat("Should have created a task", createdTask, CoreMatchers.is(true));
-        verify(taskClientService).createTask(someCcdId, taskToCreate, calculatedDueDate);
+        verify(taskClientService).createTask(serviceDetails, someCcdId, taskToCreate, calculatedDueDate);
     }
 
     @Test
@@ -62,7 +62,9 @@ class TaskServiceTest {
         boolean createdTask = underTest.createTask(serviceDetails, someTransition, someCcdId, dueDate);
 
         assertThat("Should not have created a task", createdTask, CoreMatchers.is(false));
-        verify(taskClientService, never()).createTask(any(String.class), any(TaskToCreate.class), any(ZonedDateTime.class));
+        verify(taskClientService, never()).createTask(
+            any(ServiceDetails.class),
+            any(String.class), any(TaskToCreate.class), any(ZonedDateTime.class));
     }
 
 }

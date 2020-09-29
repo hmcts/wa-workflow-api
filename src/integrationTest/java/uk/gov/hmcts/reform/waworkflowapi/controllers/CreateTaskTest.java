@@ -71,6 +71,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
             new SendMessageRequest(
                 "createTaskMessage",
                 new ProcessVariables(
+                    "IA",
+                    "Asylum",
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
@@ -96,6 +98,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
             new SendMessageRequest(
                 "createTaskMessage",
                 new ProcessVariables(
+                    "IA",
+                    "Asylum",
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
