@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.ServiceDetails;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.Transition;
 
 import java.time.ZonedDateTime;
@@ -30,6 +31,7 @@ class TaskClientServiceTest {
     private Transition transition;
     private DmnRequest<GetTaskDmnRequest> dmnRequest;
     private static final String GROUP = "TCW";
+    private ServiceDetails serviceDetails;
 
     @BeforeEach
     void setUp() {
@@ -41,6 +43,7 @@ class TaskClientServiceTest {
             dmnStringValue(transition.getEventId()),
             dmnStringValue(transition.getPostState())
         ));
+        serviceDetails = new ServiceDetails("jurisdiction", "caseType");
     }
 
     @Test
@@ -51,9 +54,10 @@ class TaskClientServiceTest {
             dmnStringValue(GROUP),
             dmnIntegerValue(workingDaysAllowed)
         ));
-        when(camundaClient.getTask(dmnRequest)).thenReturn(ts);
+        when(camundaClient.getTask(serviceDetails.getJurisdiction(), serviceDetails.getCaseType(), dmnRequest))
+            .thenReturn(ts);
 
-        Optional<TaskToCreate> task = underTest.getTask(transition);
+        Optional<TaskToCreate> task = underTest.getTask(serviceDetails, transition);
 
         assertThat(task, is(Optional.of(new TaskToCreate(taskForId(expectedTask), GROUP, workingDaysAllowed))));
     }
@@ -65,9 +69,10 @@ class TaskClientServiceTest {
             dmnStringValue(GROUP),
             null
         ));
-        when(camundaClient.getTask(dmnRequest)).thenReturn(ts);
+        when(camundaClient.getTask(serviceDetails.getJurisdiction(), serviceDetails.getCaseType(), dmnRequest))
+            .thenReturn(ts);
 
-        Optional<TaskToCreate> task = underTest.getTask(transition);
+        Optional<TaskToCreate> task = underTest.getTask(serviceDetails, transition);
 
         assertThat(task, is(Optional.of(new TaskToCreate(taskForId(expectedTask), GROUP))));
     }
@@ -75,9 +80,10 @@ class TaskClientServiceTest {
     @Test
     void noTasksForTransition() {
         List<GetTaskDmnResult> ts = emptyList();
-        when(camundaClient.getTask(dmnRequest)).thenReturn(ts);
+        when(camundaClient.getTask(serviceDetails.getJurisdiction(), serviceDetails.getCaseType(), dmnRequest))
+            .thenReturn(ts);
 
-        Optional<TaskToCreate> task = underTest.getTask(transition);
+        Optional<TaskToCreate> task = underTest.getTask(serviceDetails, transition);
 
         assertThat(task, is(Optional.empty()));
     }
@@ -86,10 +92,11 @@ class TaskClientServiceTest {
     void getsMultipleTasksBasedOnTransitionWhichIsInvalid() {
         GetTaskDmnResult dmnResult = new GetTaskDmnResult(dmnStringValue(expectedTask), dmnStringValue("TCW"), dmnIntegerValue(5));
         List<GetTaskDmnResult> ts = asList(dmnResult, dmnResult);
-        when(camundaClient.getTask(dmnRequest)).thenReturn(ts);
+        when(camundaClient.getTask(serviceDetails.getJurisdiction(), serviceDetails.getCaseType(), dmnRequest))
+            .thenReturn(ts);
 
         assertThrows(IllegalStateException.class, () -> {
-            underTest.getTask(transition);
+            underTest.getTask(serviceDetails, transition);
         });
     }
 

@@ -54,7 +54,7 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         when(dateService.now()).thenReturn(now);
 
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequest("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(createGetTaskResponse());
         mockMvc.perform(
             post("/tasks")
@@ -84,7 +84,7 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
     @Test
     void createsTaskForTransitionAndDueDate() throws Exception {
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequestWithDueDate("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(createGetTaskResponse());
         mockMvc.perform(
             post("/tasks")
@@ -109,7 +109,7 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
     @Test
     void doesNotCreateTaskForTransition() throws Exception {
         CreateTaskRequest createTaskRequest = appealSubmittedCreateTaskRequest("1234567890");
-        when(camundaClient.getTask(createGetTaskDmnRequest(createTaskRequest)))
+        when(camundaClient.getTask("IA", "Asylum", createGetTaskDmnRequest(createTaskRequest)))
             .thenReturn(emptyList());
         mockMvc.perform(
             post("/tasks")
