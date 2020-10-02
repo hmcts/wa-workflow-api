@@ -46,6 +46,7 @@ public class CamundaCreateTaskTest {
     @Deployment(resources = {"create_task.bpmn"})
     public void createsAndCompletesATaskWithADueDate() {
         ProcessInstance processInstance = startCreateTaskProcess(of(
+            "taskId", "provideRespondentEvidence",
             "group", EXPECTED_GROUP,
             "dueDate", DUE_DATE_STRING,
             "name", TASK_NAME
@@ -69,6 +70,7 @@ public class CamundaCreateTaskTest {
     @Deployment(resources = {"create_task.bpmn"})
     public void createsAndCompletesATaskWithoutADueDate() {
         Map<String, Object> processVariables = new HashMap<>();
+        processVariables.put("taskId", "provideRespondentEvidence");
         processVariables.put("group", EXPECTED_GROUP);
         processVariables.put("dueDate", null);
         processVariables.put("name", TASK_NAME);

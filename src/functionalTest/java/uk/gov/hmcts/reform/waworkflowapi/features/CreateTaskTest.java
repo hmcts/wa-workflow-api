@@ -59,6 +59,7 @@ public class CreateTaskTest {
             .then()
             .body("size()", is(1))
             .body("[0].name", is("Process Application"))
+            .body("[0].formKey", is("processApplication"))
             .extract()
             .path("[0].id");
 
@@ -97,6 +98,7 @@ public class CreateTaskTest {
             .then()
             .body("size()", is(1))
             .body("[0].name", is("Provide Respondent Evidence"))
+            .body("[0].formKey", is("provideRespondentEvidence"))
             .extract()
             .path("[0].id");
 
@@ -162,7 +164,7 @@ public class CreateTaskTest {
             .then()
             .statusCode(HttpStatus.CREATED_201);
 
-        await().ignoreException(AssertionError.class).pollInterval(1, SECONDS).atMost(60, SECONDS).until(
+        await().ignoreException(AssertionError.class).pollInterval(1, SECONDS).atMost(20, SECONDS).until(
             () -> {
                 given()
                     .contentType(APPLICATION_JSON_VALUE)
@@ -175,8 +177,10 @@ public class CreateTaskTest {
                     .then()
                     .body("size()", is(2))
                     .body("[0].name", is("Provide Respondent Evidence"))
+                    .body("[0].formKey", is("provideRespondentEvidence"))
                     .body("[0].due", startsWith(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)))
-                    .body("[1].name", is("Follow Up Overdue Respondent Evidence"));
+                    .body("[1].name", is("Follow Up Overdue Respondent Evidence"))
+                    .body("[1].formKey", is("followUpOverdueRespondentEvidence"));
 
                 return true;
             }
