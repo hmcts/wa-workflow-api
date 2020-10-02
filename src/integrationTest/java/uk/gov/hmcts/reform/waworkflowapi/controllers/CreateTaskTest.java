@@ -64,7 +64,7 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
 
         ZonedDateTime expectedDueDate = dueDateService.calculateDueDate(
             null,
-            new TaskToCreate(null, null, 5)
+            new TaskToCreate(null, null, 5, null)
         );
 
         verify(camundaClient).sendMessage(
@@ -76,7 +76,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
-                    expectedDueDate
+                    expectedDueDate,
+                    "task name"
                 )
             )
         );
@@ -103,7 +104,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
                     createTaskRequest.getCaseId(),
                     PROCESS_APPLICATION,
                     "TCW",
-                    parse(createTaskRequest.getDueDate())
+                    parse(createTaskRequest.getDueDate()),
+                    "task name"
                 )
             )
         );
@@ -137,7 +139,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         return singletonList(new GetTaskDmnResult(
                                  dmnStringValue(PROCESS_APPLICATION.getId()),
                                  dmnStringValue("TCW"),
-                                 dmnIntegerValue(5)
+                                 dmnIntegerValue(5),
+                                 dmnStringValue("task name")
                              )
         );
     }

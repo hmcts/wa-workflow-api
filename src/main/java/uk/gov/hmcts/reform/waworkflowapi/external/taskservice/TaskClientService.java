@@ -42,9 +42,10 @@ public class TaskClientService {
             Task task = taskForId(dmnResults.get(0).getTaskId().getValue());
             String group = dmnResults.get(0).getGroup().getValue();
             DmnValue<Integer> workingDaysAllowed = dmnResults.get(0).getWorkingDaysAllowed();
+            String name = dmnResults.get(0).getName().getValue();
             return Optional.of((workingDaysAllowed == null)
-                                   ? new TaskToCreate(task, group)
-                                   : new TaskToCreate(task, group, workingDaysAllowed.getValue())
+                                   ? new TaskToCreate(task, group, name)
+                                   : new TaskToCreate(task, group, workingDaysAllowed.getValue(), name)
             );
         }
         throw new IllegalStateException("Should have exactly one task for transition");
@@ -57,7 +58,8 @@ public class TaskClientService {
             ccdId,
             taskToCreate.getTask(),
             taskToCreate.getGroup(),
-            dueDate
+            dueDate,
+            taskToCreate.getName()
         );
         camundaClient.sendMessage(new SendMessageRequest("createTaskMessage", processVariables));
     }
