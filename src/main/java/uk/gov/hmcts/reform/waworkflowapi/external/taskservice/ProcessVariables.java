@@ -13,14 +13,24 @@ public class ProcessVariables {
     private final DmnValue<String> taskId;
     private final DmnValue<String> group;
     private final DmnValue<String> dueDate;
+    private final DmnValue<String> name;
 
-    public ProcessVariables(String jurisdiction, String caseType, String ccdId, Task taskId, String group, ZonedDateTime dueDate) {
+    public ProcessVariables(
+        String jurisdiction,
+        String caseType,
+        String ccdId,
+        Task taskId,
+        String group,
+        ZonedDateTime dueDate,
+        String name
+    ) {
         this.jurisdiction = dmnStringValue(jurisdiction);
         this.caseType = dmnStringValue(caseType);
         this.ccdId = dmnStringValue(ccdId);
         this.taskId = dmnStringValue(taskId.getId());
         this.group = dmnStringValue(group);
         this.dueDate = dmnStringValue(dueDate.format(DateTimeFormatter.ISO_INSTANT));
+        this.name = dmnStringValue(name);
     }
 
     public DmnValue<String> getJurisdiction() {
@@ -47,6 +57,10 @@ public class ProcessVariables {
         return dueDate;
     }
 
+    public DmnValue<String> getName() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -61,7 +75,8 @@ public class ProcessVariables {
                && Objects.equals(ccdId, that.ccdId)
                && Objects.equals(taskId, that.taskId)
                && Objects.equals(group, that.group)
-               && Objects.equals(dueDate, that.dueDate);
+               && Objects.equals(dueDate, that.dueDate)
+               && Objects.equals(name, that.name);
     }
 
     @Override
@@ -78,6 +93,7 @@ public class ProcessVariables {
                + ", taskId=" + taskId
                + ", group=" + group
                + ", dueDate=" + dueDate
+               + ", name=" + name
                + '}';
     }
 }

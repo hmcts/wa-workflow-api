@@ -58,7 +58,7 @@ public class CreateTaskTest {
             .prettyPeek()
             .then()
             .body("size()", is(1))
-            .body("[0].name", is("Process Task"))
+            .body("[0].name", is("Process Application"))
             .extract()
             .path("[0].id");
 
@@ -96,7 +96,7 @@ public class CreateTaskTest {
             .prettyPeek()
             .then()
             .body("size()", is(1))
-            .body("[0].name", is("Process Task"))
+            .body("[0].name", is("Provide Respondent Evidence"))
             .extract()
             .path("[0].id");
 
@@ -174,9 +174,9 @@ public class CreateTaskTest {
                     .prettyPeek()
                     .then()
                     .body("size()", is(2))
-                    .body("[0].name", is("Process Task"))
+                    .body("[0].name", is("Provide Respondent Evidence"))
                     .body("[0].due", startsWith(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)))
-                    .body("[1].name", is("Process overdue task"));
+                    .body("[1].name", is("Follow Up Overdue Respondent Evidence"));
 
                 return true;
             }

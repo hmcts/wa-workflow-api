@@ -44,7 +44,7 @@ class TaskServiceTest {
 
     @Test
     void createsATask() {
-        TaskToCreate taskToCreate = new TaskToCreate(this.taskBeingCreated, "TCW");
+        TaskToCreate taskToCreate = new TaskToCreate(this.taskBeingCreated, "TCW", "task name");
         when(taskClientService.getTask(serviceDetails, someTransition)).thenReturn(Optional.of(taskToCreate));
         ZonedDateTime calculatedDueDate = ZonedDateTime.now();
         when(dueDateService.calculateDueDate(this.dueDate, taskToCreate)).thenReturn(calculatedDueDate);
