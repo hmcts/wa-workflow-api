@@ -16,5 +16,4 @@ data "azurerm_key_vault" "s2s_key_vault" {
 data "azurerm_key_vault_secret" "s2s_secret" {
   name         = "microservicekey-wa-workflow-api"
   key_vault_id = data.azurerm_key_vault.s2s_key_vault.id
-  vault_uri    = data.azurerm_key_vault.s2s_key_vault.vault_uri
 }
