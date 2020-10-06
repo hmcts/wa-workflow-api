@@ -36,7 +36,6 @@ import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.app
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreatorObjectMapper.asJsonString;
 import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dmnIntegerValue;
 import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dmnStringValue;
-import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.Task.PROCESS_APPLICATION;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -81,7 +80,7 @@ class CreateTaskTest {
                     "IA",
                     "Asylum",
                     createTaskRequest.getCaseId(),
-                    PROCESS_APPLICATION,
+                    "processApplication",
                     "TCW",
                     expectedDueDate,
                     "task name"
@@ -109,7 +108,7 @@ class CreateTaskTest {
                     "IA",
                     "Asylum",
                     createTaskRequest.getCaseId(),
-                    PROCESS_APPLICATION,
+                    "processApplication",
                     "TCW",
                     parse(createTaskRequest.getDueDate()),
                     "task name"
@@ -144,7 +143,7 @@ class CreateTaskTest {
 
     private List<GetTaskDmnResult> createGetTaskResponse() {
         return singletonList(new GetTaskDmnResult(
-                                 dmnStringValue(PROCESS_APPLICATION.getId()),
+                                 dmnStringValue("processApplication"),
                                  dmnStringValue("TCW"),
                                  dmnIntegerValue(5),
                                  dmnStringValue("task name")
