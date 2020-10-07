@@ -12,5 +12,4 @@ java:
   keyVaults:
     wa:
       secrets:
-        - testsecret
         - AppInsightsInstrumentationKey
