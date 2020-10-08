@@ -19,6 +19,8 @@ public class ErrorLogger {
     public void maybeLogException(Throwable ex) {
         if (stacktraceEnabled) {
             LOG.error("Exception occurred: {}", ex.getMessage(), ex);
+        } else {
+            LOG.error("Exception occurred: {}", ex.getMessage());
         }
     }
 
