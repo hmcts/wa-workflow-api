@@ -39,7 +39,7 @@
           <text>"region"</text>
         </outputEntry>
         <outputEntry id="LiteralExpression_05korws">
-          <text>case.data. caseManagementLocation.region</text>
+          <text>case.data.caseManagementLocation.region</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_06fd9qz">
@@ -50,7 +50,7 @@
           <text>"location"</text>
         </outputEntry>
         <outputEntry id="LiteralExpression_0jj1wzo">
-          <text>case.data. caseManagementLocation. baseLocation</text>
+          <text>case.data.caseManagementLocation.baseLocation</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1oirne1">
