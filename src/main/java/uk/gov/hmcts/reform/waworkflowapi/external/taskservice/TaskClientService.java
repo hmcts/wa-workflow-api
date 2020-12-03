@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dm
 public class TaskClientService {
     private final CamundaClient camundaClient;
     private final AuthTokenGenerator authTokenGenerator;
+    public static final String WA_TASK_INITIATION_DECISION_TABLE_NAME = "wa-task-initiation";
 
     @Autowired
     public TaskClientService(@Autowired CamundaClient camundaClient,
@@ -31,8 +32,9 @@ public class TaskClientService {
             dmnStringValue(transition.getPostState())
         ));
 
-        List<GetTaskDmnResult> dmnResults = camundaClient.getTask(
+        List<GetTaskDmnResult> dmnResults = camundaClient.evaluateDmnTable(
             authTokenGenerator.generate(),
+            WA_TASK_INITIATION_DECISION_TABLE_NAME,
             serviceDetails.getJurisdiction(),
             serviceDetails.getCaseType(),
             requestParameters
