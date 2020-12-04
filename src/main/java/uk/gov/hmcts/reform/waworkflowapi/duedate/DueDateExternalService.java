@@ -1,12 +1,16 @@
 package uk.gov.hmcts.reform.waworkflowapi.duedate;
 
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.interceptor.ClientRequestInterceptor;
+import org.camunda.bpm.client.interceptor.auth.BasicAuthProvider;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.waworkflowapi.config.ServiceAuthProviderInterceptor;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +18,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static java.util.Collections.singletonMap;
+import static java.util.Collections.sort;
 
 @SuppressWarnings({"PMD.UseUnderscoresInNumericLiterals"})
 @Component
@@ -22,6 +27,9 @@ public class DueDateExternalService {
 
     private final String camundaUrl;
     private final DueDateService dueDateService;
+
+    @Autowired
+    private ServiceAuthProviderInterceptor serviceAuthProviderInterceptor;
 
     public DueDateExternalService(
         @Value("${camunda.url}") String camundaUrl,
@@ -36,6 +44,7 @@ public class DueDateExternalService {
         ExternalTaskClient client = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
             .asyncResponseTimeout(10000)
+            .addInterceptor(serviceAuthProviderInterceptor)
             .build();
 
         client.subscribe("calculate-due-date")
@@ -45,7 +54,7 @@ public class DueDateExternalService {
     }
 
     public void workingDaysHandler(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        int workingDaysAllowed = (int)((Map<?, ?>) externalTask.getVariable("task")).get("workingDaysAllowed");
+        int workingDaysAllowed = (int) ((Map<?, ?>) externalTask.getVariable("task")).get("workingDaysAllowed");
 
         ZonedDateTime dueDate = dueDateService.addWorkingDays(workingDaysAllowed);
 
