@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.duedate;
 
 import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.interceptor.ClientRequestInterceptor;
-import org.camunda.bpm.client.interceptor.auth.BasicAuthProvider;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static java.util.Collections.singletonMap;
-import static java.util.Collections.sort;
 
 @SuppressWarnings({"PMD.UseUnderscoresInNumericLiterals"})
 @Component
