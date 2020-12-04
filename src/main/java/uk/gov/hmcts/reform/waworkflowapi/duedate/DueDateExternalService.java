@@ -54,7 +54,8 @@ public class DueDateExternalService {
     }
 
     public void workingDaysHandler(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        int workingDaysAllowed = (int) ((Map<?, ?>) externalTask.getVariable("task")).get("workingDaysAllowed");
+        int workingDaysAllowed = (int) ((Map<?, ?>) externalTask
+            .getVariable("task")).get("workingDaysAllowed");
 
         ZonedDateTime dueDate = dueDateService.addWorkingDays(workingDaysAllowed);
 
