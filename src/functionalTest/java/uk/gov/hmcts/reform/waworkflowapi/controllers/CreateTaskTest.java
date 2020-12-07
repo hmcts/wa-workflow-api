@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -24,7 +25,6 @@ import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.app
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.requestRespondentEvidenceTaskRequest;
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreateTaskRequestCreator.unmappedCreateTaskRequest;
 import static uk.gov.hmcts.reform.waworkflowapi.api.TransitionBuilder.aTransition;
-import static uk.gov.hmcts.reform.waworkflowapi.config.ServiceTokenGeneratorConfiguration.SERVICE_AUTHORIZATION;
 
 public class CreateTaskTest extends SpringBootFunctionalBaseTest {
 
@@ -107,6 +107,8 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
             .prettyPeek()
             .then()
             .body("[0].groupId", is("TCW"));
+
+        cleanUp(taskId, serviceAuthorizationToken);
     }
 
     @Test
@@ -149,6 +151,8 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
             .prettyPeek()
             .then()
             .body("[0].groupId", is("external"));
+
+        cleanUp(taskId, serviceAuthorizationToken);
     }
 
     @Test
@@ -177,6 +181,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
             .body("size()", is(0));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void transition_create_overdue_task() {
         ZonedDateTime dueDate = ZonedDateTime.now();
@@ -207,7 +212,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
 
         await().ignoreException(AssertionError.class).pollInterval(1, SECONDS).atMost(20, SECONDS).until(
             () -> {
-                given()
+                Object tasks = given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
@@ -222,7 +227,11 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
                     .body("[0].formKey", is("provideRespondentEvidence"))
                     .body("[0].due", startsWith(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)))
                     .body("[1].name", is("Follow Up Overdue Respondent Evidence"))
-                    .body("[1].formKey", is("followUpOverdueRespondentEvidence"));
+                    .body("[1].formKey", is("followUpOverdueRespondentEvidence"))
+                    .extract()
+                    .path("id");
+
+                ((List<Object>) tasks).forEach(taskId -> cleanUp(taskId, serviceAuthorizationToken));
 
                 return true;
             }
