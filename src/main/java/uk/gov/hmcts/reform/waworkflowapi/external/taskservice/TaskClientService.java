@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.Transition;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static uk.gov.hmcts.reform.waworkflowapi.external.taskservice.DmnValue.dmnStringValue;
@@ -35,8 +36,8 @@ public class TaskClientService {
         List<GetTaskDmnResult> dmnResults = camundaClient.evaluateDmnTable(
             authTokenGenerator.generate(),
             WA_TASK_INITIATION_DECISION_TABLE_NAME,
-            serviceDetails.getJurisdiction(),
-            serviceDetails.getCaseType(),
+            serviceDetails.getJurisdiction().toLowerCase(Locale.getDefault()),
+            serviceDetails.getCaseType().toLowerCase(Locale.getDefault()),
             requestParameters
         );
 

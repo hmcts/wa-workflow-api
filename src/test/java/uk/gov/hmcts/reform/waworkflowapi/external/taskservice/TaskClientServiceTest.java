@@ -48,7 +48,7 @@ class TaskClientServiceTest {
             dmnStringValue(transition.getEventId()),
             dmnStringValue(transition.getPostState())
         ));
-        serviceDetails = new ServiceDetails("jurisdiction", "caseType");
+        serviceDetails = new ServiceDetails("jurisdiction", "casetype");
 
         when(authTokenGenerator.generate()).thenReturn(BEARER_SERVICE_TOKEN);
     }
