@@ -110,7 +110,7 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         when(camundaClient.evaluateDmnTable(
             BEARER_SERVICE_TOKEN,
             WA_TASK_INITIATION_DECISION_TABLE_NAME,
-            "iA",
+            "ia",
             "asylum",
             createGetTaskDmnRequest(createTaskRequest)
         ))
