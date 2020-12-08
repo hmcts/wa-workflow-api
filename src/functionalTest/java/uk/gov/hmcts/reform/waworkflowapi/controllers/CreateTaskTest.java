@@ -81,7 +81,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
             .then()
             .statusCode(HttpStatus.CREATED_201);
 
-        Object taskId = given()
+        String taskId = given()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
             .baseUri(camundaUrl)
@@ -125,7 +125,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
             .then()
             .statusCode(HttpStatus.CREATED_201);
 
-        Object taskId = given()
+        String taskId = given()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
             .baseUri(camundaUrl)
@@ -231,7 +231,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
                     .extract()
                     .path("id");
 
-                ((List<Object>) tasks).forEach(taskId -> cleanUp(taskId, serviceAuthorizationToken));
+                ((List<String>) tasks).forEach(taskId -> cleanUp(taskId, serviceAuthorizationToken));
 
                 return true;
             }
