@@ -69,8 +69,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         when(camundaClient.evaluateDmnTable(
             BEARER_SERVICE_TOKEN,
             WA_TASK_INITIATION_DECISION_TABLE_NAME,
-            "IA",
-            "Asylum",
+            "ia",
+            "asylum",
             createGetTaskDmnRequest(createTaskRequest)
         ))
             .thenReturn(createGetTaskResponse());
@@ -110,8 +110,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         when(camundaClient.evaluateDmnTable(
             BEARER_SERVICE_TOKEN,
             WA_TASK_INITIATION_DECISION_TABLE_NAME,
-            "IA",
-            "Asylum",
+            "iA",
+            "asylum",
             createGetTaskDmnRequest(createTaskRequest)
         ))
             .thenReturn(createGetTaskResponse());
@@ -145,8 +145,8 @@ class CreateTaskTest extends SpringBootIntegrationBaseTest {
         when(camundaClient.evaluateDmnTable(
             BEARER_SERVICE_TOKEN,
             WA_TASK_INITIATION_DECISION_TABLE_NAME,
-            "IA",
-            "Asylum",
+            "ia",
+            "asylum",
             createGetTaskDmnRequest(createTaskRequest)
         ))
             .thenReturn(emptyList());
