@@ -18,7 +18,7 @@ public interface CamundaClient {
     String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
     @PostMapping(
-        value = "/decision-definition/key/{decisionTableName}_{jurisdiction}_{caseType}/evaluate",
+        value = "/decision-definition/key/{decisionTableName}-{jurisdiction}-{caseType}/evaluate",
         produces = MediaType.APPLICATION_JSON_VALUE)
     List<GetTaskDmnResult> evaluateDmnTable(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
