@@ -19,7 +19,7 @@ public abstract class SpringBootFunctionalBaseTest {
     @Value("${targets.camunda}")
     protected String camundaUrl;
 
-    public void cleanUp(Object taskId, String token) {
+    public void cleanUp(String taskId, String token) {
         given()
             .header(SERVICE_AUTHORIZATION, token)
             .contentType(APPLICATION_JSON_VALUE)
