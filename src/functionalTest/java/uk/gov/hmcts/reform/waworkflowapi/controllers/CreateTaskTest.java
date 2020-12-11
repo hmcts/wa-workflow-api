@@ -212,7 +212,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
 
         await().ignoreException(AssertionError.class).pollInterval(1, SECONDS).atMost(20, SECONDS).until(
             () -> {
-                Object tasks = given()
+                List<String> tasks = given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
@@ -231,7 +231,7 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
                     .extract()
                     .path("id");
 
-                ((List<String>) tasks).forEach(taskId -> cleanUp(taskId, serviceAuthorizationToken));
+                tasks.forEach(taskId -> cleanUp(taskId, serviceAuthorizationToken));
 
                 return true;
             }
