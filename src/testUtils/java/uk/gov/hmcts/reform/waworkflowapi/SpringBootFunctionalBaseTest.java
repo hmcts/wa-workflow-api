@@ -16,9 +16,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public abstract class SpringBootFunctionalBaseTest {
 
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+    public static final String WA_TASK_INITIATION_IA_ASYLUM = "wa-task-initiation-ia-asylum";
 
-    @Value("${targets.camunda}")
-    protected String camundaUrl;
+    @Value("${targets.instance}")
+    public String testUrl;
+
+    @Value("${camunda.url}")
+    public String camundaUrl;
 
     public void cleanUp(String taskId, String token) {
         given()
