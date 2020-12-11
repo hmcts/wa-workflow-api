@@ -186,8 +186,8 @@ public class CreateTaskTest extends SpringBootFunctionalBaseTest {
     public void transition_create_overdue_task() {
         ZonedDateTime dueDate = ZonedDateTime.now();
         CreateTaskRequest createTaskRequest = aCreateTaskRequest()
-            .withJurisdiction("IA")
-            .withCaseType("Asylum")
+            .withJurisdiction("ia")
+            .withCaseType("asylum")
             .withCaseId(caseId)
             .withTransition(
                 aTransition()
