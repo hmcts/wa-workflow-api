@@ -1,8 +1,10 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
+package uk.gov.hmcts.reform.waworkflowapi.external.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.EvaluateDmnRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ class TaskClientServiceTest {
 
     private static final String BEARER_SERVICE_TOKEN = "Bearer service token";
 
-    private List<Map<String,DmnValue<?>>> mockResponse() {
+    private List<Map<String, DmnValue<?>>> mockResponse() {
         return List.of(Map.of("test",DmnValue.dmnStringValue("TestValue")));
     }
 

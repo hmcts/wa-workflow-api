@@ -1,10 +1,13 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
+package uk.gov.hmcts.reform.waworkflowapi.external.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.EvaluateDmnRequest;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.SendMessageRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,7 @@ public interface CamundaClient {
                      SendMessageRequest sendMessageRequest);
 
     @PostMapping(value = "/decision-definition/key/{key}/evaluate", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Map<String,DmnValue<?>>> evaluateDmn(
+    List<Map<String, DmnValue<?>>> evaluateDmn(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
         @PathVariable("key") String key,
         EvaluateDmnRequest evaluateDmnRequest

@@ -1,7 +1,9 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.taskservice;
+package uk.gov.hmcts.reform.waworkflowapi.external.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.external.model.EvaluateDmnRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,7 @@ class EvaluateDmnServiceTest {
 
     @BeforeEach
     void setUp() {
-        evaluateDmnRequest = new EvaluateDmnRequest(Map.of("name",DmnValue.dmnStringValue("test")));
+        evaluateDmnRequest = new EvaluateDmnRequest(Map.of("name", DmnValue.dmnStringValue("test")));
         taskClientService = mock(TaskClientService.class);
         evaluateDmnService = new EvaluateDmnService(taskClientService);
     }
