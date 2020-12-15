@@ -9,6 +9,13 @@ import pl.pojo.tester.api.assertion.Method;
 import pl.pojo.tester.internal.field.DefaultFieldValueChanger;
 import pl.pojo.tester.internal.instantiator.ObjectGenerator;
 import pl.pojo.tester.internal.utils.ThoroughFieldPermutator;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnResult;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.GetTaskDmnRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.GetTaskDmnResult;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.ProcessVariables;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.common.TaskToCreate;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.CreateTaskRequest;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.ServiceDetails;
@@ -16,13 +23,6 @@ import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.Transition;
 import uk.gov.hmcts.reform.waworkflowapi.duedate.holidaydates.CountryHolidayDates;
 import uk.gov.hmcts.reform.waworkflowapi.duedate.holidaydates.HolidayDate;
 import uk.gov.hmcts.reform.waworkflowapi.duedate.holidaydates.UkHolidayDates;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnRequest;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnResult;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.GetTaskDmnRequest;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.GetTaskDmnResult;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.ProcessVariables;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.SendMessageRequest;
 
 import java.util.List;
 

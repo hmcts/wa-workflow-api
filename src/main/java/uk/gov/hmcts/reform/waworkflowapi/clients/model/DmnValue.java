@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.model;
+package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
 import java.util.Objects;
 

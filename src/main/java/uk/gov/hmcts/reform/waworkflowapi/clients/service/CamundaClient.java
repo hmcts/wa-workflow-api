@@ -1,13 +1,13 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.service;
+package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.EvaluateDmnRequest;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.SendMessageRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 
 import java.util.List;
 import java.util.Map;

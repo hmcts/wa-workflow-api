@@ -1,8 +1,8 @@
-package uk.gov.hmcts.reform.waworkflowapi.external.service;
+package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.SendMessageRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 
 @Component
 public class SendMessageService {

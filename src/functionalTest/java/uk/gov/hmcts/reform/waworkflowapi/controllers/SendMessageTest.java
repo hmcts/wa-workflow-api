@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.DmnValue;
-import uk.gov.hmcts.reform.waworkflowapi.external.model.SendMessageRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
