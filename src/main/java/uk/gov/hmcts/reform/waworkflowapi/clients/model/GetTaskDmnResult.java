@@ -1,9 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
-import java.util.Objects;
 
 @EqualsAndHashCode
 @ToString
