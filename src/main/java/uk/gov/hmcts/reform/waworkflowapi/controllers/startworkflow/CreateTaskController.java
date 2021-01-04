@@ -44,7 +44,7 @@ public class CreateTaskController {
         this.dueDateService = dueDateService;
     }
 
-    @PostMapping(path = "/workflow/decision-definition/key/{key}/evaluate", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = "/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation("Creates a message form camunda")
     @ApiImplicitParam(name = "ServiceAuthorization", value = "Bearer xxxx", paramType = "header")
     @ApiResponses({
