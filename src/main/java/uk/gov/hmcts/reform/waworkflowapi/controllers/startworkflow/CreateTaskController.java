@@ -67,12 +67,7 @@ public class CreateTaskController {
     })
     public ResponseEntity<Void> sendMessage(@RequestBody SendMessageRequest sendMessageRequest) {
 
-        if (CREATE_TASK_MESSAGE.equals(sendMessageRequest.getMessageName())) {
-            sendMessageService.createMessage(updateDueDateInSendMessageRequest(sendMessageRequest));
-        } else {
-            sendMessageService.createMessage(sendMessageRequest);
-        }
-
+        sendMessageService.createMessage(sendMessageRequest);
         return noContent().build();
     }
 
@@ -104,11 +99,14 @@ public class CreateTaskController {
     }
 
     private TaskToCreate buildTaskToCreate(SendMessageRequest sendMessageRequest) {
+        DmnValue<?> delayUntil = sendMessageRequest.getProcessVariables().get("delayUntil");
+        String delayUntilTimer = delayUntil != null ? (String) delayUntil.getValue() : null;
         return new TaskToCreate(
             (String) sendMessageRequest.getProcessVariables().get("taskId").getValue(),
             (String) sendMessageRequest.getProcessVariables().get("group").getValue(),
             (Integer) sendMessageRequest.getProcessVariables().get("workingDaysAllowed").getValue(),
-            (String) sendMessageRequest.getProcessVariables().get("name").getValue()
+            (String) sendMessageRequest.getProcessVariables().get("name").getValue(),
+            delayUntilTimer
         );
     }
 

@@ -79,8 +79,9 @@ class CreateTaskControllerTest {
 
     @Test
     void sendMessage_with_create_task_message() {
-        final TaskToCreate taskToCreate = new TaskToCreate("some taskId", "some group", 2, "test");
         final ZonedDateTime zonedDateTime = ZonedDateTime.parse("2020-12-15T23:02:32.334031Z");
+        final TaskToCreate taskToCreate = new TaskToCreate("some taskId", "some group",
+                                                           2, "test", zonedDateTime.toString());
         final DmnValue<String> dueDate =
             DmnValue.dmnStringValue(ZonedDateTime.parse("2020-12-15T23:02:32.334031Z").toString());
         final DmnValue<String> taskId = DmnValue.dmnStringValue("some taskId");

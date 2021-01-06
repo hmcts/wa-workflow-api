@@ -32,7 +32,8 @@ class DueDateServiceTest {
 
     @Test
     void haveToSetEitherADueDateOrHaveWorkingDays() {
-        TaskToCreate taskToCreate = new TaskToCreate("processApplication", TCW_GROUP, NAME);
+        TaskToCreate taskToCreate = new TaskToCreate("processApplication", TCW_GROUP, NAME,
+                                                     ZonedDateTime.now().toString());
         assertThrows(IllegalStateException.class, () -> {
             underTest.calculateDueDate(
                 null,
@@ -46,7 +47,7 @@ class DueDateServiceTest {
         ZonedDateTime providedDueDate = ZonedDateTime.now();
         ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
             providedDueDate,
-            new TaskToCreate("processApplication", TCW_GROUP, NAME)
+            new TaskToCreate("processApplication", TCW_GROUP, NAME, ZonedDateTime.now().toString())
         );
 
         assertThat(calculatedDueDate, is(providedDueDate));
@@ -110,7 +111,8 @@ class DueDateServiceTest {
 
         ZonedDateTime calculatedDueDate = underTest.calculateDueDate(
             null,
-            new TaskToCreate("processApplication", TCW_GROUP, leadTimeDays, NAME)
+            new TaskToCreate("processApplication", TCW_GROUP, leadTimeDays,
+                             NAME, ZonedDateTime.now().toString())
         );
 
         assertThat(calculatedDueDate, is(expectedDueDate));

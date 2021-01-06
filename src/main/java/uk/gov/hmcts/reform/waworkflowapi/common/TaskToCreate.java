@@ -7,16 +7,21 @@ public class TaskToCreate {
     private final String group;
     private final int workingDaysAllowed;
     private final String name;
+    private final String delayUntil;
 
-    public TaskToCreate(String task, String group, int workingDaysAllowed, String name) {
+    public TaskToCreate(String task, String group, int workingDaysAllowed,
+                        String name, String delayUntil) {
         this.task = task;
         this.group = group;
         this.workingDaysAllowed = workingDaysAllowed;
         this.name = name;
+        this.delayUntil = delayUntil;
+
     }
 
-    public TaskToCreate(String task, String group, String name) {
-        this(task, group, 0, name);
+    public TaskToCreate(String task, String group,
+                        String name, String delayUntil) {
+        this(task, group, 0, name, delayUntil);
     }
 
     public String getTask() {
@@ -35,6 +40,10 @@ public class TaskToCreate {
         return name;
     }
 
+    public String getDelayUntil() {
+        return delayUntil;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -45,9 +54,10 @@ public class TaskToCreate {
         }
         TaskToCreate that = (TaskToCreate) object;
         return Objects.equals(task, that.task)
-               && Objects.equals(group, that.group)
-               && Objects.equals(workingDaysAllowed, that.workingDaysAllowed)
-               && Objects.equals(name, that.name);
+            && Objects.equals(group, that.group)
+            && Objects.equals(workingDaysAllowed, that.workingDaysAllowed)
+            && Objects.equals(name, that.name)
+            && Objects.equals(delayUntil, that.delayUntil);
     }
 
     @Override
@@ -58,10 +68,11 @@ public class TaskToCreate {
     @Override
     public String toString() {
         return "TaskToCreate{"
-               + "task=" + task
-               + ", group='" + group + '\''
-               + ", workingDaysAllowed='" + workingDaysAllowed + '\''
-               + ", name='" + name + '\''
-               + '}';
+            + "task=" + task
+            + ", group='" + group + '\''
+            + ", workingDaysAllowed='" + workingDaysAllowed + '\''
+            + ", name='" + name + '\''
+            + ", delayUntil='" + delayUntil + '\''
+            + '}';
     }
 }
