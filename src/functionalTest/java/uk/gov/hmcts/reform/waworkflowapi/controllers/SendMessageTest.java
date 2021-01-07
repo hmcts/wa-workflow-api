@@ -58,7 +58,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    public void transition_creates_a_task_with_TCW_group() {
+    public void transition_creates_a_task_with_Tcw_group() {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             "Process Application",
             "processApplication",
@@ -202,10 +202,9 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         processVariables.put("taskId", DmnValue.dmnStringValue(taskId));
         processVariables.put("caseId", DmnValue.dmnStringValue(caseId));
 
-        String delayUntilTimer = ZonedDateTime.now().
-            format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
+        String delayUntilTimer = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         processVariables.put("delayUntil", DmnValue.dmnStringValue(delayUntilTimer));
+
         return processVariables;
     }
 }

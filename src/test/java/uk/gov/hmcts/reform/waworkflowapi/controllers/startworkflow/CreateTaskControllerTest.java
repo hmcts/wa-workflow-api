@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.EvaluateDmnService;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.SendMessageService;
 import uk.gov.hmcts.reform.waworkflowapi.common.TaskToCreate;
-import uk.gov.hmcts.reform.waworkflowapi.duedate.DueDateService;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -43,17 +42,13 @@ class CreateTaskControllerTest {
     @Mock
     private SendMessageRequest sendMessageRequest;
 
-    @Mock
-    private DueDateService dueDateService;
-
     private CreateTaskController createTaskController;
 
     @BeforeEach
     void setUp() {
         createTaskController = new CreateTaskController(
             evaluateDmnService,
-            sendMessageService,
-            dueDateService
+            sendMessageService
         );
     }
 
@@ -97,21 +92,9 @@ class CreateTaskControllerTest {
         ));
 
 
-        when(sendMessageRequest.getMessageName()).thenReturn(CREATE_TASK_MESSAGE);
-        when(sendMessageRequest.getProcessVariables()).thenReturn(map);
-
-        when(dueDateService.calculateDueDate(zonedDateTime, taskToCreate)).thenReturn(ZonedDateTime.now());
-
         ResponseEntity<Void> response = createTaskController.sendMessage(sendMessageRequest);
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    @Test
-    void sendMessage_with_no_create_task_message() {
-        when(sendMessageRequest.getMessageName()).thenReturn("task_message");
-        ResponseEntity<Void> response = createTaskController.sendMessage(sendMessageRequest);
-        assertNotNull(response);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
 }
