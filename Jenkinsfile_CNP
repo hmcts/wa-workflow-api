@@ -5,7 +5,6 @@
 def type = "java"
 def product = "wa"
 def component = "workflow-api"
-def s2sServiceName = "workflow_api"
 
 
 def secrets = [
@@ -25,7 +24,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
-withCamundaOnlyPipeline(type, product, component, s2sServiceName, tenantId) {
+withPipeline(type, product, component) {
   disableLegacyDeployment()
 
   env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
