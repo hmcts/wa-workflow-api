@@ -5,7 +5,7 @@
 def type = "java"
 def product = "wa"
 def component = "workflow-api"
-def s2sServiceName = "wa_workflow_api"
+def s2sServiceName = "workflow_api"
 
 
 def secrets = [
