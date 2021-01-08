@@ -40,7 +40,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     @Test
     public void should_not_allow_requests_without_valid_service_authorisation_and_return_403_response_code() {
         Map<String, DmnValue<?>> processVariables = new HashMap<>();
-        Map<String, DmnValue<?>> correlationKeys = null;
         given()
             .relaxedHTTPSValidation()
             .contentType(APPLICATION_JSON_VALUE)
@@ -60,6 +59,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     @Test
     public void transition_creates_a_task_with_Tcw_group() {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
+            null,
             "Process Application",
             "processApplication",
             "TCW"
@@ -114,6 +114,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     @Test
     public void transition_create_task_with_external_group() {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
+            null,
             "Provide Respondent Evidence",
             "provideRespondentEvidence",
             "external"
@@ -168,6 +169,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     @Test
     public void should_not_be_able_to_post_as_message_does_not_exist() {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
+            ZonedDateTime.now().toString(),
             "Process Application", "processApplication",
             "TCW"
         );
@@ -190,11 +192,13 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
 
 
     private Map<String, DmnValue<?>> mockProcessVariables(
+        String dueDate,
         String name,
         String taskId,
         String group
     ) {
         Map<String, DmnValue<?>> processVariables = new HashMap<>();
+        processVariables.put("dueDate", DmnValue.dmnStringValue(dueDate));
         processVariables.put("group", DmnValue.dmnStringValue(group));
         processVariables.put("name", DmnValue.dmnStringValue(name));
         processVariables.put("jurisdiction", DmnValue.dmnStringValue("ia"));
