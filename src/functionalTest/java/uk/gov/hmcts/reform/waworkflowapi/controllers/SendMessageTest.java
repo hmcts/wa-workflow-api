@@ -57,7 +57,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    public void transition_creates_a_task_with_Tcw_group() {
+    public void transition_creates_a_task_with_default_due_date() {
+
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             null,
             "Process Application",
@@ -112,9 +113,11 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    public void transition_create_task_with_external_group() {
+    public void transition_creates_a_task_with_due_date() throws InterruptedException {
+
+        String dueDate= ZonedDateTime.now().plusSeconds(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
-            null,
+            dueDate,
             "Provide Respondent Evidence",
             "provideRespondentEvidence",
             "external"
@@ -136,6 +139,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             .then()
             .statusCode(HttpStatus.NO_CONTENT_204);
 
+        Thread.sleep(2000);
         String taskId = given()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
