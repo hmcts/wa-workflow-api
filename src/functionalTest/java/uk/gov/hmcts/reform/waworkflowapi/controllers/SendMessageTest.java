@@ -114,8 +114,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void transition_creates_a_task_with_due_date() throws InterruptedException {
-
-        String dueDate= ZonedDateTime.now().plusSeconds(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dueDate = ZonedDateTime.now().plusSeconds(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             dueDate,
             "Provide Respondent Evidence",
