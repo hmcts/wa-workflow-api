@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.waworkflowapi.common;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode
+@ToString
 public class TaskToCreate {
     private final String task;
     private final String group;
@@ -44,35 +47,4 @@ public class TaskToCreate {
         return delayUntil;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        TaskToCreate that = (TaskToCreate) object;
-        return Objects.equals(task, that.task)
-            && Objects.equals(group, that.group)
-            && Objects.equals(workingDaysAllowed, that.workingDaysAllowed)
-            && Objects.equals(name, that.name)
-            && Objects.equals(delayUntil, that.delayUntil);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(task, group);
-    }
-
-    @Override
-    public String toString() {
-        return "TaskToCreate{"
-            + "task=" + task
-            + ", group='" + group + '\''
-            + ", workingDaysAllowed='" + workingDaysAllowed + '\''
-            + ", name='" + name + '\''
-            + ", delayUntil='" + delayUntil + '\''
-            + '}';
-    }
 }
