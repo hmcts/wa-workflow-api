@@ -33,7 +33,7 @@ spring:
    allow-bean-definition-overriding: true
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_NAME:wa_case_event_handler}${POSTGRES_CONNECTION_OPTIONS:}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_NAME:wa_workflow_api}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:}
     properties:
@@ -41,7 +41,7 @@ spring:
   flyway:
     enabled: true
     baselineOnMigrate: true
-    schemas: ${POSTGRES_NAME:wa_case_event_handler}
+    schemas: ${POSTGRES_NAME:wa_workflow_api}
 
 security:
   anonymousPaths:
