@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.waworkflowapi.config.ServiceAuthProviderInterceptor;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static java.util.Collections.singletonMap;
 
