@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 import static java.util.Collections.singletonMap;
 
-@SuppressWarnings({"PMD.UseUnderscoresInNumericLiterals","PMD.PositionLiteralsFirstInComparisons","PMD.LinguisticNaming"})
+@SuppressWarnings({"PMD.UseUnderscoresInNumericLiterals", "PMD.PositionLiteralsFirstInComparisons", "PMD.LinguisticNaming"})
 @Service
 public class ExternalTaskWorker {
 
@@ -48,20 +48,11 @@ public class ExternalTaskWorker {
     }
 
     public void checkIdempotency(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        Boolean isDuplicate =  externalTask.getVariable("isDuplicate");
-        if (isDuplicate == null || isDuplicate) {
-            Map<String, Object> processVariables = singletonMap(
-                "isDuplicate",
-                false
-            );
-
-            LOGGER.info("Duplicate was hit.");
-
-            externalTaskService.complete(externalTask, processVariables);
-        } else {
-            externalTaskService.complete(externalTask);
-            LOGGER.info("Duplicate was true");
-
-        }
+        Map<String, Object> processVariables = singletonMap(
+            "isDuplicate",
+            false
+        );
+        externalTaskService.complete(externalTask, processVariables);
     }
+
 }
