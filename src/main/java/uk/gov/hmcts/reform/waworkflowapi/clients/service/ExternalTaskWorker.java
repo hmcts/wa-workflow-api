@@ -23,8 +23,6 @@ public class ExternalTaskWorker {
 
     private final AuthTokenGenerator authTokenGenerator;
 
-    private static final Logger LOGGER = Logger.getLogger(ExternalTaskWorker.class.getName());
-
     public ExternalTaskWorker(
         @Value("${camunda.url}") String camundaUrl,
         AuthTokenGenerator authTokenGenerator
