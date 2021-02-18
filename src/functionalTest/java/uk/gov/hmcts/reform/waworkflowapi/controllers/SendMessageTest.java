@@ -108,7 +108,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     .extract()
                     .path("[0].id");
 
-                taskIdResponse.set( taskId);
+                taskIdResponse.set(taskId);
 
                 return true;
             });
