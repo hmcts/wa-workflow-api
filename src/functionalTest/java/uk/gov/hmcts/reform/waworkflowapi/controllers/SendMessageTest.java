@@ -85,24 +85,35 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             .then()
             .statusCode(HttpStatus.NO_CONTENT_204);
 
-        waitSeconds(3);
+        AtomicReference<String> taskIdResponse = new AtomicReference<>();
+        await()
+            .ignoreExceptions()
+            .pollInterval(2, TimeUnit.SECONDS)
+            .atMost(10, TimeUnit.SECONDS)
+            .until(() -> {
 
-        String taskId = given()
-            .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
-            .contentType(APPLICATION_JSON_VALUE)
-            .baseUri(camundaUrl)
-            .basePath("/task")
-            .param("processVariables", "caseId_eq_" + caseId)
-            .when()
-            .get()
-            .prettyPeek()
-            .then()
-            .body("size()", is(1))
-            .body("[0].name", is("Process Application"))
-            .body("[0].formKey", is("processApplication"))
-            .extract()
-            .path("[0].id");
+                String taskId = given()
+                    .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
+                    .contentType(APPLICATION_JSON_VALUE)
+                    .baseUri(camundaUrl)
+                    .basePath("/task")
+                    .param("processVariables", "caseId_eq_" + caseId)
+                    .when()
+                    .get()
+                    .prettyPeek()
+                    .then()
+                    .body("size()", is(1))
+                    .body("[0].name", is("Process Application"))
+                    .body("[0].formKey", is("processApplication"))
+                    .extract()
+                    .path("[0].id");
 
+                taskIdResponse.set( taskId);
+
+                return true;
+            });
+
+        String taskId = taskIdResponse.get();
         given()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
