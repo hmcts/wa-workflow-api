@@ -297,7 +297,7 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
   compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.4'
 
-  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+  annotationProcessor 'org.projectlombok:lombok:1.18.18'
   compileOnly 'org.projectlombok:lombok:1.18.12'
 
   testImplementation libraries.junit5
