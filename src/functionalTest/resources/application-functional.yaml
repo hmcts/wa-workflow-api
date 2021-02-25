@@ -2,8 +2,7 @@ spring.flyway.enabled: false
 
 targets:
   instance: ${TEST_URL:http://localhost:8099}
-  aat-instance: http://wa-workflow-aat.service.core-compute-aat.internal
-
+  aat-instance: ${AAT_TEST_URL:http://localhost:8099}
 
 spring:
   datasource:
