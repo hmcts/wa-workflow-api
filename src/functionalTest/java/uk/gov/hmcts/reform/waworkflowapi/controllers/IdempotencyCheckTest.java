@@ -143,7 +143,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
-                    .baseUri(testUrl)
+                    .baseUri(aatTestUrl)
                     .basePath("/testing/idempotentKeys/search/findByIdempotencyKeyAndTenantId")
                     .params(
                         "idempotencyKey", idempotentKey,

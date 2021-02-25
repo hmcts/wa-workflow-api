@@ -30,6 +30,9 @@ public abstract class SpringBootFunctionalBaseTest {
     @Value("${targets.instance}")
     public String testUrl;
 
+    @Value("${targets.aat-instance}")
+    public String aatTestUrl;
+
     @Value("${camunda.url}")
     public String camundaUrl;
 
