@@ -27,7 +27,7 @@ public class IdempotencyTaskService {
     public void handleIdempotentIdProvidedScenario(ExternalTask externalTask,
                                                    ExternalTaskService externalTaskService,
                                                    IdempotentId idempotentId) {
-        log.info("check idempotency for idempotentId: {}", idempotentId);
+        log.info("checking idempotentId({}) is present in DB...", idempotentId);
         Optional<IdempotentKeys> idempotentRow = idempotentKeysRepository.findById(idempotentId);
 
         idempotentRow.ifPresentOrElse(
@@ -54,7 +54,7 @@ public class IdempotencyTaskService {
                                                  ExternalTaskService externalTaskService,
                                                  IdempotentKeys row) {
         log.info(
-            "idempotentId({}) already exists in the database.",
+            "Not saving idempotentId({}) because already exists in the database.",
             new IdempotentId(row.getIdempotencyKey(), row.getTenantId())
         );
         if (isSameProcessId(externalTask, row)) {
