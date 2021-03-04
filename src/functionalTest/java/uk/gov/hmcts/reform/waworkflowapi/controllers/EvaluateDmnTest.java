@@ -39,7 +39,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .body(new EvaluateDmnRequest(null))
             .baseUri(testUrl)
             .pathParam("key", WA_TASK_INITIATION_IA_ASYLUM)
-            .pathParam("tenant-id",TENANT_ID)
+            .pathParam("tenant-id", TENANT_ID)
             .basePath("/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate")
             .when()
             .post()
@@ -55,8 +55,8 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .contentType(APPLICATION_JSON_VALUE)
             .body(new EvaluateDmnRequest(mockVariables()))
             .baseUri(testUrl)
-            .pathParam("key",WA_TASK_INITIATION_IA_ASYLUM)
-            .pathParam("tenant-id",TENANT_ID)
+            .pathParam("key", WA_TASK_INITIATION_IA_ASYLUM)
+            .pathParam("tenant-id", TENANT_ID)
             .basePath("/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate")
             .when()
             .post()
@@ -80,8 +80,8 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .contentType(APPLICATION_JSON_VALUE)
             .body(new EvaluateDmnRequest(mockVariables()))
             .baseUri(testUrl)
-            .pathParam("key","non-existent")
-            .pathParam("tenant-id",TENANT_ID)
+            .pathParam("key", "non-existent")
+            .pathParam("tenant-id", TENANT_ID)
             .basePath("/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate")
             .when()
             .post()
@@ -91,8 +91,8 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     }
 
     private Map<String, DmnValue<?>> mockVariables() {
-        return Map.of("eventId",DmnValue.dmnStringValue("submitAppeal"),
-                      "postEventState",DmnValue.dmnStringValue(""));
+        return Map.of("eventId", DmnValue.dmnStringValue("submitAppeal"),
+            "postEventState", DmnValue.dmnStringValue(""));
     }
 
 }

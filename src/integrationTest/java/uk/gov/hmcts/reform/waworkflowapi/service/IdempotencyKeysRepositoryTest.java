@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentKeys;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotentKeysRepository;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -28,12 +28,12 @@ import static org.awaitility.Awaitility.await;
 @SpringBootTest
 @Slf4j
 @ActiveProfiles("integration")
-class IdempotentKeysRepositoryTest {
+class IdempotencyKeysRepositoryTest {
 
     public static final String EXPECTED_EXCEPTION = "org.springframework.orm.jpa.JpaSystemException";
     @Autowired
-    private IdempotentKeysRepository repository;
-    private IdempotentKeys idempotentKeysWithRandomId;
+    private IdempotencyKeysRepository repository;
+    private IdempotencyKeys idempotencyKeysWithRandomId;
     private IdempotentId randomIdempotentId;
 
     @BeforeEach
@@ -43,7 +43,7 @@ class IdempotentKeysRepositoryTest {
             "ia"
         );
 
-        idempotentKeysWithRandomId = new IdempotentKeys(
+        idempotencyKeysWithRandomId = new IdempotencyKeys(
             randomIdempotentId,
             UUID.randomUUID().toString(),
             LocalDateTime.now(),
@@ -53,7 +53,7 @@ class IdempotentKeysRepositoryTest {
 
     @Test
     void given_readQueryOnRow_then_anotherQueryOnSameRowThrowException() throws InterruptedException {
-        repository.save(idempotentKeysWithRandomId);
+        repository.save(idempotencyKeysWithRandomId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -85,7 +85,7 @@ class IdempotentKeysRepositoryTest {
         log.info("start read and write ops...");
 
         repository.findById(randomIdempotentId);
-        repository.save(new IdempotentKeys(
+        repository.save(new IdempotencyKeys(
             randomIdempotentId,
             "should not update because of lock",
             LocalDateTime.now(),

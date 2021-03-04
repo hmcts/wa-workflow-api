@@ -68,7 +68,7 @@ public abstract class SpringBootFunctionalBaseTest {
         String taskId,
         String group,
         String caseId,
-        String idempotentKey
+        String idempotencyKey
     ) {
         Map<String, DmnValue<?>> processVariables = new HashMap<>();
         processVariables.put("dueDate", DmnValue.dmnStringValue(dueDate));
@@ -78,7 +78,7 @@ public abstract class SpringBootFunctionalBaseTest {
         processVariables.put("caseType", DmnValue.dmnStringValue("asylum"));
         processVariables.put("taskId", DmnValue.dmnStringValue(taskId));
         processVariables.put("caseId", DmnValue.dmnStringValue(caseId));
-        processVariables.put("idempotentKey", DmnValue.dmnStringValue(idempotentKey));
+        processVariables.put("idempotencyKey", DmnValue.dmnStringValue(idempotencyKey));
 
         String delayUntilTimer = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         processVariables.put("delayUntil", DmnValue.dmnStringValue(delayUntilTimer));

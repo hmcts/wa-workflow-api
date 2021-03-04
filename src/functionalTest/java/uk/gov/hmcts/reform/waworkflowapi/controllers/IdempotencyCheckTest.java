@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentKeys;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotentKeysRepository;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
@@ -38,7 +38,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private AuthorizationHeadersProvider authorizationHeadersProvider;
 
     @Autowired
-    private IdempotentKeysRepository idempotentKeysRepository;
+    private IdempotencyKeysRepository idempotencyKeysRepository;
 
     private String serviceAuthorizationToken;
     private String caseId;
@@ -56,25 +56,25 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     @Test
     public void transition_creates_a_task_and_goes_through_external_task() {
         String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String idempotentKey = UUID.randomUUID().toString();
+        String idempotencyKey = UUID.randomUUID().toString();
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             dueDate,
             "Provide Respondent Evidence",
             "provideRespondentEvidence",
             "external",
             caseId,
-            idempotentKey
+            idempotencyKey
         );
 
         sendMessage(processVariables);
         String taskId = assertTaskIsCreated();
         assertTaskHasExpectedVariableValues(taskId);
         // fixme: uncomment below lines once the idempotencyTaskWorker is released
-        //        assertNewIdempotentKeyIsAddedInDb(idempotentKey);
+        //        assertNewIdempotencyKeyIsAddedInDb(idempotencyKey);
         cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
 
         //        sendMessage(processVariables); //We send another message for the same idempotencyKey
-        //        List<String> processIds = getProcessIdsForGivenIdempotentKey(idempotentKey);
+        //        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         //        assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(processIds);
     }
 
@@ -84,7 +84,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .count()).isEqualTo(1);
     }
 
-    private List<String> getProcessIdsForGivenIdempotentKey(String idempotentKey) {
+    private List<String> getProcessIdsForGivenIdempotencyKey(String idempotencyKey) {
         AtomicReference<List<String>> processIdsResponse = new AtomicReference<>();
         await()
             .ignoreExceptions()
@@ -97,7 +97,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
                     .basePath("/history/process-instance")
-                    .param("variables", "idempotentKey_eq_" + idempotentKey)
+                    .param("variables", "idempotencyKey_eq_" + idempotencyKey)
                     .when()
                     .get()
                     .prettyPeek()
@@ -112,8 +112,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         return processIdsResponse.get();
     }
 
-    private void assertNewIdempotentKeyIsAddedInDb(String idempotentKey) {
-        Optional<IdempotentKeys> savedEntity = idempotentKeysRepository.findById(new IdempotentId(idempotentKey, "ia"));
+    private void assertNewIdempotencyKeyIsAddedInDb(String idempotencyKey) {
+        Optional<IdempotencyKeys> savedEntity = idempotencyKeysRepository.findById(new IdempotentId(idempotencyKey, "ia"));
         assertThat(savedEntity.isPresent()).isTrue();
     }
 
