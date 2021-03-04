@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.controllers;
 
+import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
@@ -67,15 +67,15 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         );
 
         sendMessage(processVariables);
+
         String taskId = assertTaskIsCreated();
-        assertTaskHasExpectedVariableValues(taskId);
-        // fixme: uncomment below lines once the idempotencyTaskWorker is released
-        //        assertNewIdempotencyKeyIsAddedInDb(idempotencyKey);
+        assertNewIdempotencyKeyIsAddedInDb(idempotencyKey);
+
         cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
 
-        //        sendMessage(processVariables); //We send another message for the same idempotencyKey
-        //        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
-        //        assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(processIds);
+        sendMessage(processVariables); //We send another message for the same idempotencyKey
+        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
+        assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(processIds);
     }
 
     private void assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(List<String> processIds) {
@@ -88,25 +88,30 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         AtomicReference<List<String>> processIdsResponse = new AtomicReference<>();
         await()
             .ignoreExceptions()
-            .pollInterval(2, TimeUnit.SECONDS)
-            .atMost(20, TimeUnit.MINUTES)
+            .pollInterval(1, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.MINUTES)
             .until(() -> {
-                List<String> ids;
-                ids = given()
+
+                Response result = given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
                     .basePath("/history/process-instance")
                     .param("variables", "idempotencyKey_eq_" + idempotencyKey)
                     .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
-                    .extract().body().path("id");
+                    .get();
 
-                processIdsResponse.set(ids);
+                //number of messages sent, equivalent to processes created
+                result.then().assertThat()
+                    .statusCode(HttpStatus.OK_200)
+                    .contentType(APPLICATION_JSON_VALUE)
+                    .body("size()", is(2));
 
-                return ids.size() == 2; //number of messages sent, equivalent to processes created
+                processIdsResponse.set(
+                    result.then()
+                        .extract().body().path("id")
+                );
+                return true;
             });
 
         return processIdsResponse.get();
@@ -117,57 +122,37 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         assertThat(savedEntity.isPresent()).isTrue();
     }
 
-    private void assertTaskHasExpectedVariableValues(String taskId) {
-        await()
-            .ignoreExceptions()
-            .and()
-            .pollInterval(5, TimeUnit.SECONDS)
-            .atMost(15, TimeUnit.SECONDS)
-            .until(() -> {
-
-                String groupId = given()
-                    .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .baseUri(camundaUrl)
-                    .basePath("/task/" + taskId + "/identity-links?type=candidate")
-                    .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
-                    .extract()
-                    .path("[0].groupId");
-
-                return groupId.equals("external");
-            });
-    }
-
     private String assertTaskIsCreated() {
         AtomicReference<String> response = new AtomicReference<>();
         await()
             .ignoreExceptions()
-            .pollInterval(5, TimeUnit.SECONDS)
-            .atMost(15, TimeUnit.SECONDS)
+            .pollInterval(1, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
             .until(() -> {
 
-                String taskId = given()
+                Response result = given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
                     .basePath("/task")
                     .param("processVariables", "caseId_eq_" + caseId)
                     .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
+                    .get();
+
+                result.then().assertThat()
+                    .statusCode(HttpStatus.OK_200)
+                    .contentType(APPLICATION_JSON_VALUE)
                     .body("[0].name", is("Provide Respondent Evidence"))
-                    .body("[0].formKey", is("provideRespondentEvidence"))
-                    .extract()
-                    .path("[0].id");
+                    .body("[0].formKey", is("provideRespondentEvidence"));
 
-                response.set(taskId);
-
-                return StringUtils.isNotBlank(taskId);
+                response.set(
+                    result.then()
+                        .extract()
+                        .path("[0].id")
+                );
+                return true;
             });
+
         return response.get();
     }
 
