@@ -86,7 +86,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                 "createTaskMessage",
                 processVariables,
                 null
-            )).log().body()
+            ))
             .baseUri(testUrl)
             .basePath("/workflow/message")
             .when()
