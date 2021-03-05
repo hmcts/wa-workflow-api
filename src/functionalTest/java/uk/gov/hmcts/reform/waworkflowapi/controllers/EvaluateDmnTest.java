@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.controllers;
 
+import io.restassured.response.Response;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import static net.serenitybdd.rest.SerenityRest.given;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
@@ -49,7 +51,8 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void should_evaluate_and_return_dmn_results() {
-        given()
+
+        Response result = given()
             .relaxedHTTPSValidation()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
@@ -59,9 +62,11 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .pathParam("tenant-id", TENANT_ID)
             .basePath("/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate")
             .when()
-            .post()
-            .then()
-            .statusCode(HttpStatus.OK_200)
+            .post();
+
+        result.prettyPrint();
+
+        result.then().assertThat()
             .body("results[0].size()", equalTo(4))
             .body("results[0].name.value", equalTo("Process Application"))
             .body("results[0].workingDaysAllowed.value", equalTo(2))
