@@ -96,7 +96,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     private Map<String, DmnValue<?>> mockVariables() {
         return Map.of("eventId", DmnValue.dmnStringValue("submitAppeal"),
-            "postEventState", DmnValue.dmnStringValue(""));
+            "postEventState", DmnValue.dmnStringValue("appealSubmitted"));
     }
 
 }
