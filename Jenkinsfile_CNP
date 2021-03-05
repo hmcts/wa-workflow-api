@@ -10,7 +10,7 @@ def component = "workflow-api"
 def secrets = [
   'wa-${env}' : [
       secret('workflow-api-POSTGRES-PASS', 'POSTGRES_PASSWORD'),
-      secret('workflow-api-POSTGRES-USEr', 'POSTGRES_USERNAME'),
+      secret('workflow-api-POSTGRES-USER', 'POSTGRES_USERNAME'),
 
   ],
   's2s-${env}' : [
