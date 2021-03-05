@@ -31,9 +31,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
 
-    @Autowired
-    private IdempotencyKeysRepository idempotencyKeysRepository;
-
     private String serviceAuthorizationToken;
     private String caseId;
 
@@ -149,7 +146,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             UUID.randomUUID().toString()
         );
 
-        given()
+        Response request = given()
             .relaxedHTTPSValidation()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
@@ -161,9 +158,9 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             .baseUri(testUrl)
             .basePath("/workflow/message")
             .when()
-            .post()
-            .then()
-            .log().body()
+            .post();
+
+        request.then()
             .statusCode(HttpStatus.NO_CONTENT_204);
 
         AtomicReference<String> taskIdResponse = new AtomicReference<>();
