@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
@@ -14,6 +15,8 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.Idempotent
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,31 +53,29 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 .getValue(SERVICE_AUTHORIZATION);
     }
 
-    // FIXME: Uncomment once migration has been applied
-    //@Test
-    //public void transition_creates_a_task_and_goes_through_external_task() {
-    //    String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-    //    String idempotencyKey = UUID.randomUUID().toString();
-    //    Map<String, DmnValue<?>> processVariables = mockProcessVariables(
-    //        dueDate,
-    //        "Provide Respondent Evidence",
-    //        "provideRespondentEvidence",
-    //        "external",
-    //        caseId,
-    //        idempotencyKey
-    //    );
-    //
-    //    sendMessage(processVariables);
-    //
-    //    String taskId = assertTaskIsCreated();
-    //    assertNewIdempotencyKeyIsAddedInDb(idempotencyKey);
-    //
-    //    cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
-    //
-    //    sendMessage(processVariables); //We send another message for the same idempotencyKey
-    //    List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
-    //    assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(processIds);
-    //}
+    @Test
+    public void transition_creates_a_task_and_goes_through_external_task() {
+        String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String idempotentKey = UUID.randomUUID().toString();
+        Map<String, DmnValue<?>> processVariables = mockProcessVariables(
+            dueDate,
+            "Provide Respondent Evidence",
+            "provideRespondentEvidence",
+            "external",
+            caseId,
+            idempotentKey
+        );
+
+        sendMessage(processVariables);
+        String taskId = assertTaskIsCreated();
+        // fixme: uncomment below lines once the idempotencyTaskWorker is released
+        //        assertNewIdempotentKeyIsAddedInDb(idempotentKey);
+        cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
+
+        //        sendMessage(processVariables); //We send another message for the same idempotencyKey
+        //        List<String> processIds = getProcessIdsForGivenIdempotentKey(idempotentKey);
+        //        assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(processIds);
+    }
 
     private void assertThereIsOnlyOneProcessWithDuplicateEqualToTrue(List<String> processIds) {
         Assertions.assertThat((int) processIds.stream()
