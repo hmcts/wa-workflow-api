@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest.FT_STANDARD_TIMEOUT_SECS;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -63,7 +64,7 @@ class IdempotencyKeysRepositoryTest {
         await()
             .ignoreExceptions()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(30, TimeUnit.SECONDS)
+            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
 
                 ExecutionException exception = Assertions.assertThrows(ExecutionException.class, futureException::get);
