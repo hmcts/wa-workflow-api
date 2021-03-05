@@ -63,7 +63,7 @@ class IdempotencyKeysRepositoryTest {
         await()
             .ignoreExceptions()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(10, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
             .until(() -> {
 
                 ExecutionException exception = Assertions.assertThrows(ExecutionException.class, futureException::get);
