@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.controllers;
 
+import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -157,12 +157,13 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                 "createTaskMessage",
                 processVariables,
                 null
-            )).log().body()
+            ))
             .baseUri(testUrl)
             .basePath("/workflow/message")
             .when()
             .post()
             .then()
+            .log().body()
             .statusCode(HttpStatus.NO_CONTENT_204);
 
         AtomicReference<String> taskIdResponse = new AtomicReference<>();
@@ -171,24 +172,28 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             .pollInterval(1, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
-                String taskId = given()
+
+                Response result = given()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
                     .basePath("/task")
                     .param("processVariables", "caseId_eq_" + caseId)
                     .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
+                    .get();
+
+                result.then().assertThat()
                     .body("size()", is(1))
                     .body("[0].name", is("Provide Respondent Evidence"))
-                    .body("[0].formKey", is("provideRespondentEvidence"))
-                    .extract()
-                    .path("[0].id");
+                    .body("[0].formKey", is("provideRespondentEvidence"));
 
-                taskIdResponse.set(taskId);
-                return StringUtils.isNotBlank(taskId);
+                taskIdResponse.set(
+                    result.then()
+                        .extract()
+                        .path("[0].id")
+                );
+
+                return true;
             });
 
         String taskId = taskIdResponse.get();
