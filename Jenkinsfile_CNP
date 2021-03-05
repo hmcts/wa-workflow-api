@@ -9,6 +9,7 @@ def component = "workflow-api"
 
 def secrets = [
   'wa-${env}' : [
+
   ],
   's2s-${env}' : [
     secret('microservicekey-wa-workflow-api', 'S2S_SECRET_WORKFLOW_API'),
@@ -37,6 +38,7 @@ withPipeline(type, product, component) {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/**/*'
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/integration/**/*'
   }
+
 
   after('functionalTest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
