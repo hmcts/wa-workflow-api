@@ -87,7 +87,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         await()
             .ignoreExceptions()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(30, TimeUnit.MINUTES)
+            .atMost(30, TimeUnit.SECONDS)
             .until(() -> {
 
                 Response result = given()
