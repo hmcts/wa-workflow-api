@@ -35,13 +35,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private String serviceAuthorizationToken;
     private String caseId;
-    private String idempotentKey;
+    private String idempotencyKey;
     private Map<String, DmnValue<?>> processVariables;
 
     @Before
     public void setUp() {
         caseId = UUID.randomUUID().toString();
-        idempotentKey = UUID.randomUUID().toString();
+        idempotencyKey = UUID.randomUUID().toString();
 
         serviceAuthorizationToken =
             authorizationHeadersProvider
@@ -49,7 +49,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 .getValue(SERVICE_AUTHORIZATION);
 
 
-        processVariables = createProcessVariables(idempotentKey, "ia");
+        processVariables = createProcessVariables(idempotencyKey, "ia");
     }
 
     @Test
@@ -57,17 +57,17 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         sendMessage(processVariables);
         String taskId = assertTaskIsCreated(caseId);
         assertTaskHasExpectedVariableValues(taskId);
-        assertNewIdempotentKeyIsAddedInDb(idempotentKey, "ia");
+        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
-        processVariables = createProcessVariables(idempotentKey, "wa");
+        processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
         taskId = assertTaskIsCreated(caseId);
         assertTaskHasExpectedVariableValues(taskId);
-        assertNewIdempotentKeyIsAddedInDb(idempotentKey, "wa");
+        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "wa");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
-        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotentKey);
+        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 0);
     }
 
@@ -77,12 +77,12 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
         String taskId = assertTaskIsCreated(caseId);
         assertTaskHasExpectedVariableValues(taskId);
-        assertNewIdempotentKeyIsAddedInDb(idempotentKey, "ia");
+        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
 
         cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
-        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotentKey);
+        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 1);
     }
 
@@ -138,7 +138,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         );
     }
 
-    private void assertNewIdempotentKeyIsAddedInDb(String idempotentKey, String jurisdiction) {
+    private void assertNewIdempotentKeyIsAddedInDb(String idempotencyKey, String jurisdiction) {
         await()
             .ignoreExceptions()
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
@@ -150,14 +150,14 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     .baseUri(aatTestUrl)
                     .basePath("/testing/idempotencyKeys/search/findByIdempotencyKeyAndTenantId")
                     .params(
-                        "idempotencyKey", idempotentKey,
+                        "idempotencyKey", idempotencyKey,
                         "tenantId", jurisdiction
                     )
                     .when()
                     .get()
                     .prettyPeek()
                     .then()
-                    .body("idempotencyKey", is(idempotentKey))
+                    .body("idempotencyKey", is(idempotencyKey))
                     .body("tenantId", is(jurisdiction));
 
                 return true;
