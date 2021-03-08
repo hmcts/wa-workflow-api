@@ -25,7 +25,7 @@ public abstract class SpringBootFunctionalBaseTest {
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
     public static final String WA_TASK_INITIATION_IA_ASYLUM = "wa-task-initiation-ia-asylum";
     public static final String TENANT_ID = "ia";
-    public static final int FT_STANDARD_TIMEOUT_SECS = 10;
+    public static final int FT_STANDARD_TIMEOUT_SECS = 30;
 
     @Value("${targets.instance}")
     public String testUrl;
@@ -71,7 +71,7 @@ public abstract class SpringBootFunctionalBaseTest {
         String taskId,
         String group,
         String caseId,
-        String idempotentKey,
+        String idempotencyKey,
         String jurisdiction
     ) {
         Map<String, DmnValue<?>> processVariables = new HashMap<>();
@@ -82,7 +82,7 @@ public abstract class SpringBootFunctionalBaseTest {
         processVariables.put("caseType", DmnValue.dmnStringValue("asylum"));
         processVariables.put("taskId", DmnValue.dmnStringValue(taskId));
         processVariables.put("caseId", DmnValue.dmnStringValue(caseId));
-        processVariables.put("idempotentKey", DmnValue.dmnStringValue(idempotentKey));
+        processVariables.put("idempotencyKey", DmnValue.dmnStringValue(idempotencyKey));
 
         String delayUntilTimer = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         processVariables.put("delayUntil", DmnValue.dmnStringValue(delayUntilTimer));

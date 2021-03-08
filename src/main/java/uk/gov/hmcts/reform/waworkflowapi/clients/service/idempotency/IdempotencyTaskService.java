@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,17 +18,17 @@ public class IdempotencyTaskService {
 
     public static final String IS_DUPLICATE = "isDuplicate";
 
-    private final IdempotentKeysRepository idempotentKeysRepository;
+    private final IdempotencyKeysRepository idempotencyKeysRepository;
 
-    public IdempotencyTaskService(IdempotentKeysRepository idempotentKeysRepository) {
-        this.idempotentKeysRepository = idempotentKeysRepository;
+    public IdempotencyTaskService(IdempotencyKeysRepository idempotencyKeysRepository) {
+        this.idempotencyKeysRepository = idempotencyKeysRepository;
     }
 
     public void handleIdempotentIdProvidedScenario(ExternalTask externalTask,
                                                    ExternalTaskService externalTaskService,
                                                    IdempotentId idempotentId) {
         log.info("checking idempotentId({}) is present in DB...", idempotentId);
-        Optional<IdempotentKeys> idempotentRow = idempotentKeysRepository.findById(idempotentId);
+        Optional<IdempotencyKeys> idempotentRow = idempotencyKeysRepository.findById(idempotentId);
 
         idempotentRow.ifPresentOrElse(
             (row) -> handleIdempotentIdIsPresentInDb(externalTask, externalTaskService, row),
@@ -40,7 +40,7 @@ public class IdempotencyTaskService {
                                                     ExternalTaskService externalTaskService,
                                                     IdempotentId idempotentId) {
         log.info("Saving idempotentId({}) in the DB because is not present", idempotentId);
-        idempotentKeysRepository.save(new IdempotentKeys(
+        idempotencyKeysRepository.save(new IdempotencyKeys(
             idempotentId.getIdempotencyKey(),
             idempotentId.getTenantId(),
             externalTask.getProcessInstanceId(),
@@ -52,7 +52,7 @@ public class IdempotencyTaskService {
 
     private void handleIdempotentIdIsPresentInDb(ExternalTask externalTask,
                                                  ExternalTaskService externalTaskService,
-                                                 IdempotentKeys row) {
+                                                 IdempotencyKeys row) {
         log.info(
             "Not saving idempotentId({}) because already exists in the database.",
             new IdempotentId(row.getIdempotencyKey(), row.getTenantId())
@@ -64,7 +64,7 @@ public class IdempotencyTaskService {
         }
     }
 
-    private boolean isSameProcessId(ExternalTask externalTask, IdempotentKeys row) {
+    private boolean isSameProcessId(ExternalTask externalTask, IdempotencyKeys row) {
         return externalTask.getProcessInstanceId().equals(row.getProcessId());
     }
 

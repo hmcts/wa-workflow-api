@@ -11,11 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentKeys;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.WarningTaskWorkerHandler;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyTaskWorkerHandler;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotentKeysRepository;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.ExternalTaskWorker;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,25 +26,24 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest.FT_STANDARD_TIMEOUT_SECS;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Slf4j
 @ActiveProfiles("integration")
 @Disabled("It is not stable enough. We want to keep it for when we have to test or debug DB lock scenarios locally.")
-class IdempotentKeysRepositoryTest {
+class IdempotencyKeysRepositoryTest {
 
     public static final String EXPECTED_EXCEPTION = "org.springframework.orm.jpa.JpaSystemException";
     @Autowired
-    private IdempotentKeysRepository repository;
-    private IdempotentKeys idempotentKeysWithRandomId;
+    private IdempotencyKeysRepository repository;
+    private IdempotencyKeys idempotencyKeysWithRandomId;
     private IdempotentId randomIdempotentId;
 
     //because of the workers polling camunda at start-up
     @MockBean
-    private IdempotencyTaskWorkerHandler idempotencyTaskWorkerHandler;
-    @MockBean
-    private WarningTaskWorkerHandler warningTaskWorkerHandler;
+    private ExternalTaskWorker externalTaskWorker;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +52,7 @@ class IdempotentKeysRepositoryTest {
             "ia"
         );
 
-        idempotentKeysWithRandomId = new IdempotentKeys(
+        idempotencyKeysWithRandomId = new IdempotencyKeys(
             randomIdempotentId.getIdempotencyKey(),
             randomIdempotentId.getTenantId(),
             UUID.randomUUID().toString(),
@@ -65,7 +63,7 @@ class IdempotentKeysRepositoryTest {
 
     @Test
     void given_readQueryOnRow_then_anotherQueryOnSameRowThrowException() throws InterruptedException {
-        repository.save(idempotentKeysWithRandomId);
+        repository.save(idempotencyKeysWithRandomId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -75,7 +73,7 @@ class IdempotentKeysRepositoryTest {
         await()
             .ignoreExceptions()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(15, TimeUnit.SECONDS)
+            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
 
                 ExecutionException exception = Assertions.assertThrows(ExecutionException.class, futureException::get);
@@ -87,7 +85,7 @@ class IdempotentKeysRepositoryTest {
 
         executorService.shutdown();
         //noinspection ResultOfMethodCallIgnored
-        executorService.awaitTermination(3, TimeUnit.MINUTES);
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
     }
 
     private void writer() {
@@ -97,7 +95,7 @@ class IdempotentKeysRepositoryTest {
         log.info("start read and write ops...");
 
         repository.findById(randomIdempotentId);
-        repository.save(new IdempotentKeys(
+        repository.save(new IdempotencyKeys(
             randomIdempotentId.getIdempotencyKey(),
             randomIdempotentId.getTenantId(),
             "should not update because of lock",

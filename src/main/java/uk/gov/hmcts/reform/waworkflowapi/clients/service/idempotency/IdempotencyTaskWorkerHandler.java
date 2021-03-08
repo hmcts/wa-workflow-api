@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
 
 import java.util.Optional;
 
@@ -40,11 +40,11 @@ public class IdempotencyTaskWorkerHandler {
     }
 
     private Optional<IdempotentId> getIdempotentId(ExternalTask externalTask) {
-        String idempotentKey = externalTask.getVariable("idempotentKey");
-        if (StringUtils.isNotBlank(idempotentKey)) {
+        String idempotencyKey = externalTask.getVariable("idempotencyKey");
+        if (StringUtils.isNotBlank(idempotencyKey)) {
             String tenantId = externalTask.getVariable("jurisdiction");
-            log.info("build idempotentId with key({}) and tenantId({})...", idempotentKey, tenantId);
-            return Optional.of(new IdempotentId(idempotentKey, tenantId));
+            log.info("build idempotentId with key({}) and tenantId({})...", idempotencyKey, tenantId);
+            return Optional.of(new IdempotentId(idempotencyKey, tenantId));
         }
         log.info("idempotentId id blank");
         return Optional.empty();

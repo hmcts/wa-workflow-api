@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey;
+package uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,7 +13,7 @@ import javax.persistence.IdClass;
 @ToString
 @EqualsAndHashCode
 @IdClass(IdempotentId.class)
-public class IdempotentKeys implements Serializable {
+public class IdempotencyKeys implements Serializable {
 
     private static final long serialVersionUID = -7833073837420947484L;
 
@@ -25,15 +25,15 @@ public class IdempotentKeys implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdatedAt;
 
-    public IdempotentKeys() {
+    public IdempotencyKeys() {
         //needed for spring boot data JPA
     }
 
-    public IdempotentKeys(String idempotencyKey,
-                          String tenantId,
-                          String processId,
-                          LocalDateTime createdAt,
-                          LocalDateTime lastUpdatedAt) {
+    public IdempotencyKeys(String idempotencyKey,
+                           String tenantId,
+                           String processId,
+                           LocalDateTime createdAt,
+                           LocalDateTime lastUpdatedAt) {
         this.idempotencyKey = idempotencyKey;
         this.tenantId = tenantId;
         this.processId = processId;

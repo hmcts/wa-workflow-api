@@ -8,33 +8,33 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotentkey.IdempotentKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
 
 import java.util.Optional;
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
 
 @Repository
-@RepositoryRestResource(collectionResourceRel = "idempotentKeys", path = "idempotentKeys")
-public interface IdempotentKeysRepository extends CrudRepository<IdempotentKeys, IdempotentId> {
+@RepositoryRestResource(collectionResourceRel = "idempotencyKeys", path = "idempotencyKeys")
+public interface IdempotencyKeysRepository extends CrudRepository<IdempotencyKeys, IdempotentId> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
     @NonNull
     @Transactional
-    Optional<IdempotentKeys> findByIdempotencyKeyAndTenantId(@NonNull String idempotencyKey,
-                                                             @NonNull String tenantId);
+    Optional<IdempotencyKeys> findByIdempotencyKeyAndTenantId(@NonNull String idempotencyKey,
+                                                              @NonNull String tenantId);
 
     @Override
     @RestResource(exported = false)
     @NonNull
-    <S extends IdempotentKeys> S save(@NonNull S entity);
+    <S extends IdempotencyKeys> S save(@NonNull S entity);
 
     @Override
     @RestResource(exported = false)
     @NonNull
-    <S extends IdempotentKeys> Iterable<S> saveAll(@NonNull Iterable<S> entities);
+    <S extends IdempotencyKeys> Iterable<S> saveAll(@NonNull Iterable<S> entities);
 
     @Override
     @RestResource(exported = false)
@@ -42,11 +42,11 @@ public interface IdempotentKeysRepository extends CrudRepository<IdempotentKeys,
 
     @Override
     @RestResource(exported = false)
-    void delete(@NonNull IdempotentKeys entity);
+    void delete(@NonNull IdempotencyKeys entity);
 
     @Override
     @RestResource(exported = false)
-    void deleteAll(@NonNull Iterable<? extends IdempotentKeys> entities);
+    void deleteAll(@NonNull Iterable<? extends IdempotencyKeys> entities);
 
     @Override
     @RestResource(exported = false)
