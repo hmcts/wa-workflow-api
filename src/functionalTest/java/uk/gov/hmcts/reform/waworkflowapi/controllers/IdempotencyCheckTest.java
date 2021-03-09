@@ -56,14 +56,12 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
         sendMessage(processVariables);
         String taskId = assertTaskIsCreated(caseId);
-        assertTaskHasExpectedVariableValues(taskId);
         assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
         taskId = assertTaskIsCreated(caseId);
-        assertTaskHasExpectedVariableValues(taskId);
         assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "wa");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
@@ -76,9 +74,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         sendMessage(processVariables);
 
         String taskId = assertTaskIsCreated(caseId);
-        assertTaskHasExpectedVariableValues(taskId);
         assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
-
         cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
@@ -145,6 +141,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
                 given()
+                    .log().method().log().uri()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(aatTestUrl)
@@ -155,8 +152,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                     .when()
                     .get()
-                    .prettyPeek()
                     .then()
+                    .log().status().log().body(true)
                     .body("idempotencyKey", is(idempotencyKey))
                     .body("tenantId", is(jurisdiction));
 
@@ -196,6 +193,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .until(() -> {
 
                 Response result = given()
+                    .log().method().log().uri()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(camundaUrl)
@@ -204,7 +202,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     .when()
                     .get();
 
-                result.then().assertThat()
+                result
+                    .then()
+                    .log().status().log().body(true)
+                    .assertThat()
                     .statusCode(HttpStatus.OK_200)
                     .contentType(APPLICATION_JSON_VALUE)
                     .body("[0].name", is("Provide Respondent Evidence"))
@@ -224,6 +225,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private void sendMessage(Map<String, DmnValue<?>> processVariables) {
 
         given()
+            .log().method().log().uri().log().body(true)
             .relaxedHTTPSValidation()
             .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
             .contentType(APPLICATION_JSON_VALUE)
@@ -231,12 +233,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 "createTaskMessage",
                 processVariables,
                 null
-            )).log().body()
+            ))
             .baseUri(testUrl)
             .basePath("/workflow/message")
             .when()
             .post()
             .then()
+            .log().status()
             .statusCode(HttpStatus.NO_CONTENT_204);
     }
 

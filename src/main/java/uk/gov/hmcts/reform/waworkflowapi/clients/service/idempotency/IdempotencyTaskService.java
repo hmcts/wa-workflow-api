@@ -27,7 +27,7 @@ public class IdempotencyTaskService {
     public void handleIdempotentIdProvidedScenario(ExternalTask externalTask,
                                                    ExternalTaskService externalTaskService,
                                                    IdempotentId idempotentId) {
-        log.info("checking idempotentId({}) is present in DB...", idempotentId);
+        log.info("checking if idempotentId({}) is present in DB...", idempotentId);
         Optional<IdempotencyKeys> idempotentRow = idempotencyKeysRepository.findById(idempotentId);
 
         idempotentRow.ifPresentOrElse(
