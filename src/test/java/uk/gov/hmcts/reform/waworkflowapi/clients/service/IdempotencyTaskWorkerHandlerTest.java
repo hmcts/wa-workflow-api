@@ -32,7 +32,7 @@ class IdempotencyTaskWorkerHandlerTest {
     private ExternalTaskService externalTaskService;
 
     @Test
-    void given_idempotencyKey_is_provided_then_handleIdempotencyProvidedScenario_is_called() {
+    void given_idempotencyId_is_provided_then_handleIdempotencyProvidedScenario_is_called() {
         var idempotencyKey = "some idempotencyKey";
         when(externalTask.getVariable("idempotencyKey")).thenReturn(idempotencyKey);
 

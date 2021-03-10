@@ -3,7 +3,7 @@ spring.flyway.enabled: false
 spring:
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:wa_workflow_api;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=0
+    url: jdbc:h2:mem:wa_workflow_api;MODE=PostgreSQL
     username: sa
     password: password
     platform: h2
@@ -11,7 +11,3 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       default_schema: ${POSTGRES_NAME:wa_workflow_api}
-
-
-
-
