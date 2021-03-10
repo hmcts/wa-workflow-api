@@ -1,13 +1,19 @@
-spring.flyway.enabled: false
+logging:
+  level:
+    org.springframework:
+      dao: debug
+      transaction: debug
+      jdbc.core.JdbcTemplate: debug
+    org.hibernate:
+      SQL: debug
+      type.descriptor.sql.BasicBinder: trace
+      engine: debug
+    uk.gov.hmcts.reform: debug
 
-spring:
-  datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:wa_workflow_api;MODE=PostgreSQL
-    username: sa
-    password: password
-    platform: h2
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      default_schema: ${POSTGRES_NAME:wa_workflow_api}
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+
+spring.jackson.serialization.indent_output: true

@@ -9,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.ExternalTaskWorker;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -30,10 +35,31 @@ import static org.awaitility.Awaitility.await;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Slf4j
+@Testcontainers
 @ActiveProfiles("integration")
 class IdempotencyKeysRepositoryTest {
 
     public static final String EXPECTED_EXCEPTION = "org.springframework.dao.PessimisticLockingFailureException";
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:11"))
+        .withDatabaseName("wa_workflow_api")
+        .withUsername("postgres")
+        .withPassword("pass");
+
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add(
+            "spring.datasource.url",
+            () -> String.format(
+                "jdbc:postgresql://localhost:%d/%s",
+                postgres.getFirstMappedPort(),
+                postgres.getDatabaseName()
+            )
+        );
+        registry.add("spring.datasource.username", () -> postgres.getUsername());
+        registry.add("spring.datasource.password", () -> postgres.getPassword());
+    }
 
     @Autowired
     private IdempotencyKeysRepository repository;
@@ -61,35 +87,22 @@ class IdempotencyKeysRepositoryTest {
     }
 
     @Test
-    void given_save_query_then_it_saves_successfully() {
-        repository.save(idempotencyKeysWithRandomId);
-
-        Optional<IdempotencyKeys> actualIdempotencyKeys = repository.findByIdempotencyKeyAndTenantId(
-            randomIdempotentId.getIdempotencyKey(),
-            randomIdempotentId.getTenantId()
-        );
-
-        assertThat(actualIdempotencyKeys.isPresent()).isTrue();
-        IdempotencyKeys presentActualIdempotencyKeys = actualIdempotencyKeys.get();
-        assertThat(presentActualIdempotencyKeys).isEqualTo(idempotencyKeysWithRandomId);
-    }
-
-    @Test
     void given_readQueryOnRow_then_anotherQueryOnSameRowThrowException() throws InterruptedException {
+        log.info("executing test with idempotencyKeysWithRandomId({})", idempotencyKeysWithRandomId.toString());
         repository.save(idempotencyKeysWithRandomId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        Future<?> futureException = executorService.submit(this::reader1);
-        executorService.execute(this::reader2);
+        executorService.execute(this::reader1);
+        Future<?> futureException = executorService.submit(this::reader2);
 
         await()
             .ignoreExceptions()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(15, TimeUnit.SECONDS)
+            .atMost(5, TimeUnit.SECONDS)
             .until(() -> {
-
                 ExecutionException exception = Assertions.assertThrows(ExecutionException.class, futureException::get);
+                log.info(exception.toString());
                 assertThat(exception.getMessage())
                     .startsWith(EXPECTED_EXCEPTION);
 
@@ -98,7 +111,7 @@ class IdempotencyKeysRepositoryTest {
 
         executorService.shutdown();
         //noinspection ResultOfMethodCallIgnored
-        executorService.awaitTermination(20, TimeUnit.SECONDS);
+        executorService.awaitTermination(7, TimeUnit.SECONDS);
     }
 
     private void reader2() {
