@@ -51,11 +51,14 @@ class IdempotencyTaskWorkerHandlerTest {
     @SuppressWarnings("checkstyle:indentation")
     @ParameterizedTest
     @CsvSource(value = {
-        "null",
-        "''"
+        "null, some tenantId",
+        "'', some tenantId",
+        "some idempotencyKey, null",
+        "some idempotencyKey, ''"
     }, nullValues = {"null"})
-    void given_idempotencyKey_is_not_provided_then_set_isDuplicate_to_false(String idempotencyKey) {
+    void given_idempotencyKey_is_not_provided_then_set_isDuplicate_to_false(String idempotencyKey, String tenantId) {
         when(externalTask.getVariable("idempotencyKey")).thenReturn(idempotencyKey);
+        when(externalTask.getVariable("tenantId")).thenReturn(tenantId);
 
         idempotencyTaskWorkerHandler.checkIdempotency(externalTask, externalTaskService);
 
