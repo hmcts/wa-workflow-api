@@ -57,7 +57,7 @@ class IdempotencyTaskWorkerHandlerTest {
         when(externalTask.getVariable("idempotencyKey")).thenReturn(idempotencyKey);
 
         String tenantId = "some tenant id";
-        when(externalTask.getVariable("tenantId")).thenReturn(tenantId);
+        when(externalTask.getVariable("jurisdiction")).thenReturn(tenantId);
 
         idempotencyTaskWorkerHandler.checkIdempotency(externalTask, externalTaskService);
 
@@ -78,7 +78,7 @@ class IdempotencyTaskWorkerHandlerTest {
     }, nullValues = {"null"})
     void given_idempotencyKey_is_not_provided_then_set_isDuplicate_to_false(String idempotencyKey, String tenantId) {
         when(externalTask.getVariable("idempotencyKey")).thenReturn(idempotencyKey);
-        when(externalTask.getVariable("tenantId")).thenReturn(tenantId);
+        when(externalTask.getVariable("jurisdiction")).thenReturn(tenantId);
 
         idempotencyTaskWorkerHandler.checkIdempotency(externalTask, externalTaskService);
 

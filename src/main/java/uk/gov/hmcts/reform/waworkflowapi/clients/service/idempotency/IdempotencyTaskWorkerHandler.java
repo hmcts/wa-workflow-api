@@ -47,7 +47,7 @@ public class IdempotencyTaskWorkerHandler {
 
     private Optional<IdempotentId> getIdempotentId(ExternalTask externalTask) {
         String idempotencyKey = externalTask.getVariable("idempotencyKey");
-        String tenantId = externalTask.getVariable("tenantId");
+        String tenantId = externalTask.getVariable("jurisdiction");
         if (StringUtils.isNotBlank(idempotencyKey) && StringUtils.isNotBlank(tenantId)) {
             log.info("build idempotentId with key({}) and tenantId({})...", idempotencyKey, tenantId);
             return Optional.of(new IdempotentId(idempotencyKey, tenantId));
