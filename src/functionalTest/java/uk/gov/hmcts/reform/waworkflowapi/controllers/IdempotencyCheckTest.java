@@ -232,7 +232,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .body(new SendMessageRequest(
                 "createTaskMessage",
                 processVariables,
-                null
+                null,
+                false
             ))
             .baseUri(testUrl)
             .basePath("/workflow/message")
