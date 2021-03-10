@@ -1,19 +1,12 @@
-logging:
-  level:
-    org.springframework:
-      dao: debug
-      transaction: debug
-      jdbc.core.JdbcTemplate: debug
-    org.hibernate:
-      SQL: debug
-      type.descriptor.sql.BasicBinder: trace
-      engine: debug
-    uk.gov.hmcts.reform: debug
+spring.flyway.enabled: false
 
-feign:
-  client:
-    config:
-      default:
-        loggerLevel: full
-
-spring.jackson.serialization.indent_output: true
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:wa_workflow_api
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      default_schema: wa_workflow_api

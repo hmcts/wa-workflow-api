@@ -36,7 +36,7 @@ import static org.awaitility.Awaitility.await;
 @SpringBootTest
 @Slf4j
 @Testcontainers
-@ActiveProfiles("integration")
+@ActiveProfiles("docker")
 class IdempotencyKeysRepositoryTest {
 
     public static final String EXPECTED_EXCEPTION = "org.springframework.dao.PessimisticLockingFailureException";
