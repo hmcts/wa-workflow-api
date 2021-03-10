@@ -10,11 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.ExternalTaskErrorHandling;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyTaskService;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyTaskWorkerHandler;
 
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +26,8 @@ class IdempotencyTaskWorkerHandlerTest {
 
     @Mock
     private IdempotencyTaskService idempotencyTaskService;
+    @Mock
+    private ExternalTaskErrorHandling externalTaskErrorHandlingWithThreeRetries;
     @InjectMocks
     private IdempotencyTaskWorkerHandler idempotencyTaskWorkerHandler;
 
@@ -30,6 +35,15 @@ class IdempotencyTaskWorkerHandlerTest {
     private ExternalTask externalTask;
     @Mock
     private ExternalTaskService externalTaskService;
+
+    @Test
+    void given_exception_then_handle_error() {
+        given(externalTask.getVariable(anyString())).willThrow(RuntimeException.class);
+
+        idempotencyTaskWorkerHandler.checkIdempotency(externalTask, externalTaskService);
+
+        verify(externalTaskErrorHandlingWithThreeRetries).handleError(externalTask, externalTaskService);
+    }
 
     @Test
     void given_idempotencyId_is_provided_then_handleIdempotencyProvidedScenario_is_called() {
