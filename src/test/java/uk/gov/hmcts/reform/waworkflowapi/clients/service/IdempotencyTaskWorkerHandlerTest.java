@@ -53,18 +53,18 @@ class IdempotencyTaskWorkerHandlerTest {
 
     @Test
     void given_idempotencyId_is_provided_then_handleIdempotencyProvidedScenario_is_called() {
-        var idempotencyKey = "some idempotencyKey";
+        String idempotencyKey = "some idempotency key";
         when(externalTask.getVariable("idempotencyKey")).thenReturn(idempotencyKey);
 
-        var jurisdiction = "some jurisdiction";
-        when(externalTask.getVariable("jurisdiction")).thenReturn(jurisdiction);
+        String tenantId = "some tenant id";
+        when(externalTask.getVariable("tenantId")).thenReturn(tenantId);
 
         idempotencyTaskWorkerHandler.checkIdempotency(externalTask, externalTaskService);
 
         verify(idempotencyTaskService).handleIdempotentIdProvidedScenario(
             externalTask,
             externalTaskService,
-            new IdempotentId(idempotencyKey, jurisdiction)
+            new IdempotentId(idempotencyKey, tenantId)
         );
     }
 
