@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ExternalTaskErrorHandling {
 
-    void handleError(ExternalTask externalTask, ExternalTaskService externalTaskService);
+    void handleError(ExternalTask externalTask, ExternalTaskService externalTaskService, Exception exception);
 
 }

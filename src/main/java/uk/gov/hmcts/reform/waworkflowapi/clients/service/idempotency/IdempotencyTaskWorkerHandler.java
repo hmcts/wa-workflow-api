@@ -34,7 +34,7 @@ public class IdempotencyTaskWorkerHandler {
                 () -> completeTask(externalTask, externalTaskService)
             );
         } catch (Exception e) {
-            externalTaskErrorHandlingWithThreeRetries.handleError(externalTask, externalTaskService);
+            externalTaskErrorHandlingWithThreeRetries.handleError(externalTask, externalTaskService, e);
         }
     }
 
