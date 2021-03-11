@@ -1,3 +1,2 @@
 targets:
   instance: ${TEST_URL:http://localhost:8099}
-  aat-instance: ${AAT_TEST_URL:http://localhost:8099}

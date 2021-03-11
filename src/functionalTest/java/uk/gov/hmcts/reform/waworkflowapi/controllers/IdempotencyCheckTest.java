@@ -142,15 +142,61 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         );
     }
 
+    /*
+     * Because of more than one idempotencyCheck worker (Preview and AAT environments)
+     * then we have to look for  the idempotentId in both DBs, AAT and Preview.
+     */
     private void assertNewIdempotentKeyIsAddedToDb(String idempotencyKey, String jurisdiction) {
-        log.info("Asserting idempotentId({}) was added to DB...", new IdempotentId(idempotencyKey, jurisdiction));
+        boolean idempotencyKeysInAatDb = findIdempotencyKeysInAatDb(idempotencyKey, jurisdiction);
+        if (!idempotencyKeysInAatDb) {
+            getIdempotencyKeysInPreviewDb(idempotencyKey, jurisdiction);
+        }
+    }
+
+    private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
+        log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
         Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
             idempotencyKey,
             jurisdiction
         );
+        if (actual.isPresent()) {
+            log.info("idempotentKeys found in DB: {}", actual.get());
+            return true;
+        }
+        return false;
+    }
 
-        assertThat(actual.isPresent()).isTrue();
-        log.info("idempotentKeys found in DB: {}", actual.get());
+    private void getIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
+        log.info(
+            "Asserting idempotentId({}) was added to Preview DB...",
+            new IdempotentId(idempotencyKey, jurisdiction)
+        );
+        await()
+            .ignoreException(AssertionError.class)
+            .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
+            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .until(() -> {
+                given()
+                    .log().method().log().uri().log().headers()
+                    .relaxedHTTPSValidation()
+                    .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
+                    .contentType(APPLICATION_JSON_VALUE)
+                    .baseUri(testUrl)
+                    .basePath("/testing/idempotencyKeys/search/findByIdempotencyKeyAndTenantId")
+                    .params(
+                        "idempotencyKey", idempotencyKey,
+                        "tenantId", jurisdiction
+                    )
+                    .when()
+                    .get()
+                    .then()
+                    .log().status().log().body(true)
+                    .body("idempotencyKey", is(idempotencyKey))
+                    .body("tenantId", is(jurisdiction));
+
+                return true;
+            });
+        log.info("idempotentKeys found in DB: {}", new IdempotentId(idempotencyKey, jurisdiction));
     }
 
     private String assertTaskIsCreated(String caseId) {
