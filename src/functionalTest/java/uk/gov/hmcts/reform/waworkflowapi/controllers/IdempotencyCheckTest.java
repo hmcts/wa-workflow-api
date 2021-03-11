@@ -141,7 +141,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
                 given()
-                    .log().method().log().uri()
+                    .log().method().log().uri().log().headers()
+                    .relaxedHTTPSValidation()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
                     .baseUri(testUrl)
