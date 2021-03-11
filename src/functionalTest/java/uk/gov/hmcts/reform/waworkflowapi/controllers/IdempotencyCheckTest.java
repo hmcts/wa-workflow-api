@@ -91,7 +91,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private List<String> getProcessIdsForGivenIdempotencyKey(String idempotencyKey) {
         AtomicReference<List<String>> processIdsResponse = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -136,7 +136,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private void assertNewIdempotentKeyIsAddedInDb(String idempotencyKey, String jurisdiction) {
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -161,33 +161,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             });
     }
 
-    private void assertTaskHasExpectedVariableValues(String taskId) {
-        await()
-            .ignoreExceptions()
-            .and()
-            .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
-            .until(() -> {
-                String groupId = given()
-                    .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .baseUri(camundaUrl)
-                    .basePath("/task/" + taskId + "/identity-links?type=candidate")
-                    .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
-                    .extract()
-                    .path("[0].groupId");
-
-                return groupId.equals("external");
-            });
-    }
-
     private String assertTaskIsCreated(String caseId) {
         AtomicReference<String> response = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -247,7 +224,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private boolean getIsDuplicateVariableValue(String processInstanceId) {
         AtomicReference<Boolean> response = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
