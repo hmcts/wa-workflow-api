@@ -31,8 +31,8 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
     @BeforeEach
     void setUp() {
         when(externalTask.getId()).thenReturn("some external task id");
-        when(exception.getMessage()).thenReturn("some exception message");
-        when(exception.getCause()).thenReturn(new Throwable("some exception cause"));
+        when(exception.toString()).thenReturn("some exception");
+        when(exception.getMessage()).thenReturn("some exception details message");
     }
 
     @Test
@@ -43,8 +43,8 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
 
         verify(externalTaskService).handleFailure(
             "some external task id",
-            "some exception message",
-            "java.lang.Throwable: some exception cause",
+            "some exception",
+            "some exception details message",
             3,
             1000
         );
@@ -58,8 +58,8 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
 
         verify(externalTaskService).handleFailure(
             "some external task id",
-            "some exception message",
-            "java.lang.Throwable: some exception cause",
+            "some exception",
+            "some exception details message",
             2,
             1000
         );
@@ -75,14 +75,16 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
         );
 
         assertThat(actualException.getMessage()).isEqualTo(String.format(
-            "ERROR: Retrying three times could not fix the problem.%nThe task(%s) becomes an incident now.",
-            externalTask.getId()
+            "Retrying three times did not fix the problem.%n"
+                + "This external task(%s) failure causes an incident(%s).",
+            externalTask.getId(),
+            externalTask.getProcessInstanceId()
         ));
 
         verify(externalTaskService).handleFailure(
             "some external task id",
-            "some exception message",
-            "java.lang.Throwable: some exception cause",
+            "some exception",
+            "some exception details message",
             0,
             1000
         );

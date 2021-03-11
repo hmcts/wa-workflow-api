@@ -26,8 +26,10 @@ public class ExternalTaskErrorHandlingWithThreeRetries implements ExternalTaskEr
 
     private void throwException(ExternalTask externalTask) {
         String message = String.format(
-            "ERROR: Retrying three times could not fix the problem.%nThe task(%s) becomes an incident now.",
-            externalTask.getId()
+            "Retrying three times did not fix the problem.%n"
+                + "This external task(%s) failure causes an incident(%s).",
+            externalTask.getId(),
+            externalTask.getProcessInstanceId()
         );
         throw new IdempotencyTaskWorkerException(message);
     }
@@ -38,8 +40,8 @@ public class ExternalTaskErrorHandlingWithThreeRetries implements ExternalTaskEr
                             Exception exception) {
         externalTaskService.handleFailure(
             externalTask.getId(),
+            exception.toString(),
             exception.getMessage(),
-            exception.getCause().toString(),
             retries,
             1000
         );
