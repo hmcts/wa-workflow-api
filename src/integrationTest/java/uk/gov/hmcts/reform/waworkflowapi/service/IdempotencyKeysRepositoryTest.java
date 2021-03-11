@@ -22,8 +22,8 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.service.ExternalTaskWorker;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,8 +39,7 @@ import static org.awaitility.Awaitility.await;
 @ActiveProfiles("docker")
 class IdempotencyKeysRepositoryTest {
 
-    public static final String EXPECTED_EXCEPTION = "org.springframework.dao.PessimisticLockingFailureException";
-
+    public static final String FAIL_TO_UPDATE_THIS = "fail to update this";
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:11"))
         .withDatabaseName("wa_workflow_api")
@@ -97,21 +96,28 @@ class IdempotencyKeysRepositoryTest {
         Future<?> futureException = executorService.submit(this::reader2);
 
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(5, TimeUnit.SECONDS)
+            .atMost(10, TimeUnit.SECONDS)
             .until(() -> {
-                ExecutionException exception = Assertions.assertThrows(ExecutionException.class, futureException::get);
+                Exception exception = Assertions.assertThrows(Exception.class, futureException::get);
                 log.info(exception.toString());
-                assertThat(exception.getMessage())
-                    .startsWith(EXPECTED_EXCEPTION);
+                assertThat(exception).hasMessageContaining("PessimisticLockException");
 
-                return exception.getMessage().startsWith(EXPECTED_EXCEPTION);
+                return true;
             });
+
+        Optional<IdempotencyKeys> actual = repository.findByIdempotencyKeyAndTenantId(
+            idempotencyKeysWithRandomId.getIdempotencyKey(),
+            idempotencyKeysWithRandomId.getTenantId()
+        );
+
+        assertThat(actual.isPresent()).isTrue();
+        assertThat(actual.get().getProcessId()).isNotEqualTo(FAIL_TO_UPDATE_THIS);
 
         executorService.shutdown();
         //noinspection ResultOfMethodCallIgnored
-        executorService.awaitTermination(7, TimeUnit.SECONDS);
+        executorService.awaitTermination(13, TimeUnit.SECONDS);
     }
 
     private void reader2() {
@@ -122,6 +128,14 @@ class IdempotencyKeysRepositoryTest {
             randomIdempotentId.getIdempotencyKey(),
             randomIdempotentId.getTenantId()
         );
+
+        repository.save(new IdempotencyKeys(
+            idempotencyKeysWithRandomId.getIdempotencyKey(),
+            idempotencyKeysWithRandomId.getTenantId(),
+            FAIL_TO_UPDATE_THIS,
+            LocalDateTime.now(),
+            LocalDateTime.now()
+        ));
 
     }
 
