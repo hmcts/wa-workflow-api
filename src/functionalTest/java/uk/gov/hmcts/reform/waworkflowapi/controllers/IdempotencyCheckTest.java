@@ -4,7 +4,6 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -77,7 +76,6 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    @Ignore
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
         sendMessage(processVariables);
 
