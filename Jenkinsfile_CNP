@@ -9,9 +9,10 @@ def component = "workflow-api"
 
 def secrets = [
   'wa-${env}' : [
-
+    secret('workflow-api-POSTGRES-PASS', 'POSTGRES_PASSWORD'),
+    secret('workflow-api-POSTGRES-USER', 'POSTGRES_USERNAME'),
   ],
-  's2s-${env}' : [
+  's2s-${env}': [
     secret('microservicekey-wa-workflow-api', 'S2S_SECRET_WORKFLOW_API'),
   ]
 ]
@@ -32,6 +33,7 @@ withPipeline(type, product, component) {
   env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
   env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
   env.AAT_TEST_URL = "http://wa-workflow-api-aat.service.core-compute-aat.internal"
+  env.POSTGRES_HOST = "wa-workflow-api-postgres-db-aat.postgres.database.azure.com"
 
   loadVaultSecrets(secrets)
 
