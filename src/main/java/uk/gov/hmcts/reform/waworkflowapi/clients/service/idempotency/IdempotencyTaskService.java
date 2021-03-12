@@ -28,7 +28,10 @@ public class IdempotencyTaskService {
                                                    ExternalTaskService externalTaskService,
                                                    IdempotentId idempotentId) {
         log.info("checking if idempotentId({}) is present in DB...", idempotentId);
-        Optional<IdempotencyKeys> idempotentRow = idempotencyKeysRepository.findById(idempotentId);
+        Optional<IdempotencyKeys> idempotentRow = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
+            idempotentId.getIdempotencyKey(),
+            idempotentId.getTenantId()
+        );
 
         idempotentRow.ifPresentOrElse(
             (row) -> handleIdempotentIdIsPresentInDb(externalTask, externalTaskService, row),

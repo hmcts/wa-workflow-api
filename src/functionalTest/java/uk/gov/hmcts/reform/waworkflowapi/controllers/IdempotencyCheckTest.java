@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.waworkflowapi.controllers;
 
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,17 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotencyKeys;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 import uk.gov.hmcts.reform.waworkflowapi.utils.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static net.serenitybdd.rest.SerenityRest.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -32,6 +36,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public static final int POLL_INTERVAL = 2;
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
+    @Autowired
+    private IdempotencyKeysRepository idempotencyKeysRepository;
 
     private String serviceAuthorizationToken;
     private String caseId;
@@ -56,13 +62,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
         sendMessage(processVariables);
         String taskId = assertTaskIsCreated(caseId);
-        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
         taskId = assertTaskIsCreated(caseId);
-        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "wa");
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
         cleanUp(taskId, serviceAuthorizationToken); //We do the cleaning here to avoid clashing with other tasks
 
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
@@ -74,7 +80,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         sendMessage(processVariables);
 
         String taskId = assertTaskIsCreated(caseId);
-        assertNewIdempotentKeyIsAddedInDb(idempotencyKey, "ia");
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
         cleanUp(taskId, serviceAuthorizationToken); //We can do the cleaning here now
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
@@ -83,7 +89,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private void assertNumberOfDuplicatedProcesses(List<String> processIds, int expectedNumberOfDuplicatedProcesses) {
-        Assertions.assertThat((int) processIds.stream()
+        assertThat((int) processIds.stream()
             .filter(this::getIsDuplicateVariableValue)
             .count()).isEqualTo(expectedNumberOfDuplicatedProcesses);
     }
@@ -91,7 +97,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private List<String> getProcessIdsForGivenIdempotencyKey(String idempotencyKey) {
         AtomicReference<List<String>> processIdsResponse = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -134,17 +140,46 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         );
     }
 
-    private void assertNewIdempotentKeyIsAddedInDb(String idempotencyKey, String jurisdiction) {
+    /*
+     * Because of more than one idempotencyCheck worker (Preview and AAT environments)
+     * then we have to look for  the idempotentId in both DBs, AAT and Preview.
+     */
+    private void assertNewIdempotentKeyIsAddedToDb(String idempotencyKey, String jurisdiction) {
+        boolean idempotencyKeysInAatDb = findIdempotencyKeysInAatDb(idempotencyKey, jurisdiction);
+        if (!idempotencyKeysInAatDb) {
+            getIdempotencyKeysInPreviewDb(idempotencyKey, jurisdiction);
+        }
+    }
+
+    private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
+        log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
+        Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
+            idempotencyKey,
+            jurisdiction
+        );
+        if (actual.isPresent()) {
+            log.info("idempotentKeys found in DB: {}", actual.get());
+            return true;
+        }
+        return false;
+    }
+
+    private void getIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
+        log.info(
+            "Asserting idempotentId({}) was added to Preview DB...",
+            new IdempotentId(idempotencyKey, jurisdiction)
+        );
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
                 given()
-                    .log().method().log().uri()
+                    .log().method().log().uri().log().headers()
+                    .relaxedHTTPSValidation()
                     .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
                     .contentType(APPLICATION_JSON_VALUE)
-                    .baseUri(aatTestUrl)
+                    .baseUri(testUrl)
                     .basePath("/testing/idempotencyKeys/search/findByIdempotencyKeyAndTenantId")
                     .params(
                         "idempotencyKey", idempotencyKey,
@@ -159,35 +194,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-    }
-
-    private void assertTaskHasExpectedVariableValues(String taskId) {
-        await()
-            .ignoreExceptions()
-            .and()
-            .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
-            .until(() -> {
-                String groupId = given()
-                    .header(SERVICE_AUTHORIZATION, serviceAuthorizationToken)
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .baseUri(camundaUrl)
-                    .basePath("/task/" + taskId + "/identity-links?type=candidate")
-                    .when()
-                    .get()
-                    .prettyPeek()
-                    .then()
-                    .extract()
-                    .path("[0].groupId");
-
-                return groupId.equals("external");
-            });
+        log.info("idempotentKeys found in DB: {}", new IdempotentId(idempotencyKey, jurisdiction));
     }
 
     private String assertTaskIsCreated(String caseId) {
         AtomicReference<String> response = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -247,7 +260,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private boolean getIsDuplicateVariableValue(String processInstanceId) {
         AtomicReference<Boolean> response = new AtomicReference<>();
         await()
-            .ignoreExceptions()
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {

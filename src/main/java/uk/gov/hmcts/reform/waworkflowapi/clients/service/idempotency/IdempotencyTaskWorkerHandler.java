@@ -17,19 +17,25 @@ import static uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.Idem
 public class IdempotencyTaskWorkerHandler {
 
     private final IdempotencyTaskService idempotencyTaskService;
+    private final ExternalTaskErrorHandling externalTaskErrorHandlingWithThreeRetries;
 
-    public IdempotencyTaskWorkerHandler(
-        IdempotencyTaskService idempotencyTaskService) {
+    public IdempotencyTaskWorkerHandler(IdempotencyTaskService idempotencyTaskService,
+                                        ExternalTaskErrorHandling externalTaskErrorHandlingWithThreeRetries) {
         this.idempotencyTaskService = idempotencyTaskService;
+        this.externalTaskErrorHandlingWithThreeRetries = externalTaskErrorHandlingWithThreeRetries;
     }
 
     public void checkIdempotency(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         log.info("checking idempotency...");
-        Optional<IdempotentId> idempotentId = getIdempotentId(externalTask);
-        idempotentId.ifPresentOrElse(
-            id -> idempotencyTaskService.handleIdempotentIdProvidedScenario(externalTask, externalTaskService, id),
-            () -> completeTask(externalTask, externalTaskService)
-        );
+        try {
+            Optional<IdempotentId> idempotentId = getIdempotentId(externalTask);
+            idempotentId.ifPresentOrElse(
+                id -> idempotencyTaskService.handleIdempotentIdProvidedScenario(externalTask, externalTaskService, id),
+                () -> completeTask(externalTask, externalTaskService)
+            );
+        } catch (Exception e) {
+            externalTaskErrorHandlingWithThreeRetries.handleError(externalTask, externalTaskService, e);
+        }
     }
 
     private void completeTask(ExternalTask externalTask, ExternalTaskService externalTaskService) {
@@ -41,8 +47,8 @@ public class IdempotencyTaskWorkerHandler {
 
     private Optional<IdempotentId> getIdempotentId(ExternalTask externalTask) {
         String idempotencyKey = externalTask.getVariable("idempotencyKey");
-        if (StringUtils.isNotBlank(idempotencyKey)) {
-            String tenantId = externalTask.getVariable("jurisdiction");
+        String tenantId = externalTask.getVariable("jurisdiction");
+        if (StringUtils.isNotBlank(idempotencyKey) && StringUtils.isNotBlank(tenantId)) {
             log.info("build idempotentId with key({}) and tenantId({})...", idempotencyKey, tenantId);
             return Optional.of(new IdempotentId(idempotencyKey, tenantId));
         }
