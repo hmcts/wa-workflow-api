@@ -36,7 +36,7 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
     }
 
     @Test
-    void given_retries_is_null_then_set_handle_failure() {
+    void given_an_error_then_set_handle_failure_with_three_retries() {
         given(externalTask.getRetries()).willReturn(null);
 
         externalTaskErrorHandlingWithThreeRetries.handleError(externalTask, externalTaskService, exception);
@@ -51,7 +51,7 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
     }
 
     @Test
-    void given_retries_is_greater_than_one_then_set_handle_failure() {
+    void given_another_error_and_given_retries_limit_has_not_reached_then_set_handle_failure_and_reduce_retries() {
         given(externalTask.getRetries()).willReturn(3);
 
         externalTaskErrorHandlingWithThreeRetries.handleError(externalTask, externalTaskService, exception);
@@ -66,7 +66,7 @@ class ExternalTaskErrorHandlingWithThreeRetriesTest {
     }
 
     @Test
-    void given_retries_is_not_greater_than_one_then_set_handle_failure() {
+    void given_retries_limit_is_reached_then_set_handle_failure_with_zero_retries_and_throw_exception() {
         given(externalTask.getRetries()).willReturn(1);
 
         IdempotencyTaskWorkerException actualException = Assertions.assertThrows(
