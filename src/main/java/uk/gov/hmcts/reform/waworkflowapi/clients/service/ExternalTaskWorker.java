@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.waworkflowapi.config.ServiceAuthProviderInterceptor;
 @SuppressWarnings({"PMD.UseUnderscoresInNumericLiterals"})
 public class ExternalTaskWorker {
 
-    public static final int LOCK_DURATION = 30000;
     private final String camundaUrl;
     private final AuthTokenGenerator authTokenGenerator;
     private final IdempotencyTaskWorkerHandler idempotencyTaskWorkerHandler;
@@ -41,16 +40,13 @@ public class ExternalTaskWorker {
         ExternalTaskClient client = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
-            .asyncResponseTimeout(10000)
             .build();
 
         client.subscribe("wa-warning-topic")
-            .lockDuration(LOCK_DURATION)
             .handler(warningTaskWorkerHandler::checkHasWarnings)
             .open();
 
         client.subscribe("idempotencyCheck")
-            .lockDuration(LOCK_DURATION)
             .handler(idempotencyTaskWorkerHandler::checkIdempotency)
             .open();
     }
