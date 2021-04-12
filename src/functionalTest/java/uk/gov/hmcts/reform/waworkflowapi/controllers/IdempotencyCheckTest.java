@@ -206,8 +206,6 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
 
-                result.prettyPrint();
-
                 //number of messages sent, equivalent to processes created
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -260,6 +258,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variableName", "isDuplicate"
                     ));
 
+
+                result.prettyPrint();
 
                 boolean isDuplicate = result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
