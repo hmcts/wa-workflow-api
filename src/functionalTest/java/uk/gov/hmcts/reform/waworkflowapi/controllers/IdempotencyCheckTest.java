@@ -104,7 +104,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     "/history/process-instance",
                     new Headers(authenticationHeaders),
                     Map.of(
-                        "idempotencyKey", "idempotencyKey_eq_" + idempotencyKey
+                        "variables", "idempotencyKey_eq_" + idempotencyKey
                     )
                 );
 
