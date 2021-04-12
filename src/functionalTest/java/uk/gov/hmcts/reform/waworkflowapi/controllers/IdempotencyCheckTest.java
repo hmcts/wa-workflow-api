@@ -229,7 +229,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         Response result = restApiActions.post(
             "/workflow/message",
             new SendMessageRequest(
-                "createTaskMessage",
+                "createMessageTask",
                 processVariables,
                 null,
                 false
