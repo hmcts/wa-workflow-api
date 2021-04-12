@@ -79,7 +79,7 @@ public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
             .relaxedHTTPSValidation()
             .contentType(APPLICATION_JSON_VALUE)
             .body(new SendMessageRequest(
-                "createMessageTask",
+                "createTaskMessage",
                 emptyMap(),
                 null,
                 false

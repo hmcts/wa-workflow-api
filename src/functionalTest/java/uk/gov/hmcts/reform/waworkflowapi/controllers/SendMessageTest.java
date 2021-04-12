@@ -45,7 +45,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     public void should_not_allow_requests_without_valid_service_authorisation_and_return_401_response_code() {
 
         SendMessageRequest body = new SendMessageRequest(
-            "createMessageTask",
+            "createTaskMessage",
             emptyMap(),
             null,
             false
@@ -75,7 +75,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         );
 
         SendMessageRequest body = new SendMessageRequest(
-            "createMessageTask",
+            "createTaskMessage",
             processVariables,
             null,
             false

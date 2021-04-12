@@ -100,6 +100,7 @@ public class RestApiActions {
                 .contentType(contentType)
                 .accept(accept)
                 .headers(headers)
+                .log().all()
                 .when()
                 .get(path, resourceId);
         } else {
@@ -108,6 +109,7 @@ public class RestApiActions {
                 .contentType(contentType)
                 .accept(accept)
                 .headers(headers)
+                .log().all()
                 .when()
                 .get(path);
         }
