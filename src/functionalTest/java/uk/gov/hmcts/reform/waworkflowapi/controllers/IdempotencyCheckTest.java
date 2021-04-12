@@ -206,6 +206,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
 
+                result.prettyPrint();
+
                 //number of messages sent, equivalent to processes created
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -229,7 +231,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         Response result = restApiActions.post(
             "/workflow/message",
             new SendMessageRequest(
-                "createMessageTask",
+                "createTaskMessage",
                 processVariables,
                 null,
                 false
