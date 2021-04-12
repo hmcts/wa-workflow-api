@@ -224,7 +224,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             UUID.randomUUID().toString(), "ia"
         );
         SendMessageRequest body = new SendMessageRequest(
-            "createTaskMessage",
+            "invalidMessageName",
             processVariables,
             null,
             false

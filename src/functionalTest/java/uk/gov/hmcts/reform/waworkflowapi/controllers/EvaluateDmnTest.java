@@ -44,10 +44,16 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     @Test
     public void should_evaluate_and_return_dmn_results() {
 
+        EvaluateDmnRequest body = new EvaluateDmnRequest(
+            Map.of(
+                "eventId", DmnValue.dmnStringValue("submitAppeal"),
+                "postEventState", DmnValue.dmnStringValue("appealSubmitted")
+            ));
+
         Response result = restApiActions.post(
             format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_IA_ASYLUM, TENANT_ID),
             null,
-            null,
+            body,
             authenticationHeaders
         );
 
