@@ -60,13 +60,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
 
         sendMessage(processVariables);
-        String taskId = assertTaskIsCreated(caseId);
+        final String taskId = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
         cleanUpTask(taskId, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
-        String taskId2 = assertTaskIsCreated(caseId);
+        final String taskId2 = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
         cleanUpTask(taskId2, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
 
@@ -78,7 +78,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
 
         sendMessage(processVariables);
-        String taskId = assertTaskIsCreated(caseId);
+        final String taskId = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
