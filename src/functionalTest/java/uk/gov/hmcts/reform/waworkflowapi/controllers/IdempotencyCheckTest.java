@@ -62,13 +62,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         sendMessage(processVariables);
         final String taskId = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
-        cleanUpTask(taskId, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
+        cleanUpTask(taskId, REASON_COMPLETED);  //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
         final String taskId2 = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
-        cleanUpTask(taskId2, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
+        cleanUpTask(taskId2, REASON_COMPLETED);  //We do the cleaning here to avoid clashing with other tasks
 
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 0);
@@ -85,7 +85,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 1);
 
-        cleanUpTask(taskId, REASON_DELETED);
+        cleanUpTask(taskId, REASON_COMPLETED);
     }
 
     private void assertNumberOfDuplicatedProcesses(List<String> processIds, int expectedNumberOfDuplicatedProcesses) {
