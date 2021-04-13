@@ -58,16 +58,17 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
+
         sendMessage(processVariables);
         String taskId = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
-        cleanUp(taskId); //We do the cleaning here to avoid clashing with other tasks
+        cleanUpTask(taskId, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
-        taskId = assertTaskIsCreated(caseId);
+        String taskId2 = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
-        cleanUp(taskId); //We do the cleaning here to avoid clashing with other tasks
+        cleanUpTask(taskId2, REASON_DELETED);  //We do the cleaning here to avoid clashing with other tasks
 
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 0);
@@ -75,15 +76,16 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
-        sendMessage(processVariables);
 
+        sendMessage(processVariables);
         String taskId = assertTaskIsCreated(caseId);
         assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "ia");
-        cleanUp(taskId); //We can do the cleaning here now
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
         assertNumberOfDuplicatedProcesses(processIds, 1);
+
+        cleanUpTask(taskId, REASON_DELETED);
     }
 
     private void assertNumberOfDuplicatedProcesses(List<String> processIds, int expectedNumberOfDuplicatedProcesses) {
@@ -107,6 +109,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variables", "idempotencyKey_eq_" + idempotencyKey
                     )
                 );
+
+                result.prettyPrint();
 
                 //number of messages sent, equivalent to processes created
                 result.then().assertThat()
@@ -189,7 +193,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-        log.info("idempotentKeys found in DB: {}", new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("idempotentKeys found in Preview DB: {}", new IdempotentId(idempotencyKey, jurisdiction));
     }
 
     private String assertTaskIsCreated(String caseId) {
@@ -258,11 +262,9 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variableName", "isDuplicate"
                     ));
 
-
-                result.prettyPrint();
-
                 boolean isDuplicate = result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
+                    .assertThat().body("[0].name", is("isDuplicate"))
                     .assertThat().body("[0].value", notNullValue())
                     .extract().body().path("[0].value");
 

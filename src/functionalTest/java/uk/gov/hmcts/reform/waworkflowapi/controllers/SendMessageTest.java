@@ -131,7 +131,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             .statusCode(HttpStatus.OK.value())
             .body("[0].groupId", is("TCW"));
 
-        cleanUp(taskId);
+        cleanUpTask(taskId, REASON_COMPLETED);
     }
 
     @Test
@@ -211,7 +211,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                 return true;
             });
 
-        cleanUp(taskId);
+        cleanUpTask(taskId, REASON_COMPLETED);
     }
 
     @Test

@@ -1,11 +1,16 @@
 package uk.gov.hmcts.reform.waworkflowapi;
 
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
+import io.restassured.response.Response;
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.config.RestApiActions;
@@ -15,21 +20,24 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.LOWER_CAMEL_CASE;
-import static net.serenitybdd.rest.SerenityRest.given;
-import static org.awaitility.Awaitility.await;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.hamcrest.CoreMatchers.is;
 
+@Slf4j
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
 @ActiveProfiles("functional")
 public abstract class SpringBootFunctionalBaseTest {
-
     public static final String WA_TASK_INITIATION_IA_ASYLUM = "wa-task-initiation-ia-asylum";
     public static final String TENANT_ID = "ia";
     public static final int FT_STANDARD_TIMEOUT_SECS = 30;
+
+    public static final String REASON_COMPLETED = "completed";
+    public static final String REASON_DELETED = "deleted";
+
+    private static final String ENDPOINT_COMPLETE_TASK = "task/{task-id}/complete";
+    private static final String ENDPOINT_HISTORY_TASK = "history/task";
     protected RestApiActions restApiActions;
     protected RestApiActions camundaApiActions;
     @Autowired
@@ -38,7 +46,7 @@ public abstract class SpringBootFunctionalBaseTest {
     @Value("${targets.instance}")
     private String testUrl;
 
-    @Value("${camunda.url}")
+    @Value("${targets.camunda}")
     private String camundaUrl;
 
     @Before
@@ -47,34 +55,25 @@ public abstract class SpringBootFunctionalBaseTest {
         camundaApiActions = new RestApiActions(camundaUrl, LOWER_CAMEL_CASE).setUp();
     }
 
-    public void cleanUp(String taskId) {
-        given()
-            .header(authorizationHeadersProvider.getAuthorizationHeaders())
-            .contentType(APPLICATION_JSON_VALUE)
-            .baseUri(camundaUrl)
-            .basePath("/task/" + taskId + "/complete")
-            .when()
-            .post();
+    public void cleanUpTask(String taskId, String reason) {
+        log.info("Cleaning task {}", taskId);
+        Header authorizationHeaders = authorizationHeadersProvider.getAuthorizationHeaders();
+        camundaApiActions.post(
+            ENDPOINT_COMPLETE_TASK, taskId,
+            new Headers(authorizationHeaders)
+        );
 
-        await()
-            .ignoreException(AssertionError.class)
-            .pollInterval(2, TimeUnit.SECONDS)
-            .atMost(10, TimeUnit.SECONDS)
-            .until(() -> {
-                String deleteReason = given()
-                    .header(authorizationHeadersProvider.getAuthorizationHeaders())
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .accept(APPLICATION_JSON_VALUE)
-                    .baseUri(camundaUrl)
-                    .when()
-                    .get("/history/task?taskId=" + taskId)
-                    .then()
-                    .extract().path("[0].deleteReason");
+        Response result = camundaApiActions.get(
+            ENDPOINT_HISTORY_TASK,
+            new Headers(authorizationHeaders),
+            Map.of("taskId", taskId)
+        );
 
-                return deleteReason.equals("completed");
-            });
-
+        result.then().assertThat()
+            .statusCode(HttpStatus.OK.value())
+            .body("[0].deleteReason", is(reason));
     }
+
 
     public Map<String, DmnValue<?>> mockProcessVariables(
         String dueDate,
