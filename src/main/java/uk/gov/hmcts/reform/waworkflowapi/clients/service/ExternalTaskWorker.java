@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -38,18 +39,31 @@ public class ExternalTaskWorker {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void setupClient() {
-        ExternalTaskClient client = ExternalTaskClient.create()
+
+        ExternalTaskClient idempotencyClient = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
+            .backoffStrategy(new ExponentialBackoffStrategy())
+            .lockDuration(30000) // 35 seconds
             .build();
 
-        client.subscribe("wa-warning-topic")
+        idempotencyClient.subscribe("idempotencyCheck")
+            .lockDuration(30000) // 30 seconds
+            .handler(idempotencyTaskWorkerHandler::checkIdempotency)
+            .open();
+
+
+        ExternalTaskClient warningClient = ExternalTaskClient.create()
+            .baseUrl(camundaUrl)
+            .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
+            .lockDuration(30000) // 30 seconds
+            .build();
+
+        warningClient.subscribe("wa-warning-topic")
+            .lockDuration(30000) // 30 seconds
             .handler(warningTaskWorkerHandler::checkHasWarnings)
             .open();
 
-        client.subscribe("idempotencyCheck")
-            .handler(idempotencyTaskWorkerHandler::checkIdempotency)
-            .open();
     }
 
 }
