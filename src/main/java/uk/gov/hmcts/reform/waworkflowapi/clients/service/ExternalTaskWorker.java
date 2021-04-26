@@ -56,6 +56,7 @@ public class ExternalTaskWorker {
         ExternalTaskClient warningClient = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
+            .backoffStrategy(new ExponentialBackoffStrategy())
             .lockDuration(30000) // 30 seconds
             .build();
 
