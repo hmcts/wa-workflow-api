@@ -44,7 +44,7 @@ public class ExternalTaskWorker {
             .baseUrl(camundaUrl)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
             .backoffStrategy(new ExponentialBackoffStrategy())
-            .lockDuration(30000) // 35 seconds
+            .lockDuration(30000) // 30 seconds
             .build();
 
         idempotencyClient.subscribe("idempotencyCheck")
