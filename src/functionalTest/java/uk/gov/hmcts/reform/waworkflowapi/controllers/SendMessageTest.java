@@ -109,7 +109,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
-                    .body("[0].name", is("Process Application")));
+                    .body("[0].name", is("Process Application"));
 
                 taskIdResponse.set(
                     result.then()
