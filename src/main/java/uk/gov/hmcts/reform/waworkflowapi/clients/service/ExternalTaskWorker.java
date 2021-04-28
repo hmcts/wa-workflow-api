@@ -43,7 +43,7 @@ public class ExternalTaskWorker {
             .build();
 
         client.subscribe("wa-warning-topic")
-            .handler(warningTaskWorkerHandler::checkHasWarnings)
+            .handler(warningTaskWorkerHandler::setTaskWarningFlag)
             .open();
 
         client.subscribe("idempotencyCheck")
