@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.waworkflowapi.clients.service;
+package uk.gov.hmcts.reform.waworkflowapi.clients.service.handler;
 
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
@@ -12,6 +12,5 @@ public class WarningTaskWorkerHandler {
     public void setTaskWarningFlag(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         externalTaskService.complete(externalTask, null, singletonMap("hasWarnings", true));
     }
-
 }
 
