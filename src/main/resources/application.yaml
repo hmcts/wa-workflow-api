@@ -83,7 +83,6 @@ launchDarkly:
 logging:
   level:
     root: INFO
-    uk.gov.hmcts.reform.waworkflowapi.*: DEBUG
     org.zalando.logbook: TRACE
 
 feign:
