@@ -27,7 +27,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 
 @RestController
 @RequestMapping(
-    consumes = APPLICATION_JSON_VALUE
+    consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE
 )
 public class CreateTaskController {
 
@@ -42,9 +42,7 @@ public class CreateTaskController {
         this.sendMessageService = sendMessageService;
     }
 
-    @PostMapping(
-        path = "/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate",
-        produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/workflow/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate")
     @ApiOperation("Creates a message form camunda")
     @ApiResponses({
         @ApiResponse(code = 200, message = "A DMN was found, evaluated and returned",
