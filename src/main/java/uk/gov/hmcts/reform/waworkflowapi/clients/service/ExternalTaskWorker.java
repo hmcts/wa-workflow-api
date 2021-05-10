@@ -40,29 +40,17 @@ public class ExternalTaskWorker {
     @EventListener(ApplicationReadyEvent.class)
     public void setupClient() {
 
-        ExternalTaskClient idempotencyClient = ExternalTaskClient.create()
+        ExternalTaskClient client = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
-            .backoffStrategy(new ExponentialBackoffStrategy(500L, 2, 30000L))
-            .lockDuration(30000) // 30 seconds
             .build();
 
-        idempotencyClient.subscribe("idempotencyCheck")
-            .lockDuration(30000) // 30 seconds
-            .handler(idempotencyTaskWorkerHandler::checkIdempotency)
+        client.subscribe("wa-warning-topic")
+            .handler(warningTaskWorkerHandler::checkHasWarnings)
             .open();
 
-
-        ExternalTaskClient warningClient = ExternalTaskClient.create()
-            .baseUrl(camundaUrl)
-            .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
-            .backoffStrategy(new ExponentialBackoffStrategy(500L, 2, 30000L))
-            .lockDuration(30000) // 30 seconds
-            .build();
-
-        warningClient.subscribe("wa-warning-topic")
-            .lockDuration(30000) // 30 seconds
-            .handler(warningTaskWorkerHandler::checkHasWarnings)
+        client.subscribe("idempotencyCheck")
+            .handler(idempotencyTaskWorkerHandler::checkIdempotency)
             .open();
 
     }
