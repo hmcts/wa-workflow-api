@@ -166,11 +166,14 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 );
 
                 if (actual.isPresent()) {
-                    log.info("idempotentKeys found in DB: {}", actual.get());
+                    log.info("idempotentId[{}] found in DB.", actual.get());
                     result.set(true);
 
+                } else {
+                    log.info(
+                        "idempotentId[{}] NOT found in DB.", new IdempotentId(idempotencyKey, jurisdiction));
+                    result.set(false);
                 }
-                result.set(false);
                 return true;
             });
 
@@ -194,7 +197,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     Map.of(
                         "idempotencyKey", idempotencyKey,
                         "tenantId", jurisdiction
-                    ));
+                    )
+                );
 
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -204,7 +208,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-        log.info("idempotentKeys found in Preview DB: {}", new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("idempotentId[{}] found in Preview DB.", new IdempotentId(idempotencyKey, jurisdiction));
     }
 
     private String assertTaskIsCreated(String caseId) {
@@ -269,7 +273,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     Map.of(
                         "processInstanceId", processInstanceId,
                         "variableName", "isDuplicate"
-                    ));
+                    )
+                );
 
                 boolean isDuplicate = result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
