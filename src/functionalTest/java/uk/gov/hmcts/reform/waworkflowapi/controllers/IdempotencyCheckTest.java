@@ -153,15 +153,28 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
         log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
-        Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
-            idempotencyKey,
-            jurisdiction
-        );
-        if (actual.isPresent()) {
-            log.info("idempotentKeys found in DB: {}", actual.get());
-            return true;
-        }
-        return false;
+
+        AtomicReference<Boolean> result = new AtomicReference<>();
+        await()
+            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
+            .until(() -> {
+
+                Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
+                    idempotencyKey,
+                    jurisdiction
+                );
+
+                if (actual.isPresent()) {
+                    log.info("idempotentKeys found in DB: {}", actual.get());
+                    result.set(true);
+
+                }
+                result.set(false);
+                return true;
+            });
+
+        return result.get();
     }
 
     private void getIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
