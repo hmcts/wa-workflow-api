@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.service.handler.WarningTaskWork
 
 import java.util.Map;
 
-import static java.util.Collections.singletonMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,44 +30,28 @@ class WarningTaskWorkerHandlerTest {
     }
 
     @Test
-    void test_HasWarning_Handler_when_false() {
+    void should_complete_warning_external_task_Service() {
 
-        when(externalTask.getAllVariables()).thenReturn(singletonMap("hasWarnings", false));
-
-        warningTaskWorkerHandler.checkHasWarnings(externalTask, externalTaskService);
-
-        Map<String, Object> processVariables = singletonMap(
-            "hasWarnings",
-            true
+        String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        Map<String, Object> processVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", processVariablesWarningValues,
+            "warningCode", "Code2",
+            "warningText", "Text2"
         );
-        verify(externalTaskService).complete(externalTask, processVariables);
-    }
 
-    @Test
-    void test_HasWarning_Handler_when_true() {
-
-        when(externalTask.getAllVariables()).thenReturn(singletonMap("hasWarnings", true));
-
-        warningTaskWorkerHandler.checkHasWarnings(externalTask, externalTaskService);
-        Map<String, Object> processVariables = singletonMap(
-            "hasWarnings",
-            true
+        String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"},"
+            + "{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"}]";
+        Map<String, Object> expectedProcessVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", expectedWarningValues
         );
-        verify(externalTaskService).complete(externalTask, processVariables);
-    }
 
-    @Test
-    void test_HasWarning_Handler_when_empty() {
+        when(externalTask.getAllVariables()).thenReturn(processVariables);
 
-        when(externalTask.getAllVariables()).thenReturn(singletonMap("hasWarnings", null));
+        warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
 
-        warningTaskWorkerHandler.checkHasWarnings(externalTask, externalTaskService);
-
-        Map<String, Object> processVariables = singletonMap(
-            "hasWarnings",
-            true
-        );
-        verify(externalTaskService).complete(externalTask, processVariables);
+        verify(externalTaskService).complete(externalTask, expectedProcessVariables);
     }
 
 }
