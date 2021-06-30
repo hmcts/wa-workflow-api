@@ -24,17 +24,29 @@ public class WarningTaskWorkerHandler {
 
     private String mapWarningValues(Map<?, ?> variables) {
         final String warningStr = (String) variables.get("warningList");
-        WarningValues warningValues = new WarningValues(warningStr);
+        WarningValues warningValues;
+        if (warningStr == null) {
+            warningValues = new WarningValues("[]");
+        } else {
+            warningValues = new WarningValues(warningStr);
+        }
 
-        final String warningCode = (String) variables.get("warningCode");
-        final String warningText = (String) variables.get("warningText");
-
-        if (warningCode != null && warningText != null) {
-            Warning warning = new Warning(warningCode, warningText);
+        final Warning warning = mapWarningAttributes(variables);
+        if (warning != null) {
             warningValues.getValues().add(warning);
         }
 
         return warningValues.getValuesAsJson();
+    }
+
+    private Warning mapWarningAttributes(Map<?, ?> variables) {
+        final String warningCode = (String) variables.get("warningCode");
+        final String warningText = (String) variables.get("warningText");
+
+        if (warningCode != null && warningText != null) {
+            return new Warning(warningCode, warningText);
+        }
+        return null;
     }
 
 }
