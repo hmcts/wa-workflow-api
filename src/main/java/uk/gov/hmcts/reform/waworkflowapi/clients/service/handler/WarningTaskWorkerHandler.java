@@ -26,9 +26,13 @@ public class WarningTaskWorkerHandler {
         final String warningStr = (String) variables.get("warningList");
         WarningValues warningValues = new WarningValues(warningStr);
 
-        Warning warning = new Warning((String) variables.get("warningCode"),
-                                      (String) variables.get("warningText"));
-        warningValues.getValues().add(warning);
+        final String warningCode = (String) variables.get("warningCode");
+        final String warningText = (String) variables.get("warningText");
+
+        if (warningCode != null && warningText != null) {
+            Warning warning = new Warning(warningCode, warningText);
+            warningValues.getValues().add(warning);
+        }
 
         return warningValues.getValuesAsJson();
     }

@@ -54,4 +54,26 @@ class WarningTaskWorkerHandlerTest {
         verify(externalTaskService).complete(externalTask, expectedProcessVariables);
     }
 
+    @Test
+    void should_complete_warning_external_task_Service_without_warnings() {
+
+        String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        Map<String, Object> processVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", processVariablesWarningValues
+        );
+
+        String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        Map<String, Object> expectedProcessVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", expectedWarningValues
+        );
+
+        when(externalTask.getAllVariables()).thenReturn(processVariables);
+
+        warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
+
+        verify(externalTaskService).complete(externalTask, expectedProcessVariables);
+    }
+
 }
