@@ -61,7 +61,6 @@ public class ExternalTaskWorker {
             .build();
 
         warningClient.subscribe("wa-warning-topic")
-            .lockDuration(30000) // 30 seconds
             .handler(warningTaskWorkerHandler::completeWarningTaskService)
             .open();
 
