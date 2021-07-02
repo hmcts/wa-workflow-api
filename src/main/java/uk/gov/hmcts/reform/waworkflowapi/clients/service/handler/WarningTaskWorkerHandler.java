@@ -15,6 +15,8 @@ public class WarningTaskWorkerHandler {
 
     public void completeWarningTaskService(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         Map<?, ?> variables = externalTask.getAllVariables();
+        String caseId = (String) variables.get("caseId");
+        log.info("Set processVariables for same processInstance ids with caseId {}", caseId);
 
         externalTaskService.complete(externalTask, Map.of(
             "hasWarnings",
