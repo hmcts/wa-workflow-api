@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import pl.pojo.tester.api.assertion.Method;
 
@@ -23,7 +24,7 @@ class WarningValuesTest {
     }
 
     @Test
-    void deserializeTest() {
+    void deserializeTest() throws JsonProcessingException {
 
         String values = "[{\"warningCode\":\"Code1\", \"warningText\":\"Text1\"}, "
                         + "{\"warningCode\":\"Code2\", \"warningText\":\"Text2\"}]";
@@ -37,7 +38,7 @@ class WarningValuesTest {
     }
 
     @Test
-    void shouldReturnWarningsAsJson() {
+    void shouldReturnWarningsAsJson() throws JsonProcessingException {
         String values = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"},"
             + "{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"}]";
         WarningValues warningValues = new WarningValues(values);

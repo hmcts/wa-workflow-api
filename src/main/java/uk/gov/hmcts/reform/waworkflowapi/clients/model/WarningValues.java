@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +41,7 @@ public class WarningValues {
         return values;
     }
 
-    public String getValuesAsJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(values);
-        } catch (JsonProcessingException jsonProcessingException) {
-            log.error("Could not deserialize Warning values");
-        }
-        return StringUtils.EMPTY;
+    public String getValuesAsJson() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(values);
     }
 }

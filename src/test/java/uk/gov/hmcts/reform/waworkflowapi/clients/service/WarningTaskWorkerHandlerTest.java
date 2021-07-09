@@ -79,12 +79,10 @@ class WarningTaskWorkerHandlerTest {
     @Test
     void should_complete_warning_external_task_Service_without_warning_process_variable() {
 
-        String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
         Map<String, Object> processVariables = Map.of(
             "hasWarnings", true
         );
 
-        String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
         Map<String, Object> expectedProcessVariables = Map.of(
             "hasWarnings", true,
             "warningList", "[]"
@@ -97,5 +95,23 @@ class WarningTaskWorkerHandlerTest {
         verify(externalTaskService).complete(externalTask, expectedProcessVariables);
     }
 
+    @Test
+    void should_handle_json_parsing_exception() {
+
+        String processVariablesWarningValues = "[{\"warningCode\"\"Code1\",\"warningText\":\"Text1\"}]";
+        Map<String, Object> processVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", processVariablesWarningValues
+        );
+
+        when(externalTask.getAllVariables()).thenReturn(processVariables);
+        Map<String, Object> expectedProcessVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", "[]"
+        );
+        warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
+
+        verify(externalTaskService).complete(externalTask, expectedProcessVariables);
+    }
 
 }
