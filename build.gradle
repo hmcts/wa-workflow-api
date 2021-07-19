@@ -313,7 +313,7 @@ dependencies {
   compile group: 'javax.xml', name: 'jaxb-api', version: '2.1'
 
   compile group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.2'
-  compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.2.2'
+  compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.6.1'
 
   testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
