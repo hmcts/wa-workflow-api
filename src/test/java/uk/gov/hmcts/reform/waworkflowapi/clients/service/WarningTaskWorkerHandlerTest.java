@@ -33,15 +33,15 @@ class WarningTaskWorkerHandlerTest {
     void should_complete_warning_external_task_Service() {
 
         String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        String warningsFromHandler = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"}]";
         Map<String, Object> processVariables = Map.of(
             "hasWarnings", true,
             "warningList", processVariablesWarningValues,
-            "warningCode", "Code2",
-            "warningText", "Text2"
+            "warnings",  warningsFromHandler
         );
 
-        String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"},"
-            + "{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"}]";
+        String expectedWarningValues = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
+            + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
         Map<String, Object> expectedProcessVariables = Map.of(
             "hasWarnings", true,
             "warningList", expectedWarningValues
@@ -55,7 +55,34 @@ class WarningTaskWorkerHandlerTest {
     }
 
     @Test
-    void should_complete_warning_external_task_Service_without_warnings() {
+    void should_complete_warning_external_task_Service_with_duplicate_warnings() {
+
+        String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        String warningsFromHandler = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
+            + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+
+        Map<String, Object> processVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", processVariablesWarningValues,
+            "warnings",  warningsFromHandler
+        );
+
+        String expectedWarningValues = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
+            + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+        Map<String, Object> expectedProcessVariables = Map.of(
+            "hasWarnings", true,
+            "warningList", expectedWarningValues
+        );
+
+        when(externalTask.getAllVariables()).thenReturn(processVariables);
+
+        warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
+
+        verify(externalTaskService).complete(externalTask, expectedProcessVariables);
+    }
+
+    @Test
+    void should_complete_warning_external_task_Service_without_existing_warnings() {
 
         String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
         Map<String, Object> processVariables = Map.of(

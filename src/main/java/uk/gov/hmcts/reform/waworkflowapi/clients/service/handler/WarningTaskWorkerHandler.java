@@ -5,10 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.Warning;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.WarningValues;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -39,31 +43,37 @@ public class WarningTaskWorkerHandler {
 
     private String mapWarningValues(Map<?, ?> variables) throws JsonProcessingException {
         final String warningStr = (String) variables.get("warningList");
-        WarningValues warningValues;
+        WarningValues processVariableWarningValues;
         if (warningStr == null) {
-            warningValues = new WarningValues("[]");
+            processVariableWarningValues = new WarningValues("[]");
         } else {
-            warningValues = new WarningValues(warningStr);
+            processVariableWarningValues = new WarningValues(warningStr);
         }
 
-        final Warning warning = mapWarningAttributes(variables);
-        if (warning != null) {
-            warningValues.getValues().add(warning);
-        }
+        final WarningValues handlerWarningValues = mapWarningAttributesFromWarnings(variables);
+        final List<Warning> handlerWarnings = handlerWarningValues.getValues();
+
+        final List<Warning> processVariableWarnings = processVariableWarningValues.getValues();
+
+        // without duplicate warning attributes
+        final List<Warning> distinctWarnings = Stream.concat(handlerWarnings.stream(), processVariableWarnings.stream())
+            .distinct().collect(Collectors.toList());
+
+        WarningValues aggregatedWarnings = new WarningValues(distinctWarnings);
 
         String caseId = (String) variables.get("caseId");
-        log.info("caseId {} and its warning values : {}", caseId, warningValues.getValuesAsJson());
-        return warningValues.getValuesAsJson();
+        log.info("caseId {} and its warning values : {}", caseId, aggregatedWarnings.getValuesAsJson());
+
+        return aggregatedWarnings.getValuesAsJson();
     }
 
-    private Warning mapWarningAttributes(Map<?, ?> variables) {
-        final String warningCode = (String) variables.get("warningCode");
-        final String warningText = (String) variables.get("warningText");
+    private WarningValues mapWarningAttributesFromWarnings(Map<?, ?> variables) {
+        final String warningsAsJson = (String) variables.get("warnings");
 
-        if (warningCode != null && warningText != null) {
-            return new Warning(warningCode, warningText);
+        if (!StringUtils.isEmpty(warningsAsJson)) {
+            return new WarningValues(warningsAsJson);
         }
-        return null;
+        return new WarningValues();
     }
 
 }
