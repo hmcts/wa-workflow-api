@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.Warning;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.WarningValues;
+import uk.gov.hmcts.reform.waworkflowapi.clients.service.LaunchDarklyFeatureToggler;
+import uk.gov.hmcts.reform.waworkflowapi.config.features.FeatureFlag;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,12 @@ import java.util.stream.Stream;
 @Component
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class WarningTaskWorkerHandler {
+
+    private final LaunchDarklyFeatureToggler featureToggler;
+
+    public WarningTaskWorkerHandler(LaunchDarklyFeatureToggler featureToggler) {
+        this.featureToggler = featureToggler;
+    }
 
     public void completeWarningTaskService(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         Map<?, ?> variables = externalTask.getAllVariables();
@@ -50,30 +58,45 @@ public class WarningTaskWorkerHandler {
             processVariableWarningValues = new WarningValues(warningStr);
         }
 
-        final WarningValues handlerWarningValues = mapWarningAttributesFromWarnings(variables);
-        final List<Warning> handlerWarnings = handlerWarningValues.getValues();
-
-        final List<Warning> processVariableWarnings = processVariableWarningValues.getValues();
-
-        // without duplicate warning attributes
-        final List<Warning> distinctWarnings = Stream.concat(handlerWarnings.stream(), processVariableWarnings.stream())
-            .distinct().collect(Collectors.toList());
-
-        WarningValues aggregatedWarnings = new WarningValues(distinctWarnings);
+        WarningValues combinedWarningValues;
+        final boolean nonIacWarningFeature = featureToggler.getValue(FeatureFlag.WA_NON_IAC_WARNINGS, false);
+        if (nonIacWarningFeature) {
+            combinedWarningValues = mapNonIacWaringAttributes(variables, processVariableWarningValues);
+        } else {
+            combinedWarningValues = mapWarningAttributes(variables, processVariableWarningValues);
+        }
 
         String caseId = (String) variables.get("caseId");
-        log.info("caseId {} and its warning values : {}", caseId, aggregatedWarnings.getValuesAsJson());
+        log.info("caseId {} and its warning values : {}", caseId, combinedWarningValues.getValuesAsJson());
 
-        return aggregatedWarnings.getValuesAsJson();
+        return combinedWarningValues.getValuesAsJson();
     }
 
-    private WarningValues mapWarningAttributesFromWarnings(Map<?, ?> variables) {
+    private WarningValues mapWarningAttributes(Map<?, ?> variables, WarningValues processVariableWarningValues) {
+        final String warningCode = (String) variables.get("warningCode");
+        final String warningText = (String) variables.get("warningText");
+
+        if (warningCode != null && warningText != null) {
+            processVariableWarningValues.getValues().add(new Warning(warningCode, warningText));
+        }
+        return processVariableWarningValues;
+    }
+
+    private WarningValues mapNonIacWaringAttributes(Map<?, ?> variables, WarningValues processVariableWarningValues) {
         final String warningsAsJson = (String) variables.get("warnings");
 
         if (!StringUtils.isEmpty(warningsAsJson)) {
-            return new WarningValues(warningsAsJson);
+            final WarningValues warningValues = new WarningValues(warningsAsJson);
+            final List<Warning> handlerWarnings = warningValues.getValues();
+
+            final List<Warning> processVariableWarnings = processVariableWarningValues.getValues();
+
+            // without duplicate warning attributes
+            final List<Warning> distinctWarnings = Stream.concat(handlerWarnings.stream(), processVariableWarnings.stream())
+                .distinct().collect(Collectors.toList());
+            return new WarningValues(distinctWarnings);
         }
-        return new WarningValues();
+        return processVariableWarningValues;
     }
 
 }
