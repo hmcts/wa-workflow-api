@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.LaunchDarklyFeatureToggler;
 import uk.gov.hmcts.reform.waworkflowapi.config.features.FeatureFlag;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -23,15 +24,13 @@ class LaunchDarklyFeatureTogglerTest {
 
     @Test
     void should_return_default_value_when_key_does_not_exist() {
-        String notExistingKey = "not-existing-key";
-
         when(ldClient.boolVariation(
             FeatureFlag.WA_NON_IAC_WARNINGS.getKey(),
             null,
-            true)
-        ).thenReturn(true);
+            false)
+        ).thenReturn(false);
 
-        assertTrue(launchDarklyFeatureToggler.getValue(FeatureFlag.WA_NON_IAC_WARNINGS, true));
+        assertFalse(launchDarklyFeatureToggler.getValue(FeatureFlag.WA_NON_IAC_WARNINGS, false));
     }
 
     @Test
