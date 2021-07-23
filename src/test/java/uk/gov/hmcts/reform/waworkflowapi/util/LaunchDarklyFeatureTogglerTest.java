@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.LaunchDarklyFeatureToggler;
 import uk.gov.hmcts.reform.waworkflowapi.config.features.FeatureFlag;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -27,10 +26,10 @@ class LaunchDarklyFeatureTogglerTest {
         when(ldClient.boolVariation(
             FeatureFlag.WA_NON_IAC_WARNINGS.getKey(),
             null,
-            false)
-        ).thenReturn(false);
+            true)
+        ).thenReturn(true);
 
-        assertFalse(launchDarklyFeatureToggler.getValue(FeatureFlag.WA_NON_IAC_WARNINGS, false));
+        assertTrue(launchDarklyFeatureToggler.getValue(FeatureFlag.WA_NON_IAC_WARNINGS, true));
     }
 
     @Test
