@@ -50,7 +50,7 @@ public class WarningTaskWorkerHandler {
             processVariableWarningValues = new WarningValues(warningStr);
         }
 
-        WarningValues combinedWarningValues = mapWaringAttributes(variables, processVariableWarningValues);
+        WarningValues combinedWarningValues = mapWarningAttributes(variables, processVariableWarningValues);
 
         String caseId = (String) variables.get("caseId");
         log.info("caseId {} and its warning values : {}", caseId, combinedWarningValues.getValuesAsJson());
@@ -58,7 +58,7 @@ public class WarningTaskWorkerHandler {
         return combinedWarningValues.getValuesAsJson();
     }
 
-    private WarningValues mapWaringAttributes(Map<?, ?> variables, WarningValues processVariableWarningTextValues) {
+    private WarningValues mapWarningAttributes(Map<?, ?> variables, WarningValues processVariableWarningTextValues) {
         final String warningsToAddAsJson = (String) variables.get("warningsToAdd");
 
         if (!StringUtils.isEmpty(warningsToAddAsJson)) {
