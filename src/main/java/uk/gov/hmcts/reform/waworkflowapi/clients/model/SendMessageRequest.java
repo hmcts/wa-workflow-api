@@ -1,17 +1,19 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Map;
 
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class SendMessageRequest {
-    private final String messageName;
-    private final Map<String, DmnValue<?>> processVariables;
-    private final Map<String, DmnValue<?>> correlationKeys;
-    private final boolean all;
+    private String messageName;
+    private Map<String, DmnValue<?>> processVariables;
+    private Map<String, DmnValue<?>> correlationKeys;
+    private boolean all;
 
     public SendMessageRequest(String messageName,
                               Map<String, DmnValue<?>> processVariables,
