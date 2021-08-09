@@ -1,24 +1,26 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Map;
 
-@NoArgsConstructor
+
 @EqualsAndHashCode
 @ToString
 public class SendMessageRequest {
-    private String messageName;
-    private Map<String, DmnValue<?>> processVariables;
-    private Map<String, DmnValue<?>> correlationKeys;
-    private boolean all;
+    private final String messageName;
+    private final Map<String, DmnValue<?>> processVariables;
+    private final Map<String, DmnValue<?>> correlationKeys;
+    private final boolean all;
 
-    public SendMessageRequest(String messageName,
-                              Map<String, DmnValue<?>> processVariables,
-                              Map<String, DmnValue<?>> correlationKeys,
-                              boolean all) {
+    @JsonCreator
+    public SendMessageRequest(@JsonProperty("messageName") String messageName,
+                              @JsonProperty("processVariables") Map<String, DmnValue<?>> processVariables,
+                              @JsonProperty("correlationKeys") Map<String, DmnValue<?>> correlationKeys,
+                              @JsonProperty("all") boolean all) {
         this.messageName = messageName;
         this.processVariables = processVariables;
         this.correlationKeys = correlationKeys;
