@@ -33,8 +33,8 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(SpringExtension.class)
-@Provider("wa_workflow_api_post_message")
-//Uncomment this and comment the @PacBroker line to test WorkflowPostMessageConsumerTest local consumer.
+@Provider("wa_workflow_api_send_message")
+//Uncomment this and comment the @PacBroker line to test WorkflowSendMessageConsumerTest local consumer.
 //@PactFolder("target/pacts")
 @PactBroker(
     scheme = "${PACT_BROKER_SCHEME:http}",
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 )
 @Import(WorkflowProviderTestConfiguration.class)
 @IgnoreNoPactsToVerify
-public class WorkflowPostMessageProviderTest {
+public class WorkflowSendMessageProviderTest {
 
     @Mock
     private EvaluateDmnService evaluateDmnService;
@@ -74,8 +74,8 @@ public class WorkflowPostMessageProviderTest {
 
     }
 
-    @State({"post a message to Camunda"})
-    public void postMessage() {
+    @State({"send a message to Camunda"})
+    public void sendMessage() {
         setInitMock();
     }
 

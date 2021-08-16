@@ -12,28 +12,23 @@ import net.serenitybdd.rest.SerenityRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootContractBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
-import uk.gov.hmcts.reform.waworkflowapi.provider.service.CamundaConsumerApplication;
 
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue.dmnStringValue;
 
-@PactTestFor(providerName = "wa_workflow_api_post_message", port = "8899")
-@ContextConfiguration(classes = {CamundaConsumerApplication.class})
-@TestPropertySource(locations = {"classpath:application.properties"})
-public class WorkflowPostMessageConsumerTest extends SpringBootContractBaseTest {
+@PactTestFor(providerName = "wa_workflow_api_send_message", port = "8899")
+public class WorkflowSendMessageConsumerTest extends SpringBootContractBaseTest {
 
     private static final String WA_POST_MESSAGE_URL = "/workflow/message";
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @PactTestFor(pactMethod = "executePostMessage204")
-    void testPostMessage204Test(MockServer mockServer)  {
+    @PactTestFor(pactMethod = "executeSendMessage204")
+    void sendMessage204Test(MockServer mockServer)  {
         SerenityRest
             .given()
             .headers(getHttpHeaders())
@@ -44,11 +39,11 @@ public class WorkflowPostMessageConsumerTest extends SpringBootContractBaseTest 
             .statusCode(204);
     }
 
-    @Pact(provider = "wa_workflow_api_post_message", consumer = "wa_workflow_api")
-    public RequestResponsePact executePostMessage204(PactDslWithProvider builder) {
+    @Pact(provider = "wa_workflow_api_send_message", consumer = "wa_workflow_api")
+    public RequestResponsePact executeSendMessage204(PactDslWithProvider builder) {
 
         return builder
-            .given("post a message to Camunda")
+            .given("send a message to Camunda")
             .uponReceiving("message to post")
             .path(WA_POST_MESSAGE_URL)
             .method(HttpMethod.POST.toString())
