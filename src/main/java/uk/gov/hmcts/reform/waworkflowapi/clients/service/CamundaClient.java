@@ -28,7 +28,7 @@ public interface CamundaClient {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     void sendMessage(@RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-                     SendMessageRequest sendMessageRequest);
+                     String sendMessageRequest);
 
     @PostMapping(
         value = "/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate",

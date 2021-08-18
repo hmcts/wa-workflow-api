@@ -11,11 +11,13 @@ import springfox.documentation.service.ParameterType;
 import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import uk.gov.hmcts.reform.waworkflowapi.Application;
 
 import static java.util.Collections.singletonList;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfiguration {
 
     private final boolean enableSwagger;

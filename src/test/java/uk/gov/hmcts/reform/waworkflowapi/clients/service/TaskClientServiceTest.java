@@ -34,7 +34,7 @@ class TaskClientServiceTest {
     void setUp() {
         camundaClient = mock(CamundaClient.class);
         authTokenGenerator = mock(AuthTokenGenerator.class);
-        underTest = new TaskClientService(camundaClient, authTokenGenerator);
+        underTest = new TaskClientService(camundaClient, authTokenGenerator, null);
         evaluateDmnRequest = new EvaluateDmnRequest(Map.of("name",DmnValue.dmnStringValue("test")));
         when(authTokenGenerator.generate()).thenReturn(BEARER_SERVICE_TOKEN);
     }
