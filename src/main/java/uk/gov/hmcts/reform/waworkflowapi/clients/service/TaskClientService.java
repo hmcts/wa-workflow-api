@@ -26,8 +26,8 @@ public class TaskClientService {
     public void sendMessage(SendMessageRequest sendMessageRequest) {
         CamundaSendMessageRequest request = new CamundaSendMessageRequest(sendMessageRequest);
         camundaClient.sendMessage(
-        authTokenGenerator.generate(),
-        request
+            authTokenGenerator.generate(),
+            request
         );
     }
 
