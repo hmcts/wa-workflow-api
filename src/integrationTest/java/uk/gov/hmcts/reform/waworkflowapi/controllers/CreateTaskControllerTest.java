@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -97,9 +98,9 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
             eq(BEARER_SERVICE_TOKEN),
             captor.capture()
         );
-        //SendMessageRequest actualSendMessageRequest = captor.getValue();
+        SendMessageRequest actualSendMessageRequest = captor.getValue();
 
-        //assertThat(actualSendMessageRequest).isEqualTo(scenario.expectedSendMessageRequest);
+        assertThat(actualSendMessageRequest).isEqualTo(scenario.expectedSendMessageRequest);
     }
 
     private static Stream<Scenario> scenarioProvider() {
