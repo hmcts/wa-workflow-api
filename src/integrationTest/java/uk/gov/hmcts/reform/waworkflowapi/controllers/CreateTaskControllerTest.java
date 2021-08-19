@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootIntegrationBaseTest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaSendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -50,7 +50,7 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
     private CamundaClient camundaClient;
 
     @Captor
-    private ArgumentCaptor<String> captor;
+    private ArgumentCaptor<CamundaSendMessageRequest> captor;
 
 
     @BeforeEach

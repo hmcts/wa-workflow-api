@@ -5,9 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaSendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.config.CamundaFeignConfiguration;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public interface CamundaClient {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     void sendMessage(@RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-                     String sendMessageRequest);
+                     CamundaSendMessageRequest sendMessageRequest);
 
     @PostMapping(
         value = "/decision-definition/key/{key}/tenant-id/{tenant-id}/evaluate",

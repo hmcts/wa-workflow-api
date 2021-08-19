@@ -10,7 +10,7 @@ import java.util.Map;
 
 @EqualsAndHashCode
 @ToString
-//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SendMessageRequest {
     private final String messageName;
     private final Map<String, DmnValue<?>> processVariables;
