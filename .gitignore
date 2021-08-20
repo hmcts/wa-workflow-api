@@ -20,4 +20,5 @@ bin/main/application.yaml
 *.iml
 *.ipr
 bin/*
+pacts/*
 .DS_Store

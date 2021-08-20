@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @EqualsAndHashCode
 @ToString
+@Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SendMessageRequest {
     private final String messageName;
