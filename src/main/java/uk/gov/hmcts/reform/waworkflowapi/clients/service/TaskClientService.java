@@ -10,6 +10,9 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 
 @Component
 public class TaskClientService {
@@ -24,7 +27,7 @@ public class TaskClientService {
     }
 
     public void sendMessage(SendMessageRequest sendMessageRequest) {
-        CamundaSendMessageRequest request = new CamundaSendMessageRequest(sendMessageRequest);
+        CamundaSendMessageRequest request = buildSendRequest(sendMessageRequest);
         camundaClient.sendMessage(
             authTokenGenerator.generate(),
             request
@@ -32,12 +35,34 @@ public class TaskClientService {
     }
 
     public List<Map<String, DmnValue<?>>> evaluate(EvaluateDmnRequest evaluateDmnRequest, String key, String tenantId) {
+        EvaluateDmnRequest evaluateDmnRequest1 = EvaluateDmnRequest.builder()
+            .variables(convertVariablesToCamelCase(evaluateDmnRequest.getVariables()))
+            .build();
+
         return camundaClient.evaluateDmn(
             authTokenGenerator.generate(),
             key,
             tenantId,
-            evaluateDmnRequest
+            evaluateDmnRequest1
         );
+    }
+
+    private CamundaSendMessageRequest buildSendRequest(SendMessageRequest sendMessageRequest) {
+        return CamundaSendMessageRequest.builder()
+            .messageName(sendMessageRequest.getMessageName())
+            .all(sendMessageRequest.isAll())
+            .correlationKeys(convertVariablesToCamelCase(sendMessageRequest.getCorrelationKeys()))
+            .processVariables(convertVariablesToCamelCase(sendMessageRequest.getProcessVariables()))
+            .build();
+
+    }
+
+    private Map<String, DmnValue<?>> convertVariablesToCamelCase(Map<String, DmnValue<?>> variables) {
+        if (Objects.nonNull(variables)) {
+            return variables.entrySet().stream()
+                .collect(Collectors.toMap(e -> org.apache.commons.text.CaseUtils.toCamelCase(e.getKey(), false, new char[]{'_'}), e -> e.getValue()));
+        }
+        return null;
     }
 
 

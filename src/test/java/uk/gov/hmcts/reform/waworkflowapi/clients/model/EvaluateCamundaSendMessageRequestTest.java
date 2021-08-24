@@ -60,9 +60,8 @@ class EvaluateCamundaSendMessageRequestTest {
             "dueDate", dmnStringValue(dueDate)
         );
 
-        SendMessageRequest sendMessageRequest =  CamundaSendMessageRequest.builder().all(false).correlationKeys(null)
+        return  CamundaSendMessageRequest.builder().all(false).correlationKeys(null)
             .messageName("createTaskMessage").processVariables(variables).build();
 
-        return new CamundaSendMessageRequest(sendMessageRequest);
     }
 }

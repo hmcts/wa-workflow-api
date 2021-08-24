@@ -67,7 +67,7 @@ public abstract class SpringBootFunctionalBaseTest {
         Response result = camundaApiActions.get(
             ENDPOINT_HISTORY_TASK,
             new Headers(authorizationHeaders),
-            Map.of("taskId", taskId)
+            Map.of("task_id", taskId)
         );
 
         result.then().assertThat()
@@ -86,17 +86,17 @@ public abstract class SpringBootFunctionalBaseTest {
         String jurisdiction
     ) {
         Map<String, DmnValue<?>> processVariables = new HashMap<>();
-        processVariables.put("dueDate", DmnValue.dmnStringValue(dueDate));
+        processVariables.put("due_date", DmnValue.dmnStringValue(dueDate));
         processVariables.put("group", DmnValue.dmnStringValue(group));
         processVariables.put("name", DmnValue.dmnStringValue(name));
         processVariables.put("jurisdiction", DmnValue.dmnStringValue(jurisdiction));
-        processVariables.put("caseType", DmnValue.dmnStringValue("asylum"));
-        processVariables.put("taskId", DmnValue.dmnStringValue(taskId));
-        processVariables.put("caseId", DmnValue.dmnStringValue(caseId));
-        processVariables.put("idempotencyKey", DmnValue.dmnStringValue(idempotencyKey));
+        processVariables.put("case_type", DmnValue.dmnStringValue("asylum"));
+        processVariables.put("task_id", DmnValue.dmnStringValue(taskId));
+        processVariables.put("case_id", DmnValue.dmnStringValue(caseId));
+        processVariables.put("idempotency_key", DmnValue.dmnStringValue(idempotencyKey));
 
         String delayUntilTimer = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        processVariables.put("delayUntil", DmnValue.dmnStringValue(delayUntilTimer));
+        processVariables.put("delay_until", DmnValue.dmnStringValue(delayUntilTimer));
 
         return processVariables;
     }
