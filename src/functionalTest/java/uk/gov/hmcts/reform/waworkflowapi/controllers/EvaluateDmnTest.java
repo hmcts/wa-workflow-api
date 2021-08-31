@@ -81,7 +81,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             Map.of(
                 "eventId", DmnValue.dmnStringValue("submitAppeal"),
                 "postEventState", DmnValue.dmnStringValue("appealSubmitted"),
-                "caseData", DmnValue.dmnMapValue(dataMap)
+                "additionalData", DmnValue.dmnMapValue(dataMap)
             ));
 
         Response result = restApiActions.post(
