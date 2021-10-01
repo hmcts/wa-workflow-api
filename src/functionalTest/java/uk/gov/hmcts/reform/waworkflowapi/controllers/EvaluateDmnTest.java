@@ -44,11 +44,16 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void should_evaluate_and_return_dmn_results() {
+        Map<String, Object> appealMap = new HashMap<>();
+        appealMap.put("appealType", "protection");
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("Data", appealMap);
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
             Map.of(
                 "eventId", DmnValue.dmnStringValue("submitAppeal"),
-                "postEventState", DmnValue.dmnStringValue("appealSubmitted")
+                "postEventState", DmnValue.dmnStringValue("appealSubmitted"),
+                "additionalData", DmnValue.dmnMapValue(dataMap)
             ));
 
         Response result = restApiActions.post(
@@ -95,17 +100,11 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
         result.then().assertThat()
             .statusCode(HttpStatus.OK.value())
             .body("size()", equalTo(1))
-            .body("results[0].name.value", equalTo("Check Fee Status"))
+            .body("results[0].name.value", equalTo("Review the appeal"))
             .body("results[0].workingDaysAllowed.value", equalTo(2))
-            .body("results[0].delayDuration.value", equalTo(28))
-            .body("results[0].taskId.value", equalTo("checkFeeStatus"))
+            .body("results[0].taskId.value", equalTo("reviewTheAppeal"))
             .body("results[0].group.value", equalTo("TCW"))
-            .body("results[0].processCategories.value", equalTo("followUpOverdue"))
-            .body("results[1].name.value", equalTo("Review the appeal"))
-            .body("results[1].workingDaysAllowed.value", equalTo(2))
-            .body("results[1].taskId.value", equalTo("reviewTheAppeal"))
-            .body("results[1].group.value", equalTo("TCW"))
-            .body("results[1].processCategories.value", equalTo("caseProgression"));
+            .body("results[0].processCategories.value", equalTo("caseProgression"));
     }
 
     @Test
