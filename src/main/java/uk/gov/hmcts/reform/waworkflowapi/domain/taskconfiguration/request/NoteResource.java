@@ -3,11 +3,9 @@ package uk.gov.hmcts.reform.waworkflowapi.domain.taskconfiguration.request;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 @EqualsAndHashCode
 @ToString
-public class NoteResource implements Serializable {
+public class NoteResource {
 
     private final String code;
     private final String noteType;
