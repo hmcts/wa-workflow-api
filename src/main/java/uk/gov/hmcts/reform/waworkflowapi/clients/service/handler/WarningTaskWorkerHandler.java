@@ -62,12 +62,12 @@ public class WarningTaskWorkerHandler {
         boolean isCftTaskWarningEnabled = launchDarklyFeatureFlagProvider.getBooleanValue(RELEASE_2_CFT_TASK_WARNING);
         if (isCftTaskWarningEnabled) {
             //Also update the warning in CFT Task DB
-            addWarningInCFTTaskDb(externalTask.getId());
+            addWarningInCftTaskDb(externalTask.getId());
         }
 
     }
 
-    private void addWarningInCFTTaskDb(String taskId) {
+    private void addWarningInCftTaskDb(String taskId) {
         NotesRequest notesRequest = new NotesRequest(
             singletonList(
                 new NoteResource(null, "WARNING", null, null)
