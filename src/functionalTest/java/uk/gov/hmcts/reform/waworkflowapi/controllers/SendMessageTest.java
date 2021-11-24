@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.services.AuthorizationHeadersProvider;
@@ -218,6 +219,39 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
+    public void add_warnings_to_all_processes_with_same_case_id() {
+        String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Map<String, DmnValue<?>> processVariables = mockProcessVariables(
+            dueDate,
+            "Provide Respondent Evidence",
+            "provideRespondentEvidence",
+            "external",
+            caseId,
+            UUID.randomUUID().toString(), "ia"
+        );
+        processVariables.put("hasWarning", DmnValue.booleanValue(Boolean.TRUE));
+        String warningValues = "WarningValues(values=[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}])";
+        processVariables.put("warningList", DmnValue.dmnStringValue(warningValues));
+
+        SendMessageRequest body = new SendMessageRequest(
+            "warnProcess",
+            processVariables,
+            null,
+            false
+        );
+
+        Response response = restApiActions.post(
+            "/workflow/message",
+            body,
+            authenticationHeaders
+        );
+
+        response.then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+
+    }
+
+        @Test
     public void should_not_be_able_to_post_as_message_does_not_exist() {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             ZonedDateTime.now().toString(),
