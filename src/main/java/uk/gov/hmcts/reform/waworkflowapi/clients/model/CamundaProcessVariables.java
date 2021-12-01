@@ -1,33 +1,43 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaValue.booleanValue;
-import static uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaValue.stringValue;
+import static uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue.booleanValue;
+import static uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue.dmnStringValue;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode
+@ToString
 public class CamundaProcessVariables {
 
-    Map<String, CamundaValue<?>> processVariablesMap;
+    Map<String, DmnValue<?>> processVariablesMap;
 
-    public CamundaProcessVariables(Map<String, CamundaValue<?>> processVariablesMap) {
+    @JsonCreator
+    public CamundaProcessVariables(Map<String, DmnValue<?>> processVariablesMap) {
         this.processVariablesMap = processVariablesMap;
     }
 
-    public Map<String, CamundaValue<?>> getProcessVariablesMap() {
+    public Map<String, DmnValue<?>> getProcessVariablesMap() {
         return processVariablesMap;
     }
 
     public static class ProcessVariablesBuilder implements Builder<CamundaProcessVariables> {
 
-        Map<String, CamundaValue<?>> processVariablesMap = new ConcurrentHashMap<>();
+        Map<String, DmnValue<?>> processVariablesMap = new ConcurrentHashMap<>();
 
         public static ProcessVariablesBuilder processVariables() {
             return new ProcessVariablesBuilder();
         }
 
         public ProcessVariablesBuilder withProcessVariable(String key, String value) {
-            processVariablesMap.put(key, stringValue(value));
+            processVariablesMap.put(key, dmnStringValue(value));
             return this;
         }
 

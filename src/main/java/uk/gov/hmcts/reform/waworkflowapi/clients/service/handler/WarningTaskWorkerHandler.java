@@ -1,18 +1,16 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.service.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.waworkflowapi.clients.TaskManagementServiceApi;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.AddProcessVariableRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcess;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcessVariables;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaValue;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.Warning;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.WarningValues;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.CamundaClient;
@@ -22,6 +20,7 @@ import uk.gov.hmcts.reform.waworkflowapi.domain.taskconfiguration.request.NotesR
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +32,8 @@ import static uk.gov.hmcts.reform.waworkflowapi.config.features.FeatureFlag.RELE
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class WarningTaskWorkerHandler {
 
+    public static final String WARNING_LIST = "warningList";
+    public static final String WARNINGS_TO_ADD = "warningsToAdd";
     final TaskManagementServiceApi taskManagementServiceApi;
     final AuthTokenGenerator authTokenGenerator;
     final LaunchDarklyFeatureFlagProvider launchDarklyFeatureFlagProvider;
@@ -64,7 +65,7 @@ public class WarningTaskWorkerHandler {
         externalTaskService.complete(externalTask, Map.of(
             "hasWarnings",
             true,
-            "warningList",
+            WARNING_LIST,
             updatedWarningValues
         ));
 
@@ -79,28 +80,27 @@ public class WarningTaskWorkerHandler {
 
     private void addWarningToDelayedProcesses(String caseId, String updatedWarningValues) {
         List<CamundaProcess> processes = getProcesses(caseId);
-        processes.forEach(process -> updateProcessWarnings(process, updatedWarningValues));
+        processes.forEach(process -> updateDelayedProcessWarnings(process, updatedWarningValues));
     }
 
-    private void updateProcessWarnings(CamundaProcess process, String warningToAdd) {
+    private void updateDelayedProcessWarnings(CamundaProcess process, String warningToAdd) {
         String serviceToken = authTokenGenerator.generate();
         CamundaProcessVariables processVariables = camundaClient.getProcessInstanceVariables(
             serviceToken,
             process.getId()
         );
 
-        String warning = (String) processVariables.getProcessVariablesMap().get("warningList").getValue();
+        String warning = (String) processVariables.getProcessVariablesMap().get(WARNING_LIST).getValue();
 
         try {
-            WarningValues values = mapWarningAttributes(warningToAdd, new WarningValues(warning));
-            Map<String, WarningValues> warningValues = Map.of("WarningValues", values);
-            warning = new ObjectMapper().writeValueAsString(warningValues);
+            WarningValues values = mapWarningAttributes(new WarningValues(warningToAdd), new WarningValues(warning));
+            warning = values.getValuesAsJson();
 
         } catch (JsonProcessingException exp) {
             log.error("Exception occurred while parsing json: {}", exp.getMessage(), exp);
         }
 
-        Map<String, CamundaValue<String>> warningList = Map.of("warningList", CamundaValue.stringValue(warning));
+        Map<String, DmnValue<String>> warningList = Map.of(WARNING_LIST, DmnValue.dmnStringValue(warning));
         AddProcessVariableRequest modificationRequest = new AddProcessVariableRequest(warningList);
 
         camundaClient.updateProcessVariables(
@@ -121,16 +121,13 @@ public class WarningTaskWorkerHandler {
     }
 
     private String mapWarningValues(Map<?, ?> variables) throws JsonProcessingException {
-        final String warningStr = (String) variables.get("warningList");
-        WarningValues processVariableWarningValues;
-        if (warningStr == null) {
-            processVariableWarningValues = new WarningValues("[]");
-        } else {
-            processVariableWarningValues = new WarningValues(warningStr);
-        }
+        WarningValues processVariableWarningValues = toWarningValues(variables, WARNING_LIST);
+        WarningValues warningValuesToBeAdded = toWarningValues(variables, WARNINGS_TO_ADD);
 
-        WarningValues combinedWarningValues = mapWarningAttributes((String) variables.get("warningsToAdd"),
-                                                                   processVariableWarningValues);
+        WarningValues combinedWarningValues = mapWarningAttributes(
+            warningValuesToBeAdded,
+            processVariableWarningValues
+        );
 
         String caseId = (String) variables.get("caseId");
         log.info("caseId {} and its warning values : {}", caseId, combinedWarningValues.getValuesAsJson());
@@ -138,33 +135,30 @@ public class WarningTaskWorkerHandler {
         return combinedWarningValues.getValuesAsJson();
     }
 
-    private WarningValues mapWarningAttributes( String warningsToAddAsJson,
-                                                WarningValues processVariableWarningTextValues) {
+    private WarningValues toWarningValues(Map<?, ?> variables, String warningList) {
+        final String warningStr = (String) variables.get(warningList);
+        return new WarningValues(Objects.requireNonNullElse(warningStr, "[]"));
+    }
 
-        if (!StringUtils.isEmpty(warningsToAddAsJson)) {
-            final WarningValues warningValues = new WarningValues(warningsToAddAsJson);
-            final List<Warning> warningsToBeAdded = warningValues.getValues();
+    private WarningValues mapWarningAttributes(WarningValues warningsToAdd,
+                                               WarningValues processVariableWarningTextValues) {
 
-            final List<Warning> processVariableWarnings = processVariableWarningTextValues.getValues();
+        // without duplicate warning attributes
+        final List<Warning> warningTextValues = Stream.concat(
+                warningsToAdd.getValues().stream(),
+                processVariableWarningTextValues.getValues().stream()
+            )
+            .distinct().collect(Collectors.toList());
+        return new WarningValues(warningTextValues);
 
-            // without duplicate warning attributes
-            final List<Warning> warningTextValues = Stream.concat(warningsToBeAdded.stream(), processVariableWarnings.stream())
-                .distinct().collect(Collectors.toList());
-            return new WarningValues(warningTextValues);
-        }
-        return processVariableWarningTextValues;
     }
 
     private List<CamundaProcess> getProcesses(String caseId) {
-        String serviceToken = authTokenGenerator.generate();
-        List<CamundaProcess> camundaProcesses = camundaClient.getProcessInstancesByVariables(
-            serviceToken,
-            "caseId_eq_" + caseId
+        return camundaClient.getProcessInstancesByVariables(
+            authTokenGenerator.generate(),
+            "caseId_eq_" + caseId,
+            List.of("processStartTimer")
         );
-
-        return camundaProcesses.stream()
-            .filter(camundaProcess -> !camundaClient.getJobs(serviceToken, camundaProcess.getId()).isEmpty())
-            .collect(Collectors.toList());
     }
 
 }

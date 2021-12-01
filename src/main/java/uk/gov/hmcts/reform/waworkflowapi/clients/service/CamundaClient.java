@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaJob;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.AddProcessVariableRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcess;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcessVariables;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.AddProcessVariableRequest;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.ProcessVariables;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.config.CamundaFeignConfiguration;
 
@@ -56,17 +54,8 @@ public interface CamundaClient {
     @ResponseBody
     List<CamundaProcess> getProcessInstancesByVariables(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-        @RequestParam("variables") String variables
-    );
-
-    @GetMapping(value = "/job",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @ResponseBody
-    List<CamundaJob> getJobs(
-        @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-        @RequestParam("processInstanceId") String processInstanceKey
+        @RequestParam("variables") String variables,
+        @RequestParam("activityIdIn") List<String> activityId
     );
 
     @GetMapping(value = "/process-instance/{key}/variables",
