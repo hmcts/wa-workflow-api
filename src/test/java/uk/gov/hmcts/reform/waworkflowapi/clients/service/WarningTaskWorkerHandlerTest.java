@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -82,9 +83,7 @@ class WarningTaskWorkerHandlerTest {
                 List.of("processStartTimer")
             ))
                 .thenReturn(List.of(CamundaProcess.builder().id(PROCESS_INSTANCE_ID).build()));
-            when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
-                .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
-                                .withProcessVariable("warningList", WARNING_VALUES).build());
+
         }
 
         @Test
@@ -101,15 +100,19 @@ class WarningTaskWorkerHandlerTest {
 
             String expectedWarningValues = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
                 + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
-            Map<String, Object> expectedProcessVariables = Map.of(
-                "hasWarnings", true,
-                "warningList", expectedWarningValues
-            );
+
+            when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
+                .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
+                                .withProcessVariable("warningList", expectedWarningValues).build());
 
             when(externalTask.getAllVariables()).thenReturn(processVariables);
 
             warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
 
+            Map<String, Object> expectedProcessVariables = Map.of(
+                "hasWarnings", true,
+                "warningList", expectedWarningValues
+            );
             verify(externalTaskService).complete(externalTask, expectedProcessVariables);
             verify(taskManagementServiceApi).addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
             verify(camundaClient).updateProcessVariables(
@@ -147,15 +150,19 @@ class WarningTaskWorkerHandlerTest {
             );
 
             String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
-            Map<String, Object> expectedProcessVariables = Map.of(
-                "hasWarnings", true,
-                "warningList", expectedWarningValues
-            );
+
+            when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
+                .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
+                                .withProcessVariable("warningList", expectedWarningValues).build());
 
             when(externalTask.getAllVariables()).thenReturn(processVariables);
 
             warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
 
+            Map<String, Object> expectedProcessVariables = Map.of(
+                "hasWarnings", true,
+                "warningList", expectedWarningValues
+            );
             verify(externalTaskService).complete(externalTask, expectedProcessVariables);
             verify(taskManagementServiceApi).addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
             verify(camundaClient).updateProcessVariables(
@@ -249,15 +256,19 @@ class WarningTaskWorkerHandlerTest {
             );
 
             String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
-            Map<String, Object> expectedProcessVariables = Map.of(
-                "hasWarnings", true,
-                "warningList", expectedWarningValues
-            );
+
+            when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
+                .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
+                                .withProcessVariable("warningList", expectedWarningValues).build());
 
             when(externalTask.getAllVariables()).thenReturn(processVariables);
 
             warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
 
+            Map<String, Object> expectedProcessVariables = Map.of(
+                "hasWarnings", true,
+                "warningList", expectedWarningValues
+            );
             verify(externalTaskService).complete(externalTask, expectedProcessVariables);
             verify(taskManagementServiceApi).addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
             verify(camundaClient).updateProcessVariables(
@@ -295,6 +306,39 @@ class WarningTaskWorkerHandlerTest {
         }
 
         @Test
+        void should_not_add_warning_to_non_delayed_tasks() {
+            when(camundaClient.getProcessInstancesByVariables(
+                S2S_TOKEN,
+                "caseId_eq_" + CASE_ID,
+                List.of("processStartTimer")
+            ))
+                .thenReturn(List.of());
+
+
+            String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+            Map<String, Object> processVariables = Map.of(
+                "caseId", CASE_ID,
+                "hasWarnings", true,
+                "warningList", processVariablesWarningValues
+            );
+
+            when(externalTask.getAllVariables()).thenReturn(processVariables);
+
+            String expectedWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";;
+            Map<String, Object> expectedProcessVariables = Map.of(
+                "hasWarnings", true,
+                "warningList", expectedWarningValues
+            );
+            warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
+
+            verify(externalTaskService).complete(externalTask, expectedProcessVariables);
+            verify(taskManagementServiceApi).addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
+            verify(camundaClient, never()).getProcessInstanceVariables(anyString(), anyString());
+            verify(camundaClient, never()).updateProcessVariables(
+                anyString(), anyString(), any(AddProcessVariableRequest.class));
+        }
+
+        @Test
         void should_handle_json_parsing_exception() {
 
             String processVariablesWarningValues = "[{\"warningCode\"\"Code1\",\"warningText\":\"Text1\"}]";
@@ -303,6 +347,10 @@ class WarningTaskWorkerHandlerTest {
                 "hasWarnings", true,
                 "warningList", processVariablesWarningValues
             );
+
+            when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
+                .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
+                                .withProcessVariable("warningList", WARNING_VALUES).build());
 
             when(externalTask.getAllVariables()).thenReturn(processVariables);
             Map<String, Object> expectedProcessVariables = Map.of(
