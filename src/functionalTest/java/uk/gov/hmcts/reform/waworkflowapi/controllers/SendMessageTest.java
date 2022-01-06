@@ -122,16 +122,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             });
 
         String taskId = taskIdResponse.get();
-
-        Response result = camundaApiActions.get("/task/{task-id}/identity-links?type=candidate",
-            taskId,
-            new Headers(authenticationHeaders)
-        );
-
-        result.then().assertThat()
-            .statusCode(HttpStatus.OK.value())
-            .body("[0].groupId", is("TCW"));
-
         cleanUpTask(taskId, REASON_COMPLETED);
     }
 
@@ -193,26 +183,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             });
 
         String taskId = taskIdResponse.get();
-        await()
-            .ignoreException(AssertionError.class)
-            .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
-            .until(() -> {
-
-
-                Response result = camundaApiActions.get("/task/{task-id}/identity-links?type=candidate",
-                    taskId,
-                    new Headers(authenticationHeaders)
-                );
-
-                result.prettyPrint();
-                result.then().assertThat()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("[0].groupId", is("external"));
-
-                return true;
-            });
-
         cleanUpTask(taskId, REASON_COMPLETED);
     }
 
