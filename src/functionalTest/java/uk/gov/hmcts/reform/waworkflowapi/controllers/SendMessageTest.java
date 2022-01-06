@@ -70,7 +70,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             null,
             "Process Application",
             "processApplication",
-            "TCW",
             caseId,
             UUID.randomUUID().toString(), "ia"
         );
@@ -143,7 +142,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             dueDate,
             "Provide Respondent Evidence",
             "provideRespondentEvidence",
-            "external",
             caseId,
             UUID.randomUUID().toString(), "ia"
         );
@@ -207,6 +205,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     new Headers(authenticationHeaders)
                 );
 
+                result.prettyPrint();
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("[0].groupId", is("external"));
@@ -222,7 +221,6 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             ZonedDateTime.now().toString(),
             "Process Application", "processApplication",
-            "TCW",
             caseId,
             UUID.randomUUID().toString(), "ia"
         );
