@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 
 @Configuration
-public class OpenApiConfiguration {
+public class OpenAPIConfiguration {
 
     @Bean
     public GroupedOpenApi publicApi(OperationCustomizer customGlobalHeaders) {
