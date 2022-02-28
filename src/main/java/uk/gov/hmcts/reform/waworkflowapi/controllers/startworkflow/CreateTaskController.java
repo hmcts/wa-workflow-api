@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,33 +94,31 @@ public class CreateTaskController {
 
     @PostMapping(path = "/workflow/message")
     @Operation(summary = "Sends a message to the underlying business process engine.")
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "204",
-            description = "The message was correlated to a business process",
-            content = @Content(schema = @Schema(implementation = Object.class))
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = BAD_REQUEST
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = FORBIDDEN
-        ),
-        @ApiResponse(
-            responseCode = "401",
-            description = UNAUTHORIZED
-        ),
-        @ApiResponse(
-            responseCode = "415",
-            description = UNSUPPORTED_MEDIA_TYPE
-        ),
-        @ApiResponse(
-            responseCode = "500",
-            description = INTERNAL_SERVER_ERROR
-        )
-    })
+    @ApiResponse(
+        responseCode = "204",
+        description = "The message was correlated to a business process",
+        content = @Content(schema = @Schema(implementation = Object.class))
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = BAD_REQUEST
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = FORBIDDEN
+    )
+    @ApiResponse(
+        responseCode = "401",
+        description = UNAUTHORIZED
+    )
+    @ApiResponse(
+        responseCode = "415",
+        description = UNSUPPORTED_MEDIA_TYPE
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = INTERNAL_SERVER_ERROR
+    )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> sendMessage(@RequestBody SendMessageRequest sendMessageRequest) {
 
