@@ -166,35 +166,37 @@ public class ApplicationProblemControllerAdvice implements ValidationAdviceTrait
      * details with internal Java package/class names.
      */
     private String extractErrors(HttpMessageNotReadableException exception) {
-        String msg = null;
         Throwable cause = exception.getCause();
         if (cause instanceof JsonParseException) {
             JsonParseException jpe = (JsonParseException) cause;
-            msg = jpe.getOriginalMessage();
-        } else if (cause instanceof MismatchedInputException) {
+            return jpe.getOriginalMessage();
+        }
+        return processInputException(cause);
+    }
+
+    private String processInputException(Throwable cause) {
+        if (cause instanceof MismatchedInputException) {
             MismatchedInputException mie = (MismatchedInputException) cause;
             if (mie.getPath() != null && !mie.getPath().isEmpty()) {
                 String fieldName = mie.getPath().stream()
                     .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
                     .collect(Collectors.joining("."));
-                msg = "Invalid request field: " + fieldName;
+                return "Invalid request field: " + fieldName;
             }
         } else if (cause instanceof JsonMappingException) {
             JsonMappingException jme = (JsonMappingException) cause;
-            msg = jme.getOriginalMessage();
             if (jme.getPath() != null && !jme.getPath().isEmpty()) {
                 String fieldName = jme.getPath().stream()
                     .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
                     .collect(Collectors.joining("."));
-                msg = "Invalid request field: "
+                return "Invalid request field: "
                       + fieldName
                       + ": "
-                      + msg;
+                      + jme.getOriginalMessage();
             }
-        } else {
-            msg = "Invalid request message";
-        }
-        return msg;
+        } 
+        return "Invalid request message";
+
     }
 
 }
