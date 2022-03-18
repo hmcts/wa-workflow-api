@@ -3,10 +3,8 @@ package uk.gov.hmcts.reform.waworkflowapi.controllers.advice;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import com.launchdarkly.shaded.com.google.common.base.CaseFormat;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,7 +24,6 @@ import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericForbiddenException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericServerErrorException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 
-
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +36,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.zalando.problem.Status.BAD_GATEWAY;
 import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.SERVICE_UNAVAILABLE;
 
 @Slf4j
 @ControllerAdvice(basePackages = {

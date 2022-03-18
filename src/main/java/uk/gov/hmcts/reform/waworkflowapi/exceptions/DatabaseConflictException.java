@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.waworkflowapi.exceptions;
 import org.zalando.problem.AbstractThrowableProblem;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 
-
 import java.net.URI;
 
 import static org.zalando.problem.Status.SERVICE_UNAVAILABLE;
