@@ -21,6 +21,9 @@ import org.zalando.problem.ThrowableProblem;
 import org.zalando.problem.spring.web.advice.validation.ValidationAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
+import uk.gov.hmcts.reform.waworkflowapi.exceptions.CustomConstraintViolationException;
+import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericForbiddenException;
+import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericServerErrorException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 
 

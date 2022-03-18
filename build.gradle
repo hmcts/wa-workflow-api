@@ -35,6 +35,13 @@ allprojects {
   targetCompatibility = '11'
 }
 
+
+lombok {
+  config['config.stopBubbling'] = 'true'
+  config['lombok.addLombokGeneratedAnnotation'] = 'true'
+  config['lombok.anyConstructor.addConstructorProperties'] = 'true'
+}
+
 sourceSets {
   testUtils {
     java {
