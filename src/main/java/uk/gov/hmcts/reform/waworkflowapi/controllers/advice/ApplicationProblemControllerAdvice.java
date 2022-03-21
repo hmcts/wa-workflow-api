@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 
@@ -171,33 +172,41 @@ public class ApplicationProblemControllerAdvice implements ValidationAdviceTrait
             JsonParseException jpe = (JsonParseException) cause;
             return jpe.getOriginalMessage();
         }
-        return processInputException(cause);
+        return processInputException(cause).orElseGet(() -> "Invalid request message");
     }
 
-    private String processInputException(Throwable cause) {
+    private Optional<String> processInputException(Throwable cause) {
         if (cause instanceof MismatchedInputException) {
-            MismatchedInputException mie = (MismatchedInputException) cause;
-            if (mie.getPath() != null && !mie.getPath().isEmpty()) {
-                String fieldName = mie.getPath().stream()
-                    .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
-                    .collect(Collectors.joining("."));
-                return "Invalid request field: " + fieldName;
-            }
+            return processMisMatchedInputException(cause);
         } else if (cause instanceof JsonMappingException) {
-            JsonMappingException jme = (JsonMappingException) cause;
-            if (jme.getPath() != null && !jme.getPath().isEmpty()) {
-                String fieldName = jme.getPath().stream()
-                    .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
-                    .collect(Collectors.joining("."));
-                return "Invalid request field: "
-                      + fieldName
-                      + ": "
-                      + jme.getOriginalMessage();
-            }
-        } 
-        return "Invalid request message";
-
+            return processJsonMappingException(cause);
+        }
+        return Optional.empty();
     }
 
+    private Optional<String> processMisMatchedInputException(Throwable cause) {
+        MismatchedInputException mie = (MismatchedInputException) cause;
+        if (mie.getPath() != null && !mie.getPath().isEmpty()) {
+            String fieldName = mie.getPath().stream()
+                .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
+                .collect(Collectors.joining("."));
+            return Optional.of("Invalid request field: " + fieldName);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<String> processJsonMappingException(Throwable cause) {
+        JsonMappingException jme = (JsonMappingException) cause;
+        if (jme.getPath() != null && !jme.getPath().isEmpty()) {
+            String fieldName = jme.getPath().stream()
+                .map(ref -> ref.getFieldName() == null ? "[0]" : ref.getFieldName())
+                .collect(Collectors.joining("."));
+            return Optional.of("Invalid request field: "
+                               + fieldName
+                               + ": "
+                               + jme.getOriginalMessage());
+        }
+        return Optional.empty();
+    }
 }
 
