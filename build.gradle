@@ -211,6 +211,7 @@ sonarqube {
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
     property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/waworkflowapi/config/**," +
+      "src/main/java/uk/gov/hmcts/reform/waworkflowapi/exceptions/**," +
       "src/testUtils/java/uk/gov/hmcts/reform/waworkflowapi/**"
   }
 }
