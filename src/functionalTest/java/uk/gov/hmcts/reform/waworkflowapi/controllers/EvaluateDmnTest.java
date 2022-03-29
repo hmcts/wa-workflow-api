@@ -79,8 +79,8 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
             Map.of(
-                "eventId", DmnValue.dmnStringValue("submitAppeal"),
-                "postEventState", DmnValue.dmnStringValue("appealSubmitted"),
+                "eventId", DmnValue.dmnStringValue("uploadHomeOfficeBundle"),
+                "postEventState", DmnValue.dmnStringValue("awaitingRespondentEvidence"),
                 "additionalData", DmnValue.dmnMapValue(dataMap)
             ));
 
@@ -91,12 +91,14 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             authenticationHeaders
         );
 
+        result.prettyPrint();
+
         result.then().assertThat()
             .statusCode(HttpStatus.OK.value())
             .body("size()", equalTo(1))
-            .body("results[0].name.value", equalTo("Review the appeal"))
+            .body("results[0].name.value", equalTo("Review Respondent Evidence"))
             .body("results[0].workingDaysAllowed.value", equalTo(2))
-            .body("results[0].taskId.value", equalTo("reviewTheAppeal"))
+            .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
             .body("results[0].processCategories.value", equalTo("caseProgression"));
 
     }
