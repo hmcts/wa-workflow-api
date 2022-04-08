@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.waworkflowapi.controllers;
 
+import feign.FeignException;
+import feign.Request;
+import feign.RequestTemplate;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +23,7 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.CamundaClient;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -30,6 +34,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.reform.waworkflowapi.api.CreatorObjectMapper.asJsonString;
 import static uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue.dmnIntegerValue;
@@ -40,7 +45,6 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
 
     public static final String WORKFLOW_MESSAGE_ENDPOINT = "/workflow/message";
     private static final String BEARER_SERVICE_TOKEN = "Bearer service token";
-    public static final String FIXED_DATE = "2020-12-14T10:24:38.975296Z";
 
     @Autowired
     private transient MockMvc mockMvc;
@@ -81,6 +85,72 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                 .content(asJsonString(evaluateDmnRequest))
         ).andExpect(status().isOk()).andReturn();
 
+    }
+
+    @DisplayName("Should evaluate a DMN and return a 503 service unavailable application problem json response")
+    @Test
+    void evaluateDmnCamundaServiceUnavailableFailureTests() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "url",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenThrow(new FeignException.ServiceUnavailable(
+            "Service unavailable",
+            request,
+            null,
+            null));
+
+        mockMvc.perform(
+            post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(asJsonString(evaluateDmnRequest))
+        ).andExpect(status().isServiceUnavailable())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
+    }
+
+    @DisplayName("Should evaluate a DMN and return a 502 Bad Gateway application problem json response")
+    @Test
+    void evaluateDmnCamundaBadGatewayFailureTests() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "url",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenThrow(new FeignException.BadGateway(
+            "Bad Gateway",
+            request,
+            null,
+            null));
+
+        mockMvc.perform(
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isBadGateway())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
     }
 
     @ParameterizedTest

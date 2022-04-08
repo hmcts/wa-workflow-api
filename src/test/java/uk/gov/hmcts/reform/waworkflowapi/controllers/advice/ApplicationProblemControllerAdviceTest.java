@@ -55,18 +55,18 @@ class ApplicationProblemControllerAdviceTest {
     }
 
     @Test
-    void should_handle_feign_service_unavailable_exception() {
+    void should_handle_feign_bad_gateway_exception() {
         Request request = Request.create(Request.HttpMethod.GET, "url",
             new HashMap<>(), null, new RequestTemplate());
 
-        FeignException exception = new FeignException.ServiceUnavailable(
-            "Service unavailable",
+        FeignException exception = new FeignException.BadGateway(
+            "Bad Gateway",
             request,
             null,
             null);
 
         ResponseEntity<ThrowableProblem> response = applicationProblemControllerAdvice
-            .handleFeignServiceUnavailableException(exception);
+            .handleFeignBadGatewayException(exception);
 
         assertEquals(HttpStatus.BAD_GATEWAY.value(), response.getStatusCode().value());
         assertNotNull(response.getBody());
