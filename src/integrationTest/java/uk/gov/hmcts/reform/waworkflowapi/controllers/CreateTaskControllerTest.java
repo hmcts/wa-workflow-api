@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootIntegrationBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
@@ -24,7 +25,6 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.CamundaClient;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.BadRequestException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.ResourceNotFoundException;
-import uk.gov.hmcts.reform.waworkflowapi.exceptions.UnAuthorizedException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -115,10 +115,10 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
             null));
 
         mockMvc.perform(
-            post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asJsonString(evaluateDmnRequest))
-        ).andExpect(status().isServiceUnavailable())
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isServiceUnavailable())
             .andExpect(content().contentType("application/problem+json"))
             .andReturn();
     }
@@ -152,6 +152,136 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(asJsonString(evaluateDmnRequest))
             ).andExpect(status().isBadGateway())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
+    }
+
+    @DisplayName("Should evaluate a DMN and return Camunda internal server error application problem json response")
+    @Test
+    void evaluateDmnAndReturnCamundaInternalServerErrorFailures() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "url",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenThrow(new FeignException.FeignServerException(500,
+            "Server Error",
+            request,
+            null, null));
+
+        mockMvc.perform(
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isInternalServerError())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
+    }
+
+
+    @DisplayName("Should evaluate a DMN and return downstream unAuthorized error response")
+    @Test
+    void evaluateDmnAndReturnDownstreamUnAuthorisedException() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "Invalid Authrozation",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenThrow(new FeignException.Unauthorized(
+            "unauthorised",
+            request,
+            null,
+            null));
+
+        mockMvc.perform(
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isUnauthorized())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
+    }
+
+    @DisplayName("Should evaluate a DMN and return downstream forbidden error response")
+    @Test
+    void evaluateDmnAndReturnDownstreamForbiddenErrorResponse() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "Invalid Authrozation",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenThrow(new FeignException.Forbidden(
+            "forbidden",
+            request,
+            null,
+            null));
+
+        mockMvc.perform(
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isForbidden())
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn();
+    }
+
+    @DisplayName("Should evaluate a DMN and return unsupported mediatype error response")
+    @Test
+    void evaluateDmnAndThrowUnsupportedMediaTypeException() throws Exception {
+
+        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
+            Map.of("name", dmnStringValue("Process Application"),
+                "workingDaysAllowed", dmnIntegerValue(2),
+                "taskId", dmnStringValue("processApplication")
+            ));
+
+        Request request = Request.create(Request.HttpMethod.GET, "url",
+            new HashMap<>(), null, new RequestTemplate());
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenAnswer(inv -> {
+            throw new HttpMediaTypeNotAcceptableException("unsupported mediatype");
+        });
+
+        mockMvc.perform(
+                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(asJsonString(evaluateDmnRequest))
+            ).andExpect(status().isUnsupportedMediaType())
             .andExpect(content().contentType("application/problem+json"))
             .andReturn();
     }
@@ -210,35 +340,6 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(asJsonString(evaluateDmnRequest))
             ).andExpect(status().isNotFound())
-            .andExpect(content().contentType("application/json"))
-            .andReturn();
-    }
-
-    @DisplayName("Should evaluate a DMN and return work-flow API UnAuthorized error response")
-    @Test
-    void evaluateDmnAndReturnWorkflowAPIUnAuthorisedException() throws Exception {
-
-        EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
-            Map.of("name", dmnStringValue("Process Application"),
-                "workingDaysAllowed", dmnIntegerValue(2),
-                "taskId", dmnStringValue("processApplication")
-            ));
-
-        Request request = Request.create(Request.HttpMethod.GET, "Invalid Authrozation",
-            new HashMap<>(), null, new RequestTemplate());
-
-        when(camundaClient.evaluateDmn(
-            eq(BEARER_SERVICE_TOKEN),
-            anyString(),
-            anyString(),
-            eq(evaluateDmnRequest)
-        )).thenThrow(new UnAuthorizedException("Not Authorized"));
-
-        mockMvc.perform(
-                post("/workflow/decision-definition/key/getTask_IA_asylum/tenant-id/ia/evaluate")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(asJsonString(evaluateDmnRequest))
-            ).andExpect(status().isUnauthorized())
             .andExpect(content().contentType("application/json"))
             .andReturn();
     }
@@ -312,10 +413,10 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
 
     private List<Map<String, DmnValue<?>>> getEvalResponse() {
         return List.of(Map.of(
-            "name", dmnStringValue("processApplication"),
-            "group", dmnStringValue("TCW"),
-            "workingDaysAllowed", dmnIntegerValue(5),
-            "taskId", dmnStringValue("task name")
+                "name", dmnStringValue("processApplication"),
+                "group", dmnStringValue("TCW"),
+                "workingDaysAllowed", dmnIntegerValue(5),
+                "taskId", dmnStringValue("task name")
             )
         );
     }

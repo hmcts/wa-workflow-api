@@ -21,8 +21,6 @@ import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
-import org.zalando.problem.violations.Violation;
-import uk.gov.hmcts.reform.waworkflowapi.exceptions.CustomConstraintViolationException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericForbiddenException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericServerErrorException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
@@ -34,7 +32,6 @@ import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
 
 import static java.util.Collections.emptySet;
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -48,10 +45,12 @@ import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 class ApplicationProblemControllerAdviceTest {
 
     private ApplicationProblemControllerAdvice applicationProblemControllerAdvice;
+    private FeignApplicationProblemControllerAdvice feignApplicationProblemControllerAdvice;
 
     @BeforeEach
     void setUp() {
         applicationProblemControllerAdvice = new ApplicationProblemControllerAdvice();
+        feignApplicationProblemControllerAdvice = new FeignApplicationProblemControllerAdvice();
     }
 
     @Test
@@ -65,7 +64,7 @@ class ApplicationProblemControllerAdviceTest {
             null,
             null);
 
-        ResponseEntity<ThrowableProblem> response = applicationProblemControllerAdvice
+        ResponseEntity<ThrowableProblem> response = feignApplicationProblemControllerAdvice
             .handleFeignBadGatewayException(exception);
 
         assertEquals(HttpStatus.BAD_GATEWAY.value(), response.getStatusCode().value());
@@ -77,25 +76,6 @@ class ApplicationProblemControllerAdviceTest {
         assertEquals("Downstream Dependency Error", response.getBody().getTitle());
         assertEquals(ErrorMessages.DOWNSTREAM_DEPENDENCY_ERROR.getDetail(), response.getBody().getDetail());
         assertEquals(BAD_GATEWAY, response.getBody().getStatus());
-    }
-
-    @Test
-    void should_handle_custom_constraint_violation_exception() {
-
-        List<Violation> violationList = singletonList(new Violation("some.field", "some message"));
-        CustomConstraintViolationException exception = new CustomConstraintViolationException(violationList);
-
-        ResponseEntity<Problem> response = applicationProblemControllerAdvice
-            .handleCustomConstraintViolation(exception);
-
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
-        assertNotNull(response.getBody());
-        assertEquals(
-            URI.create("https://github.com/hmcts/wa-workflow-api/problem/constraint-validation"),
-            response.getBody().getType()
-        );
-        assertEquals("Constraint Violation", response.getBody().getTitle());
-        assertEquals(BAD_REQUEST, response.getBody().getStatus());
     }
 
     @Test
@@ -237,7 +217,7 @@ class ApplicationProblemControllerAdviceTest {
 
 
         GenericExceptionScenario genericServerErrorException = GenericExceptionScenario.builder()
-            .exception(new GenericServerErrorException(ErrorMessages.INITIATE_TASK_PROCESS_ERROR))
+            .exception(new GenericServerErrorException(ErrorMessages.EVALUATE_DMN_ERROR))
             .expectedTitle("Generic Server Error")
             .expectedStatus(INTERNAL_SERVER_ERROR)
             .expectedType(URI.create("https://github.com/hmcts/wa-workflow-api/problem/generic-server-error"))

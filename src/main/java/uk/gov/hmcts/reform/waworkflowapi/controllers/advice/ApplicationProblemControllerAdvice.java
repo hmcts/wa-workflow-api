@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.waworkflowapi.controllers.advice;
 
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +16,9 @@ import org.zalando.problem.ThrowableProblem;
 import org.zalando.problem.spring.web.advice.validation.ValidationAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
-import uk.gov.hmcts.reform.waworkflowapi.exceptions.CustomConstraintViolationException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericForbiddenException;
 import uk.gov.hmcts.reform.waworkflowapi.exceptions.GenericServerErrorException;
+import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 
 import java.net.URI;
 import java.util.List;
@@ -29,9 +29,8 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.zalando.problem.Status.BAD_GATEWAY;
 import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.SERVICE_UNAVAILABLE;
+import static org.zalando.problem.Status.UNSUPPORTED_MEDIA_TYPE;
 
 @Slf4j
 @ControllerAdvice(basePackages = {
@@ -43,20 +42,23 @@ import static org.zalando.problem.Status.SERVICE_UNAVAILABLE;
 public class ApplicationProblemControllerAdvice implements ValidationAdviceTrait,
     ApplicationProblemControllerAdviceBase {
 
-    public static final String EXCEPTION_OCCURRED = "Exception occurred: {}";
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<ThrowableProblem> notAcceptableMediaTypeHandler(HttpMediaTypeNotAcceptableException exception) {
 
-    @ExceptionHandler(FeignException.ServiceUnavailable.class)
-    public ResponseEntity<ThrowableProblem> handleFeignServiceUnavailableException(FeignException ex) {
-        log.error(EXCEPTION_OCCURRED, ex.getMessage(), ex);
-        Status statusType = SERVICE_UNAVAILABLE; //503
-        return createDownStreamErrorResponse(statusType);
-    }
+        Status statusType = UNSUPPORTED_MEDIA_TYPE; //415
+        URI type = URI.create("https://github.com/hmcts/wa-workflow-api/problem/unsupported-media-type");
+        String title = "Unsupported Media Type";
 
-    @ExceptionHandler(FeignException.BadGateway.class)
-    public ResponseEntity<ThrowableProblem> handleFeignBadGatewayException(FeignException ex) {
-        log.error(EXCEPTION_OCCURRED, ex.getMessage(), ex);
-        Status statusType = BAD_GATEWAY; //502
-        return createDownStreamErrorResponse(statusType);
+        ErrorMessages detail = ErrorMessages.UNSUPPORTED_MEDIA_TYPE;
+
+        return ResponseEntity.status(statusType.getStatusCode())
+            .header(CONTENT_TYPE, APPLICATION_PROBLEM_JSON_VALUE)
+            .body(Problem.builder()
+                .withType(type)
+                .withTitle(title)
+                .withDetail(detail.getDetail())
+                .withStatus(statusType)
+                .build());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -75,19 +77,6 @@ public class ApplicationProblemControllerAdvice implements ValidationAdviceTrait
                 .withDetail(errorMessage)
                 .withStatus(statusType)
                 .build());
-
-    }
-
-    @ExceptionHandler(CustomConstraintViolationException.class)
-    public ResponseEntity<Problem> handleCustomConstraintViolation(CustomConstraintViolationException ex) {
-
-        return ResponseEntity.status(ex.getStatus().getStatusCode())
-            .header(CONTENT_TYPE, APPLICATION_PROBLEM_JSON_VALUE)
-            .body(new ConstraintViolationProblem(
-                ex.getType(),
-                ex.getStatus(),
-                ex.getViolations())
-            );
     }
 
     @Override

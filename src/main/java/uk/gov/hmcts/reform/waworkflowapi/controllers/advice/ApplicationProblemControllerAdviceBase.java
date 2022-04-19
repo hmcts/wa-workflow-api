@@ -19,6 +19,8 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
 public interface ApplicationProblemControllerAdviceBase {
 
+    String EXCEPTION_OCCURRED = "Exception occurred: {}";
+
     default ResponseEntity<ThrowableProblem> createDownStreamErrorResponse(Status statusType) {
         URI type = URI.create("https://github.com/hmcts/wa-workflow-api/problem/downstream-dependency-error");
         String title = "Downstream Dependency Error";
@@ -81,4 +83,5 @@ public interface ApplicationProblemControllerAdviceBase {
         }
         return Optional.empty();
     }
+
 }
