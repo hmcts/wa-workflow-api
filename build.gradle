@@ -145,12 +145,6 @@ task tests {
   dependsOn test, integration, functional
 }
 
-task fortifyScan(type: JavaExec) {
-  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
-  classpath += sourceSets.test.runtimeClasspath
-  jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
-}
-
 checkstyle {
   maxWarnings = 0
   toolVersion = '8.29'
@@ -169,8 +163,8 @@ pmd {
 jacocoTestReport {
   executionData(test, integration)
   reports {
-    xml.enabled = true
-    csv.enabled = false
+    xml.required = true
+    csv.required = false
     xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
   }
 }
@@ -187,7 +181,7 @@ pitest {
   timestampedReports = false
   mutationThreshold = 80
 }
-project.tasks['pitest'].group = "Verification"
+project.tasks['pitest'].group = "Verification" //pitest version not compatible with gradle 8.0
 
 project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 
@@ -226,6 +220,9 @@ dependencyCheck {
   // range of 0-10 fails the build, anything greater and it doesn't fail the build
   failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
   suppressionFile = 'config/owasp/suppressions.xml'
+
+  //CVE Scanning only relevant to production code that is published, not test or other implementations
+  scanConfigurations += 'releaseCompileClasspath'
 
   analyzers {
     // Disable scanning of .NET related binaries
@@ -365,8 +362,8 @@ dependencies {
   testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-  testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
-  testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
+ // testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
+  //testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
 
   //Pact contract testing
   contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pactVersion
@@ -376,7 +373,6 @@ dependencies {
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pactVersion
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pactVersion
 
-  contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
   contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
   contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
 
