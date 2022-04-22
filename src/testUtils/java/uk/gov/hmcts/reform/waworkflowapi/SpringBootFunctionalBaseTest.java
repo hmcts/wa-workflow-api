@@ -13,13 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.config.RestApiActions;
+import uk.gov.hmcts.reform.waworkflowapi.entities.SpecificStandaloneRequest;
 import uk.gov.hmcts.reform.waworkflowapi.services.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.LOWER_CAMEL_CASE;
 import static org.hamcrest.CoreMatchers.is;
@@ -125,5 +128,34 @@ public abstract class SpringBootFunctionalBaseTest {
         processVariables.put("roleCategory", DmnValue.dmnStringValue(roleCategory));
 
         return processVariables;
+    }
+
+    public Response createSpecifiedStandaloneTask(SpecificStandaloneRequest specificStandaloneRequest) {
+
+        String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Map<String, DmnValue<?>> processVariables = standaloneMockProcessVariables(
+            dueDate,
+            specificStandaloneRequest.getTaskName(),
+            specificStandaloneRequest.getTaskType(),
+            specificStandaloneRequest.getCaseId(),
+            specificStandaloneRequest.getCaseType(),
+            UUID.randomUUID().toString(),
+            specificStandaloneRequest.getJurisdiction(),
+            specificStandaloneRequest.getRoleCategory()
+        );
+
+        SendMessageRequest body = new SendMessageRequest(
+            "createTaskMessage",
+            processVariables,
+            null,
+            false
+        );
+
+        return restApiActions.post(
+            "/workflow/message",
+            body,
+            specificStandaloneRequest.getAuthenticationHeaders()
+        );
+
     }
 }

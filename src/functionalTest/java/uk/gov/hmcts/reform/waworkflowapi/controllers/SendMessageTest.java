@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
+import uk.gov.hmcts.reform.waworkflowapi.entities.SpecificStandaloneRequest;
 import uk.gov.hmcts.reform.waworkflowapi.services.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
@@ -127,56 +128,110 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void should_creates_a_judicial_standalone_task_with_default_due_date() {
-        String caseType = "asylum";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestJudiciary";
-        String roleCategory = "JUDICIAL";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_IA, roleCategory);
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_IA)
+            .caseType("asylum")
+            .taskType("reviewSpecificAccessRequestJudiciary")
+            .taskName("Review Specific Access Request")
+            .roleCategory("JUDICIAL")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
     public void should_creates_a_legal_ops_standalone_task_with_default_due_date() {
-        String caseType = "asylum";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestLegalOps";
-        String roleCategory = "LEGAL_OPERATIONS";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_IA, roleCategory);
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_IA)
+            .caseType("asylum")
+            .taskType("reviewSpecificAccessRequestLegalOps")
+            .taskName("Review Specific Access Request")
+            .roleCategory("LEGAL_OPERATIONS")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
     public void should_creates_a_admin_standalone_task_with_default_due_date() {
-        String caseType = "asylum";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestAdmin";
-        String roleCategory = "ADMINISTRATOR";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_IA, roleCategory);
+
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_IA)
+            .caseType("asylum")
+            .taskType("reviewSpecificAccessRequestAdmin")
+            .taskName("Review Specific Access Request")
+            .roleCategory("ADMINISTRATOR")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
     public void should_creates_a_judicial_standalone_task_with_default_due_date_for_wa() {
-        String caseType = "waCaseType";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestJudiciary";
-        String roleCategory = "JUDICIAL";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_WA, roleCategory);
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestJudiciary")
+            .taskName("Review Specific Access Request")
+            .roleCategory("JUDICIAL")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
     public void should_creates_a_legal_ops_standalone_task_with_default_due_date_for_wa() {
-        String caseType = "waCaseType";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestLegalOps";
-        String roleCategory = "LEGAL_OPERATIONS";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_WA, roleCategory);
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestLegalOps")
+            .taskName("Review Specific Access Request")
+            .roleCategory("LEGAL_OPERATIONS")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
     public void should_creates_a_admin_standalone_task_with_default_due_date_for_wa() {
-        String caseType = "waCaseType";
-        String taskName = "Review Specific Access Request";
-        String taskType = "reviewSpecificAccessRequestAdmin";
-        String roleCategory = "ADMINISTRATOR";
-        createSpecifiedStandaloneTask(taskName, taskType, caseType, TENANT_ID_WA, roleCategory);
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestAdmin")
+            .taskName("Review Specific Access Request")
+            .roleCategory("ADMINISTRATOR")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
     }
 
     @Test
@@ -330,33 +385,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    private void createSpecifiedStandaloneTask(String taskName, String taskType, String caseType, String jurisdiction, String roleCategory) {
-
-        String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        Map<String, DmnValue<?>> processVariables = standaloneMockProcessVariables(
-            dueDate,
-            taskName,
-            taskType,
-            caseId,
-            caseType,
-            UUID.randomUUID().toString(),
-            jurisdiction,
-            roleCategory
-        );
-
-        SendMessageRequest body = new SendMessageRequest(
-            "createTaskMessage",
-            processVariables,
-            null,
-            false
-        );
-
-        Response response = restApiActions.post(
-            "/workflow/message",
-            body,
-            authenticationHeaders
-        );
-
+    private void assertions(Response response, SpecificStandaloneRequest specificStandaloneRequest) {
         response.then().assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
@@ -369,16 +398,16 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
 
                 Response result = camundaApiActions.get(
                     "/task",
-                    new Headers(authenticationHeaders),
+                    new Headers(specificStandaloneRequest.getAuthenticationHeaders()),
                     // Because the ccd case does not exist it does not configure the local variables
                     // so we will search using processVariables
-                    Map.of("processVariables", "caseId_eq_" + caseId)
+                    Map.of("processVariables", "caseId_eq_" + specificStandaloneRequest.getCaseId())
                 );
 
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
-                    .body("[0].name", is(taskName));
+                    .body("[0].name", is(specificStandaloneRequest.getTaskName()));
 
                 taskIdResponse.set(result.then().extract().path("[0].id"));
 
