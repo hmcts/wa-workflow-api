@@ -30,7 +30,9 @@ import static org.hamcrest.CoreMatchers.is;
 @ActiveProfiles("functional")
 public abstract class SpringBootFunctionalBaseTest {
     public static final String WA_TASK_INITIATION_IA_ASYLUM = "wa-task-initiation-ia-asylum";
-    public static final String TENANT_ID = "ia";
+    public static final String TENANT_ID_IA = "ia";
+    public static final String WA_TASK_INITIATION_WA_ASYLUM = "wa-task-initiation-wa-wacasetype";
+    public static final String TENANT_ID_WA = "wa";
     public static final int FT_STANDARD_TIMEOUT_SECS = 30;
 
     public static final String REASON_COMPLETED = "completed";
@@ -103,6 +105,7 @@ public abstract class SpringBootFunctionalBaseTest {
         String name,
         String taskId,
         String caseId,
+        String caseType,
         String idempotencyKey,
         String jurisdiction,
         String roleCategory
@@ -112,7 +115,7 @@ public abstract class SpringBootFunctionalBaseTest {
         processVariables.put("dueDate", DmnValue.dmnStringValue(dueDate));
         processVariables.put("name", DmnValue.dmnStringValue(name));
         processVariables.put("jurisdiction", DmnValue.dmnStringValue(jurisdiction));
-        processVariables.put("caseType", DmnValue.dmnStringValue("asylum"));
+        processVariables.put("caseType", DmnValue.dmnStringValue(caseType));
         processVariables.put("taskId", DmnValue.dmnStringValue(taskId));
         processVariables.put("caseId", DmnValue.dmnStringValue(caseId));
         processVariables.put("idempotencyKey", DmnValue.dmnStringValue(idempotencyKey));
