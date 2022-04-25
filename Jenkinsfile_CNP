@@ -1,6 +1,7 @@
 #!groovy
-
 @Library("Infrastructure")
+
+import uk.gov.hmcts.contino.AppPipelineDsl
 
 def type = "java"
 def product = "wa"
@@ -27,6 +28,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
+def branchesToSync = ['demo', 'ithc', 'perftest']
+
 withPipeline(type, product, component) {
   disableLegacyDeployment()
 
@@ -34,6 +37,10 @@ withPipeline(type, product, component) {
   env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
   env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
   env.POSTGRES_HOST = "wa-workflow-api-postgres-db-aat.postgres.database.azure.com"
+  env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
+  env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
+  env.PACT_BROKER_PORT = "443"
+  env.PACT_BROKER_SCHEME = "https"
 
   loadVaultSecrets(secrets)
 
@@ -51,4 +58,16 @@ withPipeline(type, product, component) {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/functional/**/*'
   }
+
+  onMaster() {
+    enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.PROVIDER])
+  }
+
+  onPR() {
+    enableCleanupOfHelmReleaseOnSuccess()
+    enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.PROVIDER])
+  }
+
+  // Sync environment specific branches with master branch
+  syncBranchesWithMaster(branchesToSync)
 }
