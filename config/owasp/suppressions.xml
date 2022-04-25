@@ -144,9 +144,9 @@
     </suppress>
     <suppress until="2022-05-01">
         <notes><![CDATA[
-   file name: spring-hateoas-1.4.1.jar
+   file name: spring-aop-5.3.18.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.hateoas/spring\-hateoas@.*$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-aop@.*$</packageUrl>
         <cve>CVE-2022-22968</cve>
     </suppress>
 >>>>>>> 3c96951 (suppress CVE-2022-22968)
