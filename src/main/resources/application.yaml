@@ -21,10 +21,15 @@ camunda:
   url: ${CAMUNDA_URL:http://camunda-bpm/engine-rest}
   getTaskDmnId: getTask
 
+task-management-api:
+  url: ${TASK_MANAGEMENT_URL:http://localhost:8087}
+
 govUkHolidays:
   url: https://www.gov.uk/
 
 spring:
+  config:
+    import: "optional:configtree:/mnt/secrets/wa/"
   data.rest.basePath: /testing
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -57,8 +62,7 @@ security:
     - "/swagger-resources/**"
     - "/swagger-ui/**"
     - "/swagger-ui/index.html"
-    - "/v2/api-docs"
-    - "/webjars/springfox-swagger-ui/**"
+    - "/v3/**"
     - "/favicon.ico"
 
 auth:
@@ -73,9 +77,24 @@ idam:
     secret: ${S2S_SECRET_WORKFLOW_API:AAAAAAAAAAAAAAAC}
     name: wa_workflow_api
   s2s-authorised:
-    services: ${WA_S2S_AUTHORIZED_SERVICES:wa_workflow_api,wa_case_event_handler,camunda-bpm}
+    services: ${WA_S2S_AUTHORIZED_SERVICES:wa_workflow_api,wa_case_event_handler,camunda-bpm,xui_webapp}
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
   socketTimeout: 5000
+
+logging:
+  level:
+    root: INFO
+    org.zalando.logbook: TRACE
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
+
+logbook:
+  include: /workflow/**
+

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency;
 
+import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class IdempotencyTaskWorkerHandler {
             log.info("build idempotentId with key({}) and tenantId({})...", idempotencyKey, tenantId);
             return Optional.of(new IdempotentId(idempotencyKey, tenantId));
         }
-        log.info("idempotentId id blank");
+        log.info("idempotentId is blank");
         return Optional.empty();
     }
 

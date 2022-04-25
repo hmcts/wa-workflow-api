@@ -42,8 +42,9 @@ public class ExternalTaskWorker {
 
         ExternalTaskClient idempotencyClient = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
+            .asyncResponseTimeout(1000)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
-            .backoffStrategy(new ExponentialBackoffStrategy())
+            .backoffStrategy(new ExponentialBackoffStrategy(2000L, 2, 8000L))
             .lockDuration(30000) // 30 seconds
             .build();
 
@@ -55,14 +56,15 @@ public class ExternalTaskWorker {
 
         ExternalTaskClient warningClient = ExternalTaskClient.create()
             .baseUrl(camundaUrl)
+            .asyncResponseTimeout(1000)
             .addInterceptor(new ServiceAuthProviderInterceptor(authTokenGenerator))
-            .backoffStrategy(new ExponentialBackoffStrategy())
+            .backoffStrategy(new ExponentialBackoffStrategy(2000L, 2, 8000L))
             .lockDuration(30000) // 30 seconds
             .build();
 
         warningClient.subscribe("wa-warning-topic")
             .lockDuration(30000) // 30 seconds
-            .handler(warningTaskWorkerHandler::checkHasWarnings)
+            .handler(warningTaskWorkerHandler::completeWarningTaskService)
             .open();
 
     }
