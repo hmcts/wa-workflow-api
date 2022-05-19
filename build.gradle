@@ -249,7 +249,7 @@ dependencyManagement {
       entry 'guava'
     }
 
-    dependency group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    dependency group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
     //CVE-2021-27568
     dependency group: 'net.minidev', name: 'json-smart', version: '2.4.7'
@@ -264,7 +264,7 @@ dependencyManagement {
       entry 'logback-core'
     }
 
-    dependencySet(group: 'org.seleniumhq.selenium', version: '4.1.2') {
+    dependencySet(group: 'org.seleniumhq.selenium', version: '4.1.4') {
       entry 'selenium-java'
       entry 'selenium-remote-driver'
       entry 'selenium-firefox-driver'
@@ -287,7 +287,7 @@ repositories {
 
 def versions = [
   junit        : '5.7.2',
-  junitPlatform: '1.7.2',
+  junitPlatform: '1.8.2',
   reformLogging: '5.1.9',
   springDoc    : '1.6.6',
   serenity     : '3.2.0',
@@ -333,7 +333,7 @@ dependencies {
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.2'
 
-  implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.1'
+  implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.11'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.4'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
@@ -357,13 +357,13 @@ dependencies {
   }
 
   testImplementation group: 'pl.pojo', name: 'pojo-tester', version: '0.7.6'
-  testImplementation group: 'com.google.guava', name: 'guava-testlib', version: '30.1-jre'
+  testImplementation group: 'com.google.guava', name: 'guava-testlib', version: '31.1-jre'
   testImplementation group: 'com.jparams', name: 'to-string-verifier', version: '1.4.8'
 
   integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
 
   testImplementation group: 'com.h2database', name: 'h2', version: '1.4.197'
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.2'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.1'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.1'
 
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
