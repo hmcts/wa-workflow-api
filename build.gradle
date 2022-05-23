@@ -21,7 +21,7 @@ plugins {
   id 'io.freefair.lombok' version '5.3.3.3'
   id 'org.flywaydb.flyway' version '8.5.1'
   // If Pact version is changed, make sure serenity report works.
-  id 'au.com.dius.pact' version '4.1.8'
+  id 'au.com.dius.pact' version '4.3.7'
 }
 
 apply plugin: 'net.serenity-bdd.aggregator'
@@ -331,7 +331,7 @@ dependencies {
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.2'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.11'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
