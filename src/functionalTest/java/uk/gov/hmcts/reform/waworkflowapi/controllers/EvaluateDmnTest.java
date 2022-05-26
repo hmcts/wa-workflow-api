@@ -104,6 +104,40 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
+    public void should_evaluate_json_data_and_return_dmn_results_makeAnApplication() {
+
+        Map<String, Object> appealMap = new HashMap<>();
+        appealMap.put("lastModifiedApplication", Map.of("type", "Adjourn",
+                                                        "decision", ""));
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("Data", appealMap);
+
+        EvaluateDmnRequest body = new EvaluateDmnRequest(
+            Map.of(
+                "eventId", DmnValue.dmnStringValue("makeAnApplication"),
+                "additionalData", DmnValue.dmnMapValue(dataMap)
+            ));
+
+        Response result = restApiActions.post(
+            format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_IA_ASYLUM, TENANT_ID),
+            null,
+            body,
+            authenticationHeaders
+        );
+
+        result.prettyPrint();
+
+        result.then().assertThat()
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", equalTo(1))
+            .body("results[0].name.value", equalTo("Process Application"))
+            .body("results[0].workingDaysAllowed.value", equalTo(5))
+            .body("results[0].taskId.value", equalTo("processApplication"))
+            .body("results[0].processCategories.value", equalTo("application"));
+
+    }
+
+    @Test
     public void should_throw_an_error_when_dmn_table_does_not_exist() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
