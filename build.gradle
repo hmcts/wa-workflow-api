@@ -13,13 +13,13 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'org.springframework.boot' version '2.6.7'
+  id 'org.springframework.boot' version '2.7.0'
   id 'org.owasp.dependencycheck' version '6.5.3'
-  id 'com.github.ben-manes.versions' version '0.38.0'
+  id 'com.github.ben-manes.versions' version '0.42.0'
   id 'org.sonarqube' version '3.3'
   id 'info.solidsoft.pitest' version '1.7.4'
   id 'io.freefair.lombok' version '6.4.3'
-  id 'org.flywaydb.flyway' version '8.5.1'
+  id 'org.flywaydb.flyway' version '8.5.11'
   // If Pact version is changed, make sure serenity report works.
   id 'au.com.dius.pact' version '4.1.8'
 }
@@ -183,7 +183,7 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '0.12'
+  junit5PluginVersion = '0.15'
   targetClasses = ['uk.gov.hmcts.reform.waworkflowapi.*']
   excludedClasses = [
     'uk.gov.hmcts.reform.waworkflowapi.config.*',
@@ -252,7 +252,7 @@ dependencyManagement {
     dependency group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
     //CVE-2021-27568
-    dependency group: 'net.minidev', name: 'json-smart', version: '2.4.7'
+    dependency group: 'net.minidev', name: 'json-smart', version: '2.4.8'
     //CVE-2021-28170
     dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
     //CVE-2020-23171
@@ -275,7 +275,7 @@ dependencyManagement {
       entry 'selenium-support'
     }
 
-    dependency group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.2'
+    dependency group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.1'
   }
 }
 
@@ -286,7 +286,7 @@ repositories {
 }
 
 def versions = [
-  junit        : '5.7.2',
+  junit        : '5.8.2',
   junitPlatform: '1.8.2',
   reformLogging: '5.1.9',
   springDoc    : '1.6.6',
@@ -320,18 +320,18 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
-  implementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.6.2'
+  implementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.1'
 
   implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDoc
 
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.2'
 
   implementation group: 'org.zalando', name: 'logbook-spring-boot-starter', version: versions.logbook
-  implementation 'org.zalando:problem-spring-web-starter:0.26.2'
+  implementation 'org.zalando:problem-spring-web-starter:0.27.0'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.2'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.11'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
@@ -339,8 +339,8 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.2'
 
-  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.58'
-  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.58'
+  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.63'
+  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.63'
 
   implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.5.Final'
 
@@ -362,9 +362,9 @@ dependencies {
 
   integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
 
-  testImplementation group: 'com.h2database', name: 'h2', version: '1.4.197'
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.1'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.1'
+  testImplementation group: 'com.h2database', name: 'h2', version: '2.1.212'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.2'
 
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
   testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
@@ -385,9 +385,8 @@ dependencies {
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pactVersion
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pactVersion
 
-  contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-  contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-  contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
+  contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+  contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
   testUtilsImplementation sourceSets.main.runtimeClasspath
   testUtilsImplementation sourceSets.test.runtimeClasspath
