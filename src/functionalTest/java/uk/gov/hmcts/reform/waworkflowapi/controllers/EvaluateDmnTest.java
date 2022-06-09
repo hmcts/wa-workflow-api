@@ -119,7 +119,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         Response result = restApiActions.post(
-            format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_IA_ASYLUM, TENANT_ID),
+            format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_IA_ASYLUM, TENANT_ID_IA),
             null,
             body,
             authenticationHeaders
@@ -229,7 +229,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .body("results[0].processCategories.value", equalTo("caseProgression"));
 
     }
-    
+
 
     @Test
     public void should_return_200_with_empty_list_when_event_id_does_not_exist() {
