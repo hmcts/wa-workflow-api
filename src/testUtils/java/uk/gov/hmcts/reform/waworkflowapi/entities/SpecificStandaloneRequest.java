@@ -4,8 +4,6 @@ import io.restassured.http.Header;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Map;
-
 @Builder
 @Getter
 public class SpecificStandaloneRequest {
@@ -17,6 +15,5 @@ public class SpecificStandaloneRequest {
     private String taskName;
     private String roleCategory;
     private String caseId;
-    private Map<String, Object> additionalProperties;
 
 }
