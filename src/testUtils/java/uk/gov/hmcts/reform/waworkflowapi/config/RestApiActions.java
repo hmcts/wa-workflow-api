@@ -52,8 +52,7 @@ public class RestApiActions {
                 )
             ).httpClient(HttpClientConfig.httpClientConfig()
             .setParam("http.connection.timeout", 100000)
-            .setParam("http.socket.timeout", 100000));
-)
+            .setParam("http.socket.timeout", 100000))
             ).relaxedHTTPSValidation();
     }
 
