@@ -256,7 +256,7 @@ dependencyManagement {
       entry 'logback-core'
     }
 
-    dependencySet(group: 'org.seleniumhq.selenium', version: '4.1.4') {
+    dependencySet(group: 'org.seleniumhq.selenium', version: '4.3.0') {
       entry 'selenium-java'
       entry 'selenium-remote-driver'
       entry 'selenium-firefox-driver'
