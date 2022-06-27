@@ -13,13 +13,13 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'org.springframework.boot' version '2.7.0'
-  id 'org.owasp.dependencycheck' version '7.1.0.1'
+  id 'org.springframework.boot' version '2.7.1'
+  id 'org.owasp.dependencycheck' version '7.1.1'
   id 'com.github.ben-manes.versions' version '0.42.0'
   id 'org.sonarqube' version '3.3'
   id 'info.solidsoft.pitest' version '1.7.4'
   id 'io.freefair.lombok' version '5.3.3.3'
-  id 'org.flywaydb.flyway' version '8.5.11'
+  id 'org.flywaydb.flyway' version '8.5.12'
   // If Pact version is changed, make sure serenity report works.
   id 'au.com.dius.pact' version '4.1.8'
 }
@@ -286,7 +286,7 @@ def versions = [
   sonarPitest  : '0.5',
   camunda      : '7.14.0',
   logbook      : '2.6.2',
-  pactVersion  : '4.1.7',
+  pactVersion  : '4.1.7'
 ]
 
 ext.libraries = [
@@ -309,7 +309,6 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
   implementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.1'
 
   implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDoc
@@ -323,8 +322,8 @@ dependencies {
   implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
-  implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.11'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.6'
+  implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.12'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.0'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.2'
@@ -334,7 +333,7 @@ dependencies {
 
   implementation group: 'org.hibernate', name: 'hibernate-core', version: '6.0.2.Final'
 
-  implementation 'org.camunda.bpm:camunda-external-task-client:7.17.0'
+  implementation group: 'org.camunda.bpm', name: 'camunda-external-task-client', version: '7.17.0'
 
   implementation group: 'javax.xml', name: 'jaxb-api', version: '2.1'
 
@@ -350,7 +349,7 @@ dependencies {
   testImplementation group: 'com.google.guava', name: 'guava-testlib', version: '31.1-jre'
   testImplementation group: 'com.jparams', name: 'to-string-verifier', version: '1.4.8'
 
-  integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
+  integrationTestImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
 
   testImplementation group: 'com.h2database', name: 'h2', version: '2.1.212'
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
@@ -364,8 +363,10 @@ dependencies {
   testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-  testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
-  testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
+
+  testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
+
+  testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.2.2'
 
   //Pact contract testing
   contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pactVersion
@@ -375,8 +376,9 @@ dependencies {
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pactVersion
   contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pactVersion
 
-  contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-  contractTestRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+  contractTestImplementation(group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit)
+  contractTestRuntimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit)
+  contractTestImplementation(group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit)
 
   testUtilsImplementation sourceSets.main.runtimeClasspath
   testUtilsImplementation sourceSets.test.runtimeClasspath
