@@ -19,7 +19,7 @@ plugins {
   id 'org.sonarqube' version '3.4.0.2513'
   id 'info.solidsoft.pitest' version '1.9.0'
   id 'io.freefair.lombok' version '6.5.1'
-  id 'org.flywaydb.flyway' version '9.2.2'
+  id 'org.flywaydb.flyway' version '9.3.1'
   // If Pact version is changed, make sure serenity report works.
   id 'au.com.dius.pact' version '4.1.8'
 }
