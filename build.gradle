@@ -166,7 +166,7 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '1.0.0'
+  junit5PluginVersion = '1.1.0'
   targetClasses = ['uk.gov.hmcts.reform.waworkflowapi.*']
   excludedClasses = [
     'uk.gov.hmcts.reform.waworkflowapi.config.*',
@@ -248,13 +248,13 @@ def versions = [
   springDoc     : '1.6.6',
   serenity      : '3.2.0',
   gradlePitest  : '1.9.0',
-  pitest        : '1.9.4',
+  pitest        : '1.9.6',
   sonarPitest   : '0.5',
   camunda       : '7.14.0',
   logbook       : '2.6.2',
   pactVersion   : '4.1.7',
-  testcontainers: '1.17.3',
-  log4j         : '2.18.0'
+  testcontainers: '1.17.4',
+  log4j         : '2.19.0'
 ]
 
 ext.libraries = [
@@ -289,7 +289,7 @@ dependencies {
   implementation 'org.zalando:problem-spring-web-starter:0.27.0'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.0'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
 
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.4.0'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
