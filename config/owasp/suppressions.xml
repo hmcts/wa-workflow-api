@@ -31,4 +31,8 @@
     <notes>Suppressed, because no fixed release yet and affected feature UNWRAP_SINGLE_VALUE_ARRAYS is disabled by default and not used in the project</notes>
     <cve>CVE-2022-42003</cve>
   </suppress>
+  <suppress>
+    <notes>Suppressed, because we are yet to update tomcat-embed-websocket-10.0.21.jar</notes>
+    <cve> CVE-2022-34305</cve>
+  </suppress>
 </suppressions>
