@@ -52,7 +52,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         idempotencyKey = UUID.randomUUID().toString();
         authenticationHeaders = authorizationHeadersProvider.getAuthorizationHeaders();
 
-        processVariables = createProcessVariables(idempotencyKey, "WA");
+        processVariables = createProcessVariables(idempotencyKey, "ia");
     }
 
     @Test
