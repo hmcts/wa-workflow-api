@@ -60,7 +60,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
         sendMessage(processVariables);
         final String taskId = assertTaskIsCreated(caseId);
-        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "WA");
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
         cleanUpTask(taskId, REASON_COMPLETED);  //We do the cleaning here to avoid clashing with other tasks
 
         processVariables = createProcessVariables(idempotencyKey, "wa");
