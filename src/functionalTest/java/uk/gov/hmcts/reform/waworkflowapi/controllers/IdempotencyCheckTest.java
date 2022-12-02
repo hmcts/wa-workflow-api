@@ -82,7 +82,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
-        assertNumberOfDuplicatedProcesses(processIds, 0);
+        assertNumberOfDuplicatedProcesses(processIds, 1);
 
         cleanUpTask(taskId, REASON_COMPLETED);
     }
