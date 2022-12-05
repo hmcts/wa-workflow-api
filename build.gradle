@@ -13,8 +13,7 @@ plugins {
   id 'io.freefair.lombok' version '6.5.1'
   id 'org.flywaydb.flyway' version '9.4.0'
   // If Pact version is changed, make sure serenity report works.
-  id 'net.serenity-bdd.serenity-gradle-plugin' version '3.2.3'
-  id 'au.com.dius.pact' version '4.3.8'
+  id 'au.com.dius.pact' version '4.1.8'
 }
 
 group = 'uk.gov.hmcts.reform'
