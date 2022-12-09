@@ -12,7 +12,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.waworkflowapi.config.ServiceTokenGeneratorConfiguration.SERVICE_AUTHORIZATION;
 
 @FeignClient(
-    name = "task-management-api",
+    name = "wa-task-management-api",
     url = "${wa-task-management-api.url}",
     configuration = FeignClientSnakeCaseConfiguration.class
 )
