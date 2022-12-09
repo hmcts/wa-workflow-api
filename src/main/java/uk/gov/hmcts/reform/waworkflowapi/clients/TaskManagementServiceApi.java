@@ -13,7 +13,7 @@ import static uk.gov.hmcts.reform.waworkflowapi.config.ServiceTokenGeneratorConf
 
 @FeignClient(
     name = "task-management-api",
-    url = "${task-management-api.url}",
+    url = "${wa-task-management-api.url}",
     configuration = FeignClientSnakeCaseConfiguration.class
 )
 public interface TaskManagementServiceApi {
@@ -23,6 +23,6 @@ public interface TaskManagementServiceApi {
         consumes = APPLICATION_JSON_VALUE
     )
     void addTaskNote(@RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-                             @PathVariable("task-id") String taskId,
-                             @RequestBody NotesRequest body);
+                     @PathVariable("task-id") String taskId,
+                     @RequestBody NotesRequest body);
 }
