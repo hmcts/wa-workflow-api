@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ class TaskClientServiceTest {
     private static final String BEARER_SERVICE_TOKEN = "Bearer service token";
 
     private List<Map<String, DmnValue<?>>> mockResponse() {
-        return List.of(Map.of("test",DmnValue.dmnStringValue("TestValue")));
+        return List.of(Map.of("test", DmnValue.dmnStringValue("TestValue")));
     }
 
     @BeforeEach
@@ -35,7 +36,7 @@ class TaskClientServiceTest {
         camundaClient = mock(CamundaClient.class);
         authTokenGenerator = mock(AuthTokenGenerator.class);
         underTest = new TaskClientService(camundaClient, authTokenGenerator);
-        evaluateDmnRequest = new EvaluateDmnRequest(Map.of("name",DmnValue.dmnStringValue("test")));
+        evaluateDmnRequest = new EvaluateDmnRequest(Map.of("name", DmnValue.dmnStringValue("test")));
         when(authTokenGenerator.generate()).thenReturn(BEARER_SERVICE_TOKEN);
     }
 
@@ -48,13 +49,13 @@ class TaskClientServiceTest {
             eq(evaluateDmnRequest)
         )).thenReturn(mockResponse());
 
-        List<Map<String,DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
+        List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
         assertEquals(task.get(0).get("test").getValue(), "TestValue");
     }
 
     @Test
     void evaluateForEmptyDmn() {
-        List<Map<String,DmnValue<?>>> ts = emptyList();
+        List<Map<String, DmnValue<?>>> ts = emptyList();
         when(camundaClient.evaluateDmn(
             BEARER_SERVICE_TOKEN,
             "key",
@@ -62,7 +63,24 @@ class TaskClientServiceTest {
             evaluateDmnRequest
         )).thenReturn(ts);
 
-        List<Map<String,DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test","id");
+        List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
+
+        assertEquals(task, new ArrayList<>());
+    }
+
+    @Test
+    void evaluateForEmptyMap() {
+        Map<String, DmnValue<?>> emptyMap = new HashMap<>();
+        List<Map<String, DmnValue<?>>> dmnResponse = new ArrayList<>();
+        dmnResponse.add(emptyMap);
+        when(camundaClient.evaluateDmn(
+            BEARER_SERVICE_TOKEN,
+            "key",
+            "id",
+            evaluateDmnRequest
+        )).thenReturn(dmnResponse);
+
+        List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
 
         assertEquals(task, new ArrayList<>());
     }
