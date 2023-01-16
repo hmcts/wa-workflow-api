@@ -32,7 +32,11 @@ class TaskClientServiceTest {
     }
 
     private List<Map<String, DmnValue<?>>> mockResponseWithSpaces() {
-        return List.of(Map.of("test", DmnValue.dmnStringValue("value1, value2")));
+        return List.of(Map.of(
+            "key1", DmnValue.dmnStringValue("value1, value2"),
+            "key2", DmnValue.dmnStringValue("value3"),
+            "key3", DmnValue.dmnStringValue("value4,value5")
+        ));
     }
 
     @BeforeEach
@@ -101,6 +105,8 @@ class TaskClientServiceTest {
 
 
         List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
-        assertEquals(task.get(0).get("test").getValue(), "value1,value2");
+        assertEquals(task.get(0).get("key1").getValue(), "value1,value2");
+        assertEquals(task.get(0).get("key2").getValue(), "value3");
+        assertEquals(task.get(0).get("key3").getValue(), "value4,value5");
     }
 }
