@@ -57,7 +57,6 @@ public class TaskClientService {
                     .map(String::trim)
                     .collect(Collectors.toList());
 
-                response.remove(entry.getKey());
                 response.put(
                     entry.getKey(),
                     DmnValue.dmnStringValue(
