@@ -31,6 +31,10 @@ class TaskClientServiceTest {
         return List.of(Map.of("test", DmnValue.dmnStringValue("TestValue")));
     }
 
+    private List<Map<String, DmnValue<?>>> mockResponseWithSpaces() {
+        return List.of(Map.of("test", DmnValue.dmnStringValue("value1, value2")));
+    }
+
     @BeforeEach
     void setUp() {
         camundaClient = mock(CamundaClient.class);
@@ -83,5 +87,20 @@ class TaskClientServiceTest {
         List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
 
         assertEquals(task, new ArrayList<>());
+    }
+
+    @Test
+    void evaluateDmnRequestWithSpaces() {
+
+        when(camundaClient.evaluateDmn(
+            eq(BEARER_SERVICE_TOKEN),
+            anyString(),
+            anyString(),
+            eq(evaluateDmnRequest)
+        )).thenReturn(mockResponseWithSpaces());
+
+
+        List<Map<String, DmnValue<?>>> task = underTest.evaluate(evaluateDmnRequest, "test", "id");
+        assertEquals(task.get(0).get("test").getValue(), "value1,value2");
     }
 }

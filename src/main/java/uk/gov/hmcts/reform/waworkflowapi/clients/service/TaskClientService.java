@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,7 +44,9 @@ public class TaskClientService {
         return dmnResponse.stream().map(this::removeSpaces).collect(Collectors.toList());
     }
 
-    private Map<String, DmnValue<?>> removeSpaces(Map<String, DmnValue<?>> response) {
+    private Map<String, DmnValue<?>> removeSpaces(Map<String, DmnValue<?>> dmnResponse) {
+
+        HashMap<String, DmnValue<?>> response = new HashMap<>(dmnResponse);
 
         for (Map.Entry<String, DmnValue<?>> entry : response.entrySet()) {
             String value = entry.getValue().getValue().toString();
