@@ -34,7 +34,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
-    public static final int POLL_INTERVAL = 2;
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
     @Autowired
