@@ -108,7 +108,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variables", "idempotencyKey_eq_" + idempotencyKey
                     )
                 );
-
+                log.info("RWA-2044-getProcessIdsForGivenIdempotencyKey");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 result.prettyPrint();
 
                 //number of messages sent, equivalent to processes created
@@ -223,7 +226,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     new Headers(authenticationHeaders),
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
-
+                log.info("RWA-2044-assertTaskIsCreated");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 //number of messages sent, equivalent to processes created
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -274,7 +280,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variableName", "isDuplicate"
                     )
                 );
-
+                log.info("RWA-2044-getIsDuplicateVariableValue");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 boolean isDuplicate = result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .assertThat().body("[0].name", is("isDuplicate"))

@@ -110,7 +110,10 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                         "processVariables", "caseId_eq_" + caseId
                     ));
 
-
+                log.info("RWA-2044-transition_creates_a_task_with_default_due_date");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
@@ -278,7 +281,10 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     // so we will search using processVariables
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
-
+                log.info("RWA-2044-transition_creates_a_task_with_due_date");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
@@ -340,7 +346,10 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     // so we will search using processVariables
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
-
+                log.info("RWA-2044-transition_creates_a_task_with_due_date_for_wa");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
@@ -487,6 +496,11 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     Map.of("processVariables", "caseId_eq_" + specificStandaloneRequest.getCaseId())
                 );
 
+                log.info("RWA-2044-assertions");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
+
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
@@ -518,6 +532,11 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     Map.of("processVariables", "caseId_eq_" + specificStandaloneRequest.getCaseId())
                 );
 
+                log.info("RWA-2044-assertionsForAdditionalProperties-526");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
+
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
@@ -543,7 +562,10 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     processVariablesPath,
                     specificStandaloneRequest.getAuthenticationHeaders()
                 );
-
+                log.info("RWA-2044-assertionsForAdditionalProperties-556");
+                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
+                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
+                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .body("type", is("Object"));
