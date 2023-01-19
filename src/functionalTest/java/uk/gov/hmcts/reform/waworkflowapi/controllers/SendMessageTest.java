@@ -493,7 +493,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     new Headers(specificStandaloneRequest.getAuthenticationHeaders()),
                     // Because the ccd case does not exist it does not configure the local variables
                     // so we will search using processVariables
-                    Map.of("processVariables", "caseId_eq_" + specificStandaloneRequest.getCaseId())
+                    Map.of("processVariables", "caseId_eq_a6aa2e6f-eddc-434b-980b-661cbb84a441")
                 );
 
                 log.info("RWA-2044-assertions");
