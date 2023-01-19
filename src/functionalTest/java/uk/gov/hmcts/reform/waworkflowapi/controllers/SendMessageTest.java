@@ -484,7 +484,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         AtomicReference<String> taskIdResponse = new AtomicReference<>();
         await()
             .ignoreException(AssertionError.class)
-            .pollInterval(1, TimeUnit.SECONDS)
+            .pollInterval(10, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
 
