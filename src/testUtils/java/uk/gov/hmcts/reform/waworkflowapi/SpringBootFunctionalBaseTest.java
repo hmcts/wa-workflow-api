@@ -57,7 +57,7 @@ public abstract class SpringBootFunctionalBaseTest {
         restApiActions = new RestApiActions(testUrl, LOWER_CAMEL_CASE).setUp();
         //Convention should be snake case will be fixed in another PR
         //restApiActions = new RestApiActions(testUrl, SNAKE_CASE).setUp();
-        log.info("RWA-2044-camundaUrl:{} - testUrl:{}", camundaUrl, testUrl);
+        log.info("RWA-2044-camundaUrl:{}  - testUrl:{}", camundaUrl, testUrl);
         //camundaUrl = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest";
         camundaApiActions = new RestApiActions(camundaUrl, LOWER_CAMEL_CASE).setUp();
     }
