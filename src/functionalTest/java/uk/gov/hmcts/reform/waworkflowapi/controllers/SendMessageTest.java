@@ -131,119 +131,113 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         cleanUpTask(taskId, REASON_COMPLETED);
     }
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_judicial_standalone_task_with_default_due_date() {
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("WaCaseType")
-    //        .taskType("reviewSpecificAccessRequestJudiciary")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("JUDICIAL")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+    @Test
+    public void should_creates_a_judicial_standalone_task_with_default_due_date() {
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("WaCaseType")
+            .taskType("reviewSpecificAccessRequestJudiciary")
+            .taskName("Review Specific Access Request")
+            .roleCategory("JUDICIAL")
+            .caseId(caseId)
+            .build();
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_legal_ops_standalone_task_with_default_due_date() {
-    //
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("WaCaseType")
-    //        .taskType("reviewSpecificAccessRequestLegalOps")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("LEGAL_OPERATIONS")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+        Response response = createSpecifiedStandaloneTask(request);
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_admin_standalone_task_with_default_due_date() {
-    //
-    //
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("WaCaseType")
-    //        .taskType("reviewSpecificAccessRequestAdmin")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("ADMINISTRATOR")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+        assertions(response, request);
+    }
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_judicial_standalone_task_with_default_due_date_for_wa() {
-    //
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("waCaseType")
-    //        .taskType("reviewSpecificAccessRequestJudiciary")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("JUDICIAL")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+    @Test
+    public void should_creates_a_legal_ops_standalone_task_with_default_due_date() {
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_legal_ops_standalone_task_with_default_due_date_for_wa() {
-    //
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("waCaseType")
-    //        .taskType("reviewSpecificAccessRequestLegalOps")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("LEGAL_OPERATIONS")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("WaCaseType")
+            .taskType("reviewSpecificAccessRequestLegalOps")
+            .taskName("Review Specific Access Request")
+            .roleCategory("LEGAL_OPERATIONS")
+            .caseId(caseId)
+            .build();
 
-    //@Disabled
-    //@Test
-    //public void should_creates_a_admin_standalone_task_with_default_due_date_for_wa() {
-    //
-    //    SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
-    //        .authenticationHeaders(authenticationHeaders)
-    //        .jurisdiction(TENANT_ID_WA)
-    //        .caseType("waCaseType")
-    //        .taskType("reviewSpecificAccessRequestAdmin")
-    //        .taskName("Review Specific Access Request")
-    //        .roleCategory("ADMINISTRATOR")
-    //        .caseId(caseId)
-    //        .build();
-    //
-    //    Response response = createSpecifiedStandaloneTask(request);
-    //
-    //    assertions(response, request);
-    //}
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
+    }
+
+    @Test
+    public void should_creates_a_admin_standalone_task_with_default_due_date() {
+
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("WaCaseType")
+            .taskType("reviewSpecificAccessRequestAdmin")
+            .taskName("Review Specific Access Request")
+            .roleCategory("ADMINISTRATOR")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
+    }
+
+    @Test
+    public void should_creates_a_judicial_standalone_task_with_default_due_date_for_wa() {
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestJudiciary")
+            .taskName("Review Specific Access Request")
+            .roleCategory("JUDICIAL")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
+    }
+
+    @Test
+    public void should_creates_a_legal_ops_standalone_task_with_default_due_date_for_wa() {
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestLegalOps")
+            .taskName("Review Specific Access Request")
+            .roleCategory("LEGAL_OPERATIONS")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
+    }
+
+    @Test
+    public void should_creates_a_admin_standalone_task_with_default_due_date_for_wa() {
+
+        SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
+            .authenticationHeaders(authenticationHeaders)
+            .jurisdiction(TENANT_ID_WA)
+            .caseType("waCaseType")
+            .taskType("reviewSpecificAccessRequestAdmin")
+            .taskName("Review Specific Access Request")
+            .roleCategory("ADMINISTRATOR")
+            .caseId(caseId)
+            .build();
+
+        Response response = createSpecifiedStandaloneTask(request);
+
+        assertions(response, request);
+    }
 
     @Test
     public void transition_creates_a_task_with_due_date() {
