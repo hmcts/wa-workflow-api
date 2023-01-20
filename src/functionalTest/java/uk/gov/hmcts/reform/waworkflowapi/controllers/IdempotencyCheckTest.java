@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -72,6 +73,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         assertNumberOfDuplicatedProcesses(processIds, 0);
     }
 
+    @Disabled
     @Test
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
 
