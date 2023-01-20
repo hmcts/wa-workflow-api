@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -154,7 +153,6 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
 
         AtomicReference<Boolean> result = new AtomicReference<>(false);
-        AtomicInteger count = new AtomicInteger(0);
         await()
             .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
