@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,17 +149,20 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private void assertNewIdempotentKeyIsAddedToDb(String idempotencyKey, String jurisdiction) {
         boolean idempotencyKeysInAatDb = findIdempotencyKeysInAatDb(idempotencyKey, jurisdiction);
         if (!idempotencyKeysInAatDb) {
-            getIdempotencyKeysInPreviewDb(idempotencyKey, jurisdiction);
+            findIdempotencyKeysInPreviewDb(idempotencyKey, jurisdiction);
         }
     }
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
-        log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("findIdempotencyKeysInAatDb Asserting idempotentId({}) was added to AAT DB...",
+            new IdempotentId(idempotencyKey, jurisdiction));
 
-        AtomicReference<Boolean> result = new AtomicReference<>();
+        AtomicReference<Boolean> result = new AtomicReference<>(false);
+        AtomicInteger count = new AtomicInteger(0);
         await()
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
+            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
 
                 Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
@@ -167,23 +171,28 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 );
 
                 if (actual.isPresent()) {
-                    log.info("idempotentId[{}] found in DB.", actual.get());
+                    log.info("findIdempotencyKeysInAatDb idempotentId[{}] found in AAT DB.", actual.get());
                     result.set(true);
-
                 } else {
                     log.info(
-                        "idempotentId[{}] NOT found in DB.", new IdempotentId(idempotencyKey, jurisdiction));
-                    result.set(false);
+                        "findIdempotencyKeysInAatDb idempotentId[{}] NOT found in AAT DB.",
+                        new IdempotentId(idempotencyKey, jurisdiction));
                 }
-                return true;
+                count.getAndIncrement();
+                log.info("findIdempotencyKeysInAatDb count:{}", count.get());
+                if (count.get() > 6) {
+                    return true;
+                }
+
+                return result.get();
             });
 
         return result.get();
     }
 
-    private void getIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
+    private void findIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
         log.info(
-            "Asserting idempotentId({}) was added to Preview DB...",
+            "findIdempotencyKeysInPreviewDb Asserting idempotentId({}) was added to Preview DB...",
             new IdempotentId(idempotencyKey, jurisdiction)
         );
         await()
@@ -201,6 +210,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                 );
 
+                log.info("findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
+
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
@@ -209,7 +220,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-        log.info("idempotentId[{}] found in Preview DB.", new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("findIdempotencyKeysInPreviewDb idempotentId[{}] found in Preview DB.",
+            new IdempotentId(idempotencyKey, jurisdiction));
     }
 
     private String assertTaskIsCreated(String caseId) {
