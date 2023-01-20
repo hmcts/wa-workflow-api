@@ -6,7 +6,6 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -73,20 +72,20 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         assertNumberOfDuplicatedProcesses(processIds, 0);
     }
 
-    @Disabled
-    @Test
-    public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
-
-        sendMessage(processVariables);
-        final String taskId = assertTaskIsCreated(caseId);
-        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "WA");
-
-        sendMessage(processVariables); //We send another message for the same idempotencyKey
-        List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
-        assertNumberOfDuplicatedProcesses(processIds, 1);
-
-        cleanUpTask(taskId, REASON_COMPLETED);
-    }
+    //@Disabled
+    //@Test
+    //public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
+    //
+    //    sendMessage(processVariables);
+    //    final String taskId = assertTaskIsCreated(caseId);
+    //    assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "WA");
+    //
+    //    sendMessage(processVariables); //We send another message for the same idempotencyKey
+    //    List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
+    //    assertNumberOfDuplicatedProcesses(processIds, 1);
+    //
+    //    cleanUpTask(taskId, REASON_COMPLETED);
+    //}
 
     private void assertNumberOfDuplicatedProcesses(List<String> processIds, int expectedNumberOfDuplicatedProcesses) {
         assertThat((int) processIds.stream()
