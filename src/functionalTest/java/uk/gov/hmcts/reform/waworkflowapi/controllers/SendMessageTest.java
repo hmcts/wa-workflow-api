@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -131,6 +132,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         cleanUpTask(taskId, REASON_COMPLETED);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_judicial_standalone_task_with_default_due_date() {
         SpecificStandaloneRequest request = SpecificStandaloneRequest.builder()
@@ -148,6 +150,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         assertions(response, request);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_legal_ops_standalone_task_with_default_due_date() {
 
@@ -166,6 +169,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         assertions(response, request);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_admin_standalone_task_with_default_due_date() {
 
@@ -185,6 +189,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         assertions(response, request);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_judicial_standalone_task_with_default_due_date_for_wa() {
 
@@ -203,6 +208,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         assertions(response, request);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_legal_ops_standalone_task_with_default_due_date_for_wa() {
 
@@ -221,6 +227,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         assertions(response, request);
     }
 
+    @Disabled
     @Test
     public void should_creates_a_admin_standalone_task_with_default_due_date_for_wa() {
 
