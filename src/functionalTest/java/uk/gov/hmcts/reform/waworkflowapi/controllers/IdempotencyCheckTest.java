@@ -154,7 +154,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
-        log.info("findIdempotencyKeysInAatDb Asserting idempotentId({}) was added to AAT DB...",
+        log.info("RWA-2044-findIdempotencyKeysInAatDb Asserting idempotentId({}) was added to AAT DB...",
             new IdempotentId(idempotencyKey, jurisdiction));
 
         AtomicReference<Boolean> result = new AtomicReference<>(false);
@@ -179,7 +179,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         new IdempotentId(idempotencyKey, jurisdiction));
                 }
                 count.getAndIncrement();
-                log.info("findIdempotencyKeysInAatDb count:{}", count.get());
+                log.info("RWA-2044-findIdempotencyKeysInAatDb count:{}", count.get());
                 if (count.get() > 6) {
                     return true;
                 }
@@ -192,7 +192,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private void findIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
         log.info(
-            "findIdempotencyKeysInPreviewDb Asserting idempotentId({}) was added to Preview DB...",
+            "RWA-2044-findIdempotencyKeysInPreviewDb Asserting idempotentId({}) was added to Preview DB...",
             new IdempotentId(idempotencyKey, jurisdiction)
         );
         await()
@@ -210,7 +210,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                 );
 
-                log.info("findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
+                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
 
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -220,7 +220,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-        log.info("findIdempotencyKeysInPreviewDb idempotentId[{}] found in Preview DB.",
+        log.info("RWA-2044-findIdempotencyKeysInPreviewDb idempotentId[{}] found in Preview DB.",
             new IdempotentId(idempotencyKey, jurisdiction));
     }
 

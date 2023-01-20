@@ -155,11 +155,16 @@ public abstract class SpringBootFunctionalBaseTest {
             false
         );
 
-        return restApiActions.post(
+        Response response = restApiActions.post(
             "/workflow/message",
             body,
             specificStandaloneRequest.getAuthenticationHeaders()
         );
+
+        log.info("RWA-2044-createSpecifiedStandaloneTask statusCode: {}", response.then().extract().statusCode());
+        log.info("RWA-2044-createSpecifiedStandaloneTask response: {}", response.then().extract().body().asString());
+
+        return response;
 
     }
 }
