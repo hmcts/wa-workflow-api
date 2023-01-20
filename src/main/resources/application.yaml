@@ -84,22 +84,10 @@ launchDarkly:
   connectionTimeout: 5000
   socketTimeout: 5000
 
-#logging:
-#  level:
-#    root: INFO
-#    org.zalando.logbook: TRACE
-
 logging:
   level:
-    org.springframework:
-      dao: info
-      transaction: debug
-      jdbc.core.JdbcTemplate: debug
-    org.hibernate:
-      SQL: debug
-      type.descriptor.sql.BasicBinder: trace
-      engine: info
-    uk.gov.hmcts.reform: debug
+    root: INFO
+    org.zalando.logbook: TRACE
 
 feign:
   client:

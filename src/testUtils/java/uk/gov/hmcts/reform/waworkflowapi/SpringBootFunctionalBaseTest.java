@@ -57,8 +57,7 @@ public abstract class SpringBootFunctionalBaseTest {
         restApiActions = new RestApiActions(testUrl, LOWER_CAMEL_CASE).setUp();
         //Convention should be snake case will be fixed in another PR
         //restApiActions = new RestApiActions(testUrl, SNAKE_CASE).setUp();
-        log.info("RWA-2044-camundaUrl:{}  - testUrl:{}", camundaUrl, testUrl);
-        //camundaUrl = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest";
+        log.info("camundaUrl:{}  - testUrl:{}", camundaUrl, testUrl);
         camundaApiActions = new RestApiActions(camundaUrl, LOWER_CAMEL_CASE).setUp();
     }
 
@@ -161,8 +160,8 @@ public abstract class SpringBootFunctionalBaseTest {
             specificStandaloneRequest.getAuthenticationHeaders()
         );
 
-        log.info("RWA-2044-createSpecifiedStandaloneTask statusCode: {}", response.then().extract().statusCode());
-        log.info("RWA-2044-createSpecifiedStandaloneTask response: {}", response.then().extract().body().asString());
+        log.info("createSpecifiedStandaloneTask statusCode: {}", response.then().extract().statusCode());
+        log.info("createSpecifiedStandaloneTask response: {}", response.then().extract().body().asString());
 
         return response;
 

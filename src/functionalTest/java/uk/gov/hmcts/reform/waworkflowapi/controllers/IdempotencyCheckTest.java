@@ -108,10 +108,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variables", "idempotencyKey_eq_" + idempotencyKey
                     )
                 );
-                log.info("RWA-2044-getProcessIdsForGivenIdempotencyKey");
-                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
-                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
-                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
+                log.info("getProcessIdsForGivenIdempotencyKey-body:{}", result.then().extract().body().asString());
                 result.prettyPrint();
 
                 //number of messages sent, equivalent to processes created
@@ -154,8 +151,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
-        log.info("RWA-2044-findIdempotencyKeysInAatDb Asserting idempotentId({}) was added to AAT DB...",
-            new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
 
         AtomicReference<Boolean> result = new AtomicReference<>(false);
         AtomicInteger count = new AtomicInteger(0);
@@ -171,19 +167,13 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 );
 
                 if (actual.isPresent()) {
-                    log.info("findIdempotencyKeysInAatDb idempotentId[{}] found in AAT DB.", actual.get());
+                    log.info("idempotentId[{}] found in AAT DB.", actual.get());
                     result.set(true);
                 } else {
                     log.info(
-                        "findIdempotencyKeysInAatDb idempotentId[{}] NOT found in AAT DB.",
+                        "idempotentId[{}] NOT found in AAT DB.",
                         new IdempotentId(idempotencyKey, jurisdiction));
                 }
-                count.getAndIncrement();
-                log.info("RWA-2044-findIdempotencyKeysInAatDb count:{}", count.get());
-                if (count.get() > 6) {
-                    return true;
-                }
-
                 return result.get();
             });
 
@@ -192,7 +182,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private void findIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
         log.info(
-            "RWA-2044-findIdempotencyKeysInPreviewDb Asserting idempotentId({}) was added to Preview DB...",
+            "Asserting idempotentId({}) was added to Preview DB...",
             new IdempotentId(idempotencyKey, jurisdiction)
         );
         await()
@@ -210,7 +200,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                 );
 
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
+                log.info("findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
 
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -220,7 +210,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 return true;
             });
-        log.info("RWA-2044-findIdempotencyKeysInPreviewDb idempotentId[{}] found in Preview DB.",
+        log.info("findIdempotencyKeysInPreviewDb idempotentId[{}] found in Preview DB.",
             new IdempotentId(idempotencyKey, jurisdiction));
     }
 
@@ -237,10 +227,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     new Headers(authenticationHeaders),
                     Map.of("processVariables", "caseId_eq_" + caseId)
                 );
-                log.info("RWA-2044-assertTaskIsCreated");
-                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
-                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
-                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
+
+                log.info("assertTaskIsCreated body:{}", result.then().extract().body().asString());
                 //number of messages sent, equivalent to processes created
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -291,10 +279,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "variableName", "isDuplicate"
                     )
                 );
-                log.info("RWA-2044-getIsDuplicateVariableValue");
-                log.info("RWA-2044-statusCode:{}", result.then().extract().statusCode());
-                log.info("RWA-2044-contentType:{}", result.then().extract().contentType());
-                log.info("RWA-2044-body:{}", result.then().extract().body().asString());
+
+                log.info("getIsDuplicateVariableValue body:{}", result.then().extract().body().asString());
                 boolean isDuplicate = result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .assertThat().body("[0].name", is("isDuplicate"))
