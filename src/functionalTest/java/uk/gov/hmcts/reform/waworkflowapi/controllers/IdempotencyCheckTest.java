@@ -160,7 +160,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
-        log.info("RWA-2044-Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
+        log.info("RWA-2044-Asserting idempotentId({}) was added to AAT DB...",
+            new IdempotentId(idempotencyKey, jurisdiction));
         AtomicReference<Boolean> result = new AtomicReference<>(false);
         try {
             await()
@@ -215,8 +216,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                 );
 
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result statusCode:{}", result.then().extract().statusCode());
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result body:{}", result.then().extract().body().asString());
+                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result statusCode:{}",
+                    result.then().extract().statusCode());
+                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result body:{}",
+                    result.then().extract().body().asString());
 
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
