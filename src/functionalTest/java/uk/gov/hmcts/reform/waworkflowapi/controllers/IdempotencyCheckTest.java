@@ -59,27 +59,22 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
 
         sendMessage(processVariables);
-        log.info("RWA-2044 sendMessage-1 processVariables:{}", processVariables);
         final String taskId = assertTaskIsCreated(caseId);
-        log.info("RWA-2044 assertTaskIsCreated-1 caseId:{}", caseId);
-        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
-        log.info("RWA-2044 assertNewIdempotentKeyIsAddedToDb-1 idempotencyKey:{}", idempotencyKey);
+        String tenantId1 = "wa";
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, tenantId1);
         cleanUpTask(taskId, REASON_COMPLETED);  //We do the cleaning here to avoid clashing with other tasks
 
-        processVariables = createProcessVariables(idempotencyKey, "wa");
-        log.info("RWA-2044 createProcessVariables-1 idempotencyKey:{}", idempotencyKey);
+        String tenantId2 = "ia";
+        processVariables = createProcessVariables(idempotencyKey, tenantId2);
 
         sendMessage(processVariables); //We send another message for the same idempotencyKey and different tenantId
-        log.info("RWA-2044 sendMessage-2 processVariables:{}", processVariables);
         final String taskId2 = assertTaskIsCreated(caseId);
-        log.info("RWA-2044 assertTaskIsCreated-2 caseId:{}", caseId);
-        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, "wa");
-        log.info("RWA-2044 assertNewIdempotentKeyIsAddedToDb-2 idempotencyKey:{}", idempotencyKey);
+        assertNewIdempotentKeyIsAddedToDb(idempotencyKey, tenantId2);
         cleanUpTask(taskId2, REASON_COMPLETED);  //We do the cleaning here to avoid clashing with other tasks
 
         List<String> processIds = getProcessIdsForGivenIdempotencyKey(idempotencyKey);
-        log.info("RWA-2044 processIds:{}", String.join(", ", processIds));
         assertNumberOfDuplicatedProcesses(processIds, 0);
+
     }
 
     @Test
@@ -160,7 +155,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
-        log.info("RWA-2044-Asserting idempotentId({}) was added to AAT DB...",
+        log.info("Asserting idempotentId({}) was added to AAT DB...",
             new IdempotentId(idempotencyKey, jurisdiction));
         AtomicReference<Boolean> result = new AtomicReference<>(false);
         try {
@@ -176,27 +171,27 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     );
 
                     if (actual.isPresent()) {
-                        log.info("RWA-2044-idempotentId[{}] found in AAT DB.", actual.get());
+                        log.info("idempotentId[{}] found in AAT DB.", actual.get());
                         result.set(true);
                     } else {
                         log.info(
-                            "RWA-2044-idempotentId[{}] NOT found in AAT DB.",
+                            "idempotentId[{}] NOT found in AAT DB.",
                             new IdempotentId(idempotencyKey, jurisdiction));
                     }
-                    log.info("RWA-2044-findIdempotencyKeysInAatDb result:{}", result.get());
+                    log.info("findIdempotencyKeysInAatDb result:{}", result.get());
                     return result.get();
                 });
         } catch (ConditionTimeoutException e) {
-            log.info("RWA-2044-findIdempotencyKeysInAatDb ConditionTimeoutException:{}", e.getMessage());
+            log.info("findIdempotencyKeysInAatDb ConditionTimeoutException:{}", e.getMessage());
         }
 
-        log.info("RWA-2044-findIdempotencyKeysInAatDb after result:{}", result.get());
+        log.info("findIdempotencyKeysInAatDb after result:{}", result.get());
         return result.get();
     }
 
     private void findIdempotencyKeysInPreviewDb(String idempotencyKey, String jurisdiction) {
         log.info(
-            "RWA-2044-Asserting idempotentId({}) was added to Preview DB...",
+            "Asserting idempotentId({}) was added to Preview DB...",
             new IdempotentId(idempotencyKey, jurisdiction)
         );
         await()
@@ -205,7 +200,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
 
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb idempotencyKey:{} jurisdiction:{}",
+                log.info("findIdempotencyKeysInPreviewDb idempotencyKey:{} jurisdiction:{}",
                     idempotencyKey, jurisdiction);
                 Response result = restApiActions.get(
                     "/testing/idempotencyKeys/search/findByIdempotencyKeyAndTenantId",
@@ -216,9 +211,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                     )
                 );
 
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result statusCode:{}",
-                    result.then().extract().statusCode());
-                log.info("RWA-2044-findIdempotencyKeysInPreviewDb result body:{}",
+                log.info("findIdempotencyKeysInPreviewDb result body:{}",
                     result.then().extract().body().asString());
 
                 result.then().assertThat()
@@ -234,35 +227,38 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     private String assertTaskIsCreated(String caseId) {
-        AtomicReference<String> response = new AtomicReference<>();
+        AtomicReference<String> taskId = new AtomicReference<>("");
+        AtomicReference<Response> response = new AtomicReference<>(null);
         await()
             .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
-
-                Response result = camundaApiActions.get(
-                    "/task",
-                    new Headers(authenticationHeaders),
-                    Map.of("processVariables", "caseId_eq_" + caseId)
+                log.info("assertTaskIsCreated");
+                response.set(
+                    camundaApiActions.get(
+                        "/task",
+                        new Headers(authenticationHeaders),
+                        Map.of("processVariables", "caseId_eq_" + caseId)
+                    )
                 );
 
-                log.info("assertTaskIsCreated body:{}", result.then().extract().body().asString());
+                log.info("assertTaskIsCreated body:{}", response.get().then().extract().body().asString());
                 //number of messages sent, equivalent to processes created
-                result.then().assertThat()
+                response.get().then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
                     .body("[0].name", is("Process Application"));
 
-                response.set(
-                    result.then()
+                taskId.set(
+                    response.get().then()
                         .extract()
                         .path("[0].id")
                 );
                 return true;
             });
 
-        return response.get();
+        return taskId.get();
     }
 
     private void sendMessage(Map<String, DmnValue<?>> processVariables) {
