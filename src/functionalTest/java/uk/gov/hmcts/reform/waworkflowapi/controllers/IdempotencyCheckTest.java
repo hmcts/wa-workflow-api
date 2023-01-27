@@ -4,6 +4,7 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.core.ConditionTimeoutException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,31 +152,33 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private boolean findIdempotencyKeysInAatDb(String idempotencyKey, String jurisdiction) {
         log.info("Asserting idempotentId({}) was added to AAT DB...", new IdempotentId(idempotencyKey, jurisdiction));
-
         AtomicReference<Boolean> result = new AtomicReference<>(false);
-        await()
-            .ignoreExceptions()
-            //.ignoreException(AssertionError.class)
-            .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
-            .until(() -> {
+        try {
+            await()
+                .ignoreException(AssertionError.class)
+                .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
+                .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .until(() -> {
 
-                Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
-                    idempotencyKey,
-                    jurisdiction
-                );
+                    Optional<IdempotencyKeys> actual = idempotencyKeysRepository.findByIdempotencyKeyAndTenantId(
+                        idempotencyKey,
+                        jurisdiction
+                    );
 
-                if (actual.isPresent()) {
-                    log.info("idempotentId[{}] found in AAT DB.", actual.get());
-                    result.set(true);
-                } else {
-                    log.info(
-                        "idempotentId[{}] NOT found in AAT DB.",
-                        new IdempotentId(idempotencyKey, jurisdiction));
-                }
-                log.info("findIdempotencyKeysInAatDb result:{}", result.get());
-                return result.get();
-            });
+                    if (actual.isPresent()) {
+                        log.info("idempotentId[{}] found in AAT DB.", actual.get());
+                        result.set(true);
+                    } else {
+                        log.info(
+                            "idempotentId[{}] NOT found in AAT DB.",
+                            new IdempotentId(idempotencyKey, jurisdiction));
+                    }
+                    log.info("findIdempotencyKeysInAatDb result:{}", result.get());
+                    return result.get();
+                });
+        } catch (ConditionTimeoutException e) {
+            log.info("findIdempotencyKeysInAatDb ConditionTimeoutException:{}", e.getMessage());
+        }
 
         log.info("findIdempotencyKeysInAatDb after result:{}", result.get());
         return result.get();
