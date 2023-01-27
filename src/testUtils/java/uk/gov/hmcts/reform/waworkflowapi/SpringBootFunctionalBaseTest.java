@@ -54,10 +54,10 @@ public abstract class SpringBootFunctionalBaseTest {
 
     @Before
     public void setUpGivens() {
+        log.info("camundaUrl:{}  - testUrl:{}", camundaUrl, testUrl);
         restApiActions = new RestApiActions(testUrl, LOWER_CAMEL_CASE).setUp();
         //Convention should be snake case will be fixed in another PR
         //restApiActions = new RestApiActions(testUrl, SNAKE_CASE).setUp();
-        log.info("camundaUrl:{}  - testUrl:{}", camundaUrl, testUrl);
         camundaApiActions = new RestApiActions(camundaUrl, LOWER_CAMEL_CASE).setUp();
     }
 
