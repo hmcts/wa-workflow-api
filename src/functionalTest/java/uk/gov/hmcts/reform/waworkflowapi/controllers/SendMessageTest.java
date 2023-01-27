@@ -244,8 +244,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
         String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         Map<String, DmnValue<?>> processVariables = mockProcessVariables(
             dueDate,
-            "Review the appeal",
-            "reviewTheAppeal",
+            "Process Application",
+            "processApplication",
             caseId,
             UUID.randomUUID().toString(),
             TENANT_ID_WA
@@ -287,7 +287,7 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
                     .body("size()", is(1))
-                    .body("[0].name", is("Review the appeal"));
+                    .body("[0].name", is("Process Application"));
 
                 taskIdResponse.set(
                     result.then()

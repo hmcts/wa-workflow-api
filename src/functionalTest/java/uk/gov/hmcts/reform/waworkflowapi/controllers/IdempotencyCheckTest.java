@@ -140,8 +140,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         String dueDate = ZonedDateTime.now().plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         return mockProcessVariables(
             dueDate,
-            "Review the appeal",
-            "reviewTheAppeal",
+            "Process Application",
+            "processApplication",
             caseId,
             idempotentKey,
             jurisdiction
@@ -252,7 +252,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 result.then().assertThat()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(APPLICATION_JSON_VALUE)
-                    .body("[0].name", is("Review the appeal"));
+                    .body("[0].name", is("Process Application"));
 
                 response.set(
                     result.then()
