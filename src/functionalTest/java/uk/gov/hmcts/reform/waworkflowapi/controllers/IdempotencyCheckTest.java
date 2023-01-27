@@ -154,7 +154,8 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
         AtomicReference<Boolean> result = new AtomicReference<>(false);
         await()
-            .ignoreException(AssertionError.class)
+            .ignoreExceptions()
+            //.ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
             .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
             .until(() -> {
@@ -172,9 +173,11 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                         "idempotentId[{}] NOT found in AAT DB.",
                         new IdempotentId(idempotencyKey, jurisdiction));
                 }
+                log.info("findIdempotencyKeysInAatDb result:{}", result.get());
                 return result.get();
             });
 
+        log.info("findIdempotencyKeysInAatDb after result:{}", result.get());
         return result.get();
     }
 
