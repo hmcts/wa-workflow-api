@@ -151,7 +151,8 @@ public abstract class SpringBootFunctionalBaseTest {
             "createTaskMessage",
             processVariables,
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(

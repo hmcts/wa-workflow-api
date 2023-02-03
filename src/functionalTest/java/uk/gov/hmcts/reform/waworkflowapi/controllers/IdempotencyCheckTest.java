@@ -269,7 +269,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 "createTaskMessage",
                 processVariables,
                 null,
-                false
+                false, "wa"
             ),
             authenticationHeaders
         );

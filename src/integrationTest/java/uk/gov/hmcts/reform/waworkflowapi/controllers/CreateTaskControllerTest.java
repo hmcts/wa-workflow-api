@@ -435,7 +435,8 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                 "caseId", dmnStringValue("some caseId")
             ),
             null,
-            false
+            false,
+            "wa"
         );
 
         SendMessageRequest expectedSendMessageRequest1 = new SendMessageRequest(
@@ -448,7 +449,8 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                 "caseId", dmnStringValue("some caseId")
             ),
             null,
-            false
+            false,
+            "wa"
         );
 
         Scenario messageIsOtherThanCreateTaskThenDueTaskIsNotSet = Scenario.builder()
@@ -466,7 +468,8 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                 "caseId", dmnStringValue("some caseId")
             ),
             null,
-            false
+            false,
+            "wa"
         );
 
         expectedSendMessageRequest1 = new SendMessageRequest(
@@ -479,7 +482,8 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
                 "caseId", dmnStringValue("some caseId")
             ),
             null,
-            false
+            false,
+            "wa"
         );
 
         Scenario messageIsOtherThanCreateTaskThenDueTaskIsNotSet2 = Scenario.builder()
