@@ -41,7 +41,7 @@ class IdempotencyKeysRepositoryTest {
 
     public static final String FAIL_TO_UPDATE_THIS = "fail to update this";
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:11"))
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:14"))
         .withDatabaseName("wa_workflow_api")
         .withUsername("postgres")
         .withPassword("pass");
