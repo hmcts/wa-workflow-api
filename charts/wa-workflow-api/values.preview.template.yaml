@@ -21,3 +21,5 @@ java:
     enabled: true
     auth:
       database: wa_workflow_api
+    image:
+      tag: '14.5.0'
