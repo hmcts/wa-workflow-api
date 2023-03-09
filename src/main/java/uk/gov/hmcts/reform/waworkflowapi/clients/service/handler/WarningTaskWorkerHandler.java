@@ -79,15 +79,23 @@ public class WarningTaskWorkerHandler {
 
     private void addWarningToDelayedProcesses(String caseId, String updatedWarningValues) {
         List<CamundaProcess> processes = getProcesses(caseId);
-        processes.forEach(process -> updateDelayedProcessWarnings(process, updatedWarningValues));
+        processes.forEach(process -> updateDelayedProcessWarnings(caseId, process, updatedWarningValues));
     }
 
-    private void updateDelayedProcessWarnings(CamundaProcess process, String warningToAdd) {
+    private void updateDelayedProcessWarnings(String caseId, CamundaProcess process, String warningToAdd) {
+        //todo: add some logs and hande null pointer
         String serviceToken = authTokenGenerator.generate();
         CamundaProcessVariables processVariables = camundaClient.getProcessInstanceVariables(
             serviceToken,
             process.getId()
         );
+
+        if (processVariables == null || processVariables.getProcessVariablesMap() == null) {
+            log.info("addWarningToDelayedProcesses processVariables not found. "
+                     + "caseId:{} warningToAdd:{} tenantId:{} processId:{}",
+                caseId, warningToAdd, process.getTenantId(), process.getId());
+            return;
+        }
 
         String warning = (String) processVariables.getProcessVariablesMap().get(WARNING_LIST).getValue();
 
