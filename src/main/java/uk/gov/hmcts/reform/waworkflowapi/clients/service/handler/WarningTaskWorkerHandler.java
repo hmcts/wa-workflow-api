@@ -79,11 +79,17 @@ public class WarningTaskWorkerHandler {
 
     private void addWarningToDelayedProcesses(String caseId, String updatedWarningValues) {
         List<CamundaProcess> processes = getProcesses(caseId);
-        processes.forEach(process -> updateDelayedProcessWarnings(caseId, process, updatedWarningValues));
+        processes.forEach(process -> {
+            if (process == null) {
+                log.warn("addWarningToDelayedProcesses can NOT continue to process due to process is null. "
+                         + "caseId:{} updatedWarningValues:{}", caseId, updatedWarningValues);
+            } else {
+                updateDelayedProcessWarnings(caseId, process, updatedWarningValues);
+            }
+        });
     }
 
     private void updateDelayedProcessWarnings(String caseId, CamundaProcess process, String warningToAdd) {
-        //todo: add some logs and hande null pointer
         String serviceToken = authTokenGenerator.generate();
         CamundaProcessVariables processVariables = camundaClient.getProcessInstanceVariables(
             serviceToken,
@@ -91,13 +97,16 @@ public class WarningTaskWorkerHandler {
         );
 
         if (processVariables == null || processVariables.getProcessVariablesMap() == null) {
-            log.info("addWarningToDelayedProcesses processVariables not found. "
+            log.warn("updateDelayedProcessWarnings processVariables not found. "
                      + "caseId:{} warningToAdd:{} tenantId:{} processId:{}",
                 caseId, warningToAdd, process.getTenantId(), process.getId());
             return;
         }
 
-        String warning = (String) processVariables.getProcessVariablesMap().get(WARNING_LIST).getValue();
+        String warning = "[{}]";
+        if (processVariables.getProcessVariablesMap().get(WARNING_LIST) != null) {
+            warning = (String) processVariables.getProcessVariablesMap().get(WARNING_LIST).getValue();
+        }
 
         LocalDateTime delayDate = LocalDateTime.parse((String) processVariables.getProcessVariablesMap().get("delayUntil").getValue());
 
