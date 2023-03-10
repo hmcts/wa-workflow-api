@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class TaskClientService {
     private final CamundaClient camundaClient;
@@ -34,6 +36,7 @@ public class TaskClientService {
     }
 
     public List<Map<String, DmnValue<?>>> evaluate(EvaluateDmnRequest evaluateDmnRequest, String key, String tenantId) {
+        log.info("RWA-2367 evaluate dmn key:{} tenantId:{} evaluateDmnRequest:{}", key, tenantId, evaluateDmnRequest);
         List<Map<String, DmnValue<?>>> dmnResponse = camundaClient.evaluateDmn(
             authTokenGenerator.generate(),
             key,
@@ -41,6 +44,7 @@ public class TaskClientService {
             evaluateDmnRequest
         );
 
+        log.info("RWA-2367 dmnResponse fetched");
         return dmnResponse.stream().map(this::removeSpaces).collect(Collectors.toList());
     }
 
