@@ -101,6 +101,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
             .body("results[0].processCategories.value", equalTo("caseProgression"));
 
+        
     }
 
     @Test
