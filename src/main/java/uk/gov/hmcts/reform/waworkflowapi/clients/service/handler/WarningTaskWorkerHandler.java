@@ -53,16 +53,15 @@ public class WarningTaskWorkerHandler {
 
     public void completeWarningTaskService(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         Map<?, ?> variables = externalTask.getAllVariables();
+        if (variables == null) {
+            log.warn("completeWarningTaskService can NOT continue to process due to externalTask is null. "
+                     + "externalTask:{}", externalTask);
+            return;
+        }
         String caseId = (String) variables.get("caseId");
         log.info("Set processVariables for same processInstance ids with caseId {}", caseId);
 
-        String updatedWarningValues = "[]";
-
-        try {
-            updatedWarningValues = mapWarningValues(variables);
-        } catch (JsonProcessingException exp) {
-            log.error("Exception occurred while parsing json: {}", exp.getMessage(), exp);
-        }
+        String updatedWarningValues = mapWarningValues(variables);
 
         externalTaskService.complete(externalTask, Map.of(
             "hasWarnings",
@@ -78,8 +77,14 @@ public class WarningTaskWorkerHandler {
     }
 
     private void addWarningToDelayedProcesses(String caseId, String updatedWarningValues) {
-        List<CamundaProcess> processes = getProcesses(caseId);
-        processes.forEach(process -> {
+        List<CamundaProcess> camundaProcessList = getProcesses(caseId);
+        if (camundaProcessList == null) {
+            log.warn("addWarningToDelayedProcesses can NOT continue to process due to process list is null. "
+                     + "caseId:{} updatedWarningValues:{}", caseId, updatedWarningValues);
+            return;
+        }
+
+        camundaProcessList.forEach(process -> {
             if (process == null) {
                 log.warn("addWarningToDelayedProcesses can NOT continue to process due to process is null. "
                          + "caseId:{} updatedWarningValues:{}", caseId, updatedWarningValues);
@@ -144,7 +149,7 @@ public class WarningTaskWorkerHandler {
         }
     }
 
-    private String mapWarningValues(Map<?, ?> variables) throws JsonProcessingException {
+    private String mapWarningValues(Map<?, ?> variables) {
         WarningValues processVariableWarningValues = toWarningValues(variables, WARNING_LIST);
         WarningValues warningValuesToBeAdded = toWarningValues(variables, WARNINGS_TO_ADD);
 
@@ -154,9 +159,15 @@ public class WarningTaskWorkerHandler {
         );
 
         String caseId = (String) variables.get("caseId");
-        log.info("caseId {} and its warning values : {}", caseId, combinedWarningValues.getValuesAsJson());
+        String combinedWarningValuesJson = "[]";
+        try {
+            combinedWarningValuesJson = combinedWarningValues.getValuesAsJson();
+        } catch (JsonProcessingException e) {
+            log.error("Could not deserialize values");
+        }
+        log.info("caseId {} and its warning values : {}", caseId, combinedWarningValuesJson);
 
-        return combinedWarningValues.getValuesAsJson();
+        return combinedWarningValuesJson;
     }
 
     private WarningValues toWarningValues(Map<?, ?> variables, String warningList) {
