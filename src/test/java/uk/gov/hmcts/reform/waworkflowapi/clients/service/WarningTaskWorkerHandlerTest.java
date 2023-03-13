@@ -580,6 +580,7 @@ class WarningTaskWorkerHandlerTest {
             String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to process is null. "
                                 + "caseId:someCaseId "
                                 + "updatedWarningValues:[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+
             assertLogMessageContains(output, logMessage);
         }
 
