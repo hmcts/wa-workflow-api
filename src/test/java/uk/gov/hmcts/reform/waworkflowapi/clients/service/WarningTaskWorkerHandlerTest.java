@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
@@ -14,7 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.waworkflowapi.clients.TaskManagementServiceApi;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.AddProcessVariableRequest;
@@ -35,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -45,7 +43,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
 class WarningTaskWorkerHandlerTest {
 
     private static final String S2S_TOKEN = "some S2SToken";
@@ -66,15 +64,8 @@ class WarningTaskWorkerHandlerTest {
     private LaunchDarklyFeatureFlagProvider launchDarklyFeatureFlagProvider;
     private WarningTaskWorkerHandler warningTaskWorkerHandler;
 
-    private ListAppender<ILoggingEvent> listAppender;
-
     @BeforeEach
     void setUp() {
-        Logger logger = (Logger) LoggerFactory.getLogger(WarningTaskWorkerHandler.class);
-
-        listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
 
         warningTaskWorkerHandler = new WarningTaskWorkerHandler(
             taskManagementServiceApi,
@@ -507,7 +498,7 @@ class WarningTaskWorkerHandlerTest {
         }
 
         @Test
-        void should_not_add_warning_to_non_delayed_tasks_when_process_list_is_null() {
+        void should_not_add_warning_to_non_delayed_tasks_when_process_list_is_null(CapturedOutput output) {
             when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
                 "caseId_eq_" + CASE_ID,
@@ -543,11 +534,11 @@ class WarningTaskWorkerHandlerTest {
                 anyString(), anyString(), any(AddProcessVariableRequest.class));
 
             String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to process list is null.";
-            assertLogMessageContains(logMessage);
+            assertLogMessageContains(output, logMessage);
         }
 
         @Test
-        void should_not_add_warning_to_non_delayed_tasks_when_process_is_null() {
+        void should_not_add_warning_to_non_delayed_tasks_when_process_is_null(CapturedOutput output) {
             List<CamundaProcess> camundaProcessList = new ArrayList<>();
             camundaProcessList.add(null);
             when(camundaClient.getProcessInstancesByVariables(
@@ -589,11 +580,11 @@ class WarningTaskWorkerHandlerTest {
             String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to process is null. "
                                 + "caseId:someCaseId "
                                 + "updatedWarningValues:[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
-            assertLogMessageContains(logMessage);
+            assertLogMessageContains(output, logMessage);
         }
 
         @Test
-        void should_not_complete_delay_warning_external_task_Service_when_process_variables_are_null() {
+        void should_not_complete_delay_warning_external_task_Service_when_process_variables_are_null(CapturedOutput output) {
             Map<String, Object> processVariables = null;
 
             lenient().when(camundaClient.getProcessInstancesByVariables(
@@ -621,12 +612,12 @@ class WarningTaskWorkerHandlerTest {
             );
 
             String logMessage = "completeWarningTaskService can NOT continue to process due to externalTask is null.";
-            assertLogMessageContains(logMessage);
+            assertLogMessageContains(output, logMessage);
 
         }
 
         @Test
-        void should_not_update_warning_to_delayed_tasks() {
+        void should_not_update_warning_to_delayed_tasks(CapturedOutput output) {
 
             when(camundaClient.getProcessInstanceVariables(
                 S2S_TOKEN,
@@ -662,7 +653,7 @@ class WarningTaskWorkerHandlerTest {
                 anyString(), anyString(), any(AddProcessVariableRequest.class));
 
             String logMessage = "updateDelayedProcessWarnings processVariables not found. ";
-            assertLogMessageContains(logMessage);
+            assertLogMessageContains(output, logMessage);
         }
 
         private NotesRequest getExpectedWarningRequest() {
@@ -712,11 +703,8 @@ class WarningTaskWorkerHandlerTest {
             "SomeProcessInstanceId"));
     }
 
-    private void assertLogMessageContains(String expectedMessage) {
-        List<ILoggingEvent> logsList = List.copyOf(listAppender.list);
+    private void assertLogMessageContains(CapturedOutput output, String expectedMessage) {
 
-        assertTrue(logsList.stream()
-            .map(ILoggingEvent::getFormattedMessage)
-            .anyMatch(log -> log.contains(expectedMessage)));
+        assertTrue(output.getOut().contains(expectedMessage));
     }
 }
