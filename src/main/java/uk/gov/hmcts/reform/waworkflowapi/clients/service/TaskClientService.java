@@ -36,7 +36,6 @@ public class TaskClientService {
     }
 
     public List<Map<String, DmnValue<?>>> evaluate(EvaluateDmnRequest evaluateDmnRequest, String key, String tenantId) {
-        log.info("RWA-2367 evaluate dmn key:{} tenantId:{} evaluateDmnRequest:{}", key, tenantId, evaluateDmnRequest);
         List<Map<String, DmnValue<?>>> dmnResponse = camundaClient.evaluateDmn(
             authTokenGenerator.generate(),
             key,
@@ -44,7 +43,6 @@ public class TaskClientService {
             evaluateDmnRequest
         );
 
-        log.info("RWA-2367 dmnResponse fetched");
         return dmnResponse.stream().map(this::removeSpaces).collect(Collectors.toList());
     }
 

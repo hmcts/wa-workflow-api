@@ -533,7 +533,7 @@ class WarningTaskWorkerHandlerTest {
             verify(camundaClient, never()).updateProcessVariables(
                 anyString(), anyString(), any(AddProcessVariableRequest.class));
 
-            String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to process list is null.";
+            String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to camundaProcessList is null.";
             assertLogMessageContains(output, logMessage);
         }
 
@@ -577,7 +577,7 @@ class WarningTaskWorkerHandlerTest {
             verify(camundaClient, never()).updateProcessVariables(
                 anyString(), anyString(), any(AddProcessVariableRequest.class));
 
-            String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to process is null. "
+            String logMessage = "addWarningToDelayedProcesses can NOT continue to process due to camundaProcess is null. "
                                 + "caseId:someCaseId "
                                 + "updatedWarningValues:[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
 
