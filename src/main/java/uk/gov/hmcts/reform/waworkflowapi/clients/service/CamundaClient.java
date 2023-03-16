@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.AddProcessVariableRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcess;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcessBody;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcessVariables;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaTask;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
@@ -30,6 +31,8 @@ import java.util.Map;
 public interface CamundaClient {
 
     String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+    String KEY = "key";
+    String TENANT_ID = "tenant-id";
 
     @PostMapping(
         value = "/message",
@@ -44,9 +47,20 @@ public interface CamundaClient {
         produces = MediaType.APPLICATION_JSON_VALUE)
     List<Map<String, DmnValue<?>>> evaluateDmn(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-        @PathVariable("key") String key,
-        @PathVariable("tenant-id") String tenantId,
+        @PathVariable(KEY) String key,
+        @PathVariable(TENANT_ID) String tenantId,
         EvaluateDmnRequest evaluateDmnRequest
+    );
+
+    @PostMapping(
+        value = "/process-definition/key/{key}/tenant-id/{tenant-id}/start",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    CamundaProcess startProcess(
+        @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
+        @PathVariable(KEY) String key,
+        @PathVariable(TENANT_ID) String tenantId,
+        CamundaProcessBody processBody
     );
 
     @PostMapping(value = "/process-instance",
@@ -67,7 +81,7 @@ public interface CamundaClient {
     @ResponseBody
     CamundaProcessVariables getProcessInstanceVariables(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-        @PathVariable("key") String processInstanceKey
+        @PathVariable(KEY) String processInstanceKey
     );
 
     @PostMapping(
@@ -76,7 +90,7 @@ public interface CamundaClient {
         produces = MediaType.APPLICATION_JSON_VALUE)
     void updateProcessVariables(
         @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorisation,
-        @PathVariable("key") String key,
+        @PathVariable(KEY) String key,
         AddProcessVariableRequest addProcessVariableRequest
     );
 

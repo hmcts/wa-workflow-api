@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.waworkflowapi.clients.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.waworkflowapi.clients.model.CamundaProcessBody;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.EvaluateDmnRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
@@ -27,10 +28,21 @@ public class TaskClientService {
     }
 
     public void sendMessage(SendMessageRequest sendMessageRequest) {
+        /*
+        //old code
         camundaClient.sendMessage(
             authTokenGenerator.generate(),
             sendMessageRequest
         );
+         */
+
+        //new code
+        Map<String, DmnValue<?>> variables = sendMessageRequest.getProcessVariables();
+        //variables.put("messageName", DmnValue.dmnStringValue(sendMessageRequest.getMessageName()));
+        //variables.putAll(sendMessageRequest.getCorrelationKeys());
+        CamundaProcessBody processBody = new CamundaProcessBody(variables);
+        camundaClient
+            .startProcess(authTokenGenerator.generate(), "send-user-task", "prl", processBody);
     }
 
     public List<Map<String, DmnValue<?>>> evaluate(EvaluateDmnRequest evaluateDmnRequest, String key, String tenantId) {
