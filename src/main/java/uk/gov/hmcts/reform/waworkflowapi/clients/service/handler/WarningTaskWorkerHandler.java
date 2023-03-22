@@ -128,7 +128,7 @@ public class WarningTaskWorkerHandler {
         try {
             delayDate = LocalDateTime.parse((String) processVariables.getProcessVariablesMap().get("delayUntil").getValue());
         } catch (Exception e) {
-            log.warn("updateDelayedProcessWarnings delayUntil is null. ", e);
+            log.warn(String.format("updateDelayedProcessWarnings delayUntil is null. processId:%s ", process.getId()), e);
             return;
         }
 
