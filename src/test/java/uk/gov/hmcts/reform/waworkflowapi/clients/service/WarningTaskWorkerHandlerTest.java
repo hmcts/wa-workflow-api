@@ -695,13 +695,20 @@ class WarningTaskWorkerHandlerTest {
                 "warningList", expectedWarningValues
             );
             verify(externalTaskService).complete(externalTask, expectedProcessVariables);
-            verify(taskManagementServiceApi, times(1)).addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
+            verify(taskManagementServiceApi, times(1))
+                .addTaskNote(S2S_TOKEN, externalTask.getId(), getExpectedWarningRequest());
             verify(camundaClient, never()).updateProcessVariables(
                 S2S_TOKEN, PROCESS_INSTANCE_ID,
                 getAddProcessVariableRequest(expectedWarningValues)
             );
 
-            String logMessage = "updateDelayedProcessWarnings caseId:someCaseId warningToAdd:[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}] tenantId:null processId:some process instance Id processVariables:CamundaProcessVariables(processVariablesMap={warningList=DmnValue(value=[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}], type=String), delayUntil=DmnValue(value=null, type=String)})";
+            String logMessage = "updateDelayedProcessWarnings caseId:someCaseId warningToAdd:"
+                                + "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},{\"warningCode\":\"Code1\""
+                                + ",\"warningText\":\"Text1\"}] tenantId:null processId:some process instance Id "
+                                + "processVariables:CamundaProcessVariables(processVariablesMap="
+                                + "{warningList=DmnValue(value=[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
+                                + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}], type=String), "
+                                + "delayUntil=DmnValue(value=null, type=String)})";
             assertLogMessageContains(output, logMessage);
 
             logMessage = "updateDelayedProcessWarnings delayUntil is null.";
