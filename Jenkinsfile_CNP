@@ -34,14 +34,14 @@ withPipeline(type, product, component) {
   disableLegacyDeployment()
 
   env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
-  env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-  env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
+  env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.platform.hmcts.net"
+  env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.platform.hmcts.net/engine-rest"
   env.POSTGRES_HOST = "wa-workflow-api-postgres-db-aat.postgres.database.azure.com"
   env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
   env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
   env.PACT_BROKER_PORT = "443"
   env.PACT_BROKER_SCHEME = "https"
-  env.WA_TASK_MANAGEMENT_API_URL = "http://wa-task-management-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+  env.WA_TASK_MANAGEMENT_API_URL = "http://wa-task-management-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.platform.hmcts.net"
 
   loadVaultSecrets(secrets)
 

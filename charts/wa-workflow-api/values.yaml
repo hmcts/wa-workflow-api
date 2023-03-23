@@ -1,7 +1,7 @@
 java:
   applicationPort: 8099
   image: 'hmctspublic.azurecr.io/wa/workflow-api:latest'
-  ingressHost: wa-workflow-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  ingressHost: wa-workflow-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.platform.hmcts.net
   autoscaling:
     enabled: true
     maxReplicas: 4
@@ -12,13 +12,13 @@ java:
   environment:
     RESTART_APP: 1
     ENABLE_SWAGGER: true
-    CAMUNDA_URL: "http://camunda-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/engine-rest"
-    S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    CAMUNDA_URL: "http://camunda-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.platform.hmcts.net/engine-rest"
+    S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.platform.hmcts.net"
     POSTGRES_PORT: 5432
     POSTGRES_HOST: wa-workflow-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
     POSTGRES_NAME: wa_workflow_api
     POSTGRES_CONNECTION_OPTIONS: "?sslmode=require"
-    WA_TASK_MANAGEMENT_API_URL: "http://wa-task-management-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    WA_TASK_MANAGEMENT_API_URL: "http://wa-task-management-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.platform.hmcts.net"
   keyVaults:
     wa:
       secrets:
