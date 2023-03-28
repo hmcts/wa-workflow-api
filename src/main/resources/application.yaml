@@ -27,9 +27,6 @@ wa-task-management-api:
 govUkHolidays:
   url: https://www.gov.uk/
 
-springdoc:
-  writer-with-order-by-keys: true
-
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/wa/"
@@ -81,6 +78,9 @@ idam:
     name: wa_workflow_api
   s2s-authorised:
     services: ${WA_S2S_AUTHORIZED_SERVICES:wa_workflow_api,wa_case_event_handler,camunda-bpm,xui_webapp,wa_task_management_api}
+
+springdoc:
+  writer-with-order-by-keys: true
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
