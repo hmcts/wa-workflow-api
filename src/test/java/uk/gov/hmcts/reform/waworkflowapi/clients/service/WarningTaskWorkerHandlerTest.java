@@ -86,8 +86,7 @@ class WarningTaskWorkerHandlerTest {
         void setUp() {
             when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
-                "caseId_eq_" + CASE_ID,
-                List.of("processStartTimer")
+                "caseId_eq_" + CASE_ID
             ))
                 .thenReturn(List.of(CamundaProcess.builder().id(PROCESS_INSTANCE_ID).build()));
 
@@ -431,8 +430,7 @@ class WarningTaskWorkerHandlerTest {
         void should_not_add_warning_to_non_delayed_tasks() {
             when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
-                "caseId_eq_" + CASE_ID,
-                List.of("processStartTimer")
+                "caseId_eq_" + CASE_ID
             ))
                 .thenReturn(List.of());
 
@@ -502,8 +500,7 @@ class WarningTaskWorkerHandlerTest {
         void should_not_add_warning_to_non_delayed_tasks_when_process_list_is_null(CapturedOutput output) {
             when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
-                "caseId_eq_" + CASE_ID,
-                List.of("processStartTimer")
+                "caseId_eq_" + CASE_ID
             )).thenReturn(null);
 
             String processVariablesWarningValues = "[{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
@@ -544,8 +541,7 @@ class WarningTaskWorkerHandlerTest {
             camundaProcessList.add(null);
             when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
-                "caseId_eq_" + CASE_ID,
-                List.of("processStartTimer")
+                "caseId_eq_" + CASE_ID
             ))
                 .thenReturn(camundaProcessList);
 
@@ -591,8 +587,7 @@ class WarningTaskWorkerHandlerTest {
 
             lenient().when(camundaClient.getProcessInstancesByVariables(
                 S2S_TOKEN,
-                "caseId_eq_" + CASE_ID,
-                List.of("processStartTimer")
+                "caseId_eq_" + CASE_ID
             )).thenReturn(List.of(CamundaProcess.builder().id(PROCESS_INSTANCE_ID).build()));
 
             when(externalTask.getAllVariables()).thenReturn(processVariables);
