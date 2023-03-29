@@ -768,9 +768,6 @@ class WarningTaskWorkerHandlerTest {
                 "name", "SomeName"
             );
 
-            String expectedWarningValues = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
-                                           + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
-
             when(camundaClient.getProcessInstanceVariables(S2S_TOKEN, PROCESS_INSTANCE_ID))
                 .thenReturn(CamundaProcessVariables.ProcessVariablesBuilder.processVariables()
                     .build());
@@ -786,6 +783,9 @@ class WarningTaskWorkerHandlerTest {
 
             warningTaskWorkerHandler.completeWarningTaskService(externalTask, externalTaskService);
 
+            String expectedWarningValues = "[{\"warningCode\":\"Code2\",\"warningText\":\"Text2\"},"
+                                           + "{\"warningCode\":\"Code1\",\"warningText\":\"Text1\"}]";
+            
             Map<String, Object> expectedProcessVariables = Map.of(
                 "hasWarnings", true,
                 "warningList", expectedWarningValues
