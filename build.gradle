@@ -320,7 +320,7 @@ dependencies {
   implementation 'org.zalando:problem-spring-web-starter:0.27.0'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.0'
+  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.2'
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.1'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.4.0'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
@@ -331,13 +331,13 @@ dependencies {
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: versions.tomcat
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: versions.tomcat
 
-  implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.5.Final'
+  implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.15.Final'
 
   implementation group: 'org.camunda.bpm', name: 'camunda-external-task-client', version: '7.18.0'
 
   implementation group: 'javax.xml', name: 'jaxb-api', version: '2.1'
 
-  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.4'
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.6'
 
   testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
