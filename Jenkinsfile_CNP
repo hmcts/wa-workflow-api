@@ -13,6 +13,8 @@ def secrets = [
     secret('workflow-api-POSTGRES-PASS', 'POSTGRES_PASSWORD'),
     secret('workflow-api-POSTGRES-USER', 'POSTGRES_USERNAME'),
     secret('ld-secret', 'LAUNCH_DARKLY_SDK_KEY'),
+    secret('postgres-user', 'POSTGRES_USER'),
+    secret('postgres-password', 'POSTGRES_PASSWORD')
   ],
   's2s-${env}': [
     secret('microservicekey-wa-workflow-api', 'S2S_SECRET_WORKFLOW_API'),
