@@ -10,3 +10,9 @@ dependencies:
   - name: java
     version: 4.1.0
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
+
+  # WA
+  - name: wa
+    version: 0.1.4
+    repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
+    condition: wa.enabled

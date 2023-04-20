@@ -3,7 +3,7 @@ java:
   ingressHost: ${SERVICE_FQDN}
   environment:
     RESTART_APP: 1
-    CAMUNDA_URL: "http://camunda-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/engine-rest"
+    CAMUNDA_URL: http://{{ .Release.Name }}-camunda/engine-rest
     S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
     POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
@@ -21,3 +21,31 @@ java:
     enabled: true
     auth:
       database: wa_workflow_api
+
+
+wa:
+  enabled: true
+  wa:
+    postgresql:
+      enabled: false
+  
+  wa-task-management-api:
+    enabled: false
+  
+  wa-task-monitor:
+    enabled: false
+  
+  wa-case-event-handler:
+    enabled: false
+  
+  wa-workflow-api:
+    enabled: false
+
+  wa-task-batch-service:
+    enabled: false
+
+  wa-message-cron-service:
+    enabled: false
+
+  servicebus:
+    enabled: false
