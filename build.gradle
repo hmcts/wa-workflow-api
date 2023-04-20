@@ -284,7 +284,7 @@ def versions = [
   camunda       : '7.14.0',
   logbook       : '2.6.2',
   pactVersion   : '4.1.7',
-  testcontainers: '1.17.4',
+  testcontainers: '1.18.0',
   log4j         : '2.19.0',
   tomcat        : '9.0.73'
 ]
@@ -333,7 +333,7 @@ dependencies {
 
   implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.15.Final'
 
-  implementation group: 'org.camunda.bpm', name: 'camunda-external-task-client', version: '7.18.0'
+  implementation group: 'org.camunda.bpm', name: 'camunda-external-task-client', version: '7.19.0'
 
   implementation group: 'javax.xml', name: 'jaxb-api', version: '2.1'
 
