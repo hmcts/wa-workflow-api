@@ -42,3 +42,8 @@ wa:
       enabled: false
     servicebus:
       enabled: false
+    camunda:
+      java:
+        environment:
+          CAMUNDA_DB_USER_NAME: POSTGRES_USERNAME
+          CAMUNDA_DB_PASSWORD: POSTGRES_PASSWORD
