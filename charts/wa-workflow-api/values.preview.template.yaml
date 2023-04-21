@@ -5,10 +5,10 @@ java:
     RESTART_APP: 1
     CAMUNDA_URL: "http://{{ .Release.Name }}-camunda/engine-rest"
     S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
-    POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
-    POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
-    POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
+    POSTGRES_NAME: wa_workflow_api
+    POSTGRES_HOST: '{{ tpl .Values.global.postgresHost $}}'
+    POSTGRES_USERNAME: '{{ tpl .Values.global.postgresUsername $}}'
+    POSTGRES_PASSWORD: '{{ tpl .Values.global.postgresPassword $}}'
     POSTGRES_CONNECTION_OPTIONS: ""
   keyVaults:
     wa:
