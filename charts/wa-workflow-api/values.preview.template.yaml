@@ -6,9 +6,9 @@ java:
     CAMUNDA_URL: "http://{{ .Release.Name }}-camunda/engine-rest"
     S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     POSTGRES_NAME: wa_workflow_api
-    POSTGRES_HOST: '{{ .Values.global.postgresHost }}'
-    POSTGRES_USERNAME: '{{ .Values.global.postgresUsername }}'
-    POSTGRES_PASSWORD: '{{ .Values.global.postgresPassword }}'
+    POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
+    POSTGRES_USERNAME: hmcts
+    POSTGRES_PASSWORD: hmcts
     POSTGRES_CONNECTION_OPTIONS: ""
   keyVaults:
     wa:
@@ -17,10 +17,6 @@ java:
           alias: azure.application-insights.instrumentation-key
         - name: s2s-secret-workflow-api
           alias: S2S_SECRET_WORKFLOW_API
-#  postgresql:
-#    enabled: true
-#    auth:
-#      database: wa_workflow_api
 
 wa:
   enabled: true
