@@ -14,4 +14,4 @@ cd ..
 cp -r ./wa-task-configuration-template/src/main/resources .
 rm -rf ./wa-task-configuration-template
 
-./bin/import-dmn-diagram.sh . wa wacasetype
+./bin/import-dmn-diagram.sh . wa wa
