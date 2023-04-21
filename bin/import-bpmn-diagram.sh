@@ -4,7 +4,7 @@ set -eu
 workspace=${1}
 
 serviceToken=$($(realpath $workspace)/bin/utils/idam-lease-service-token.sh wa_workflow_api \
-  $(docker run --rm toolbelt/oathtool --totp -b ${S2S_SECRET:-AABBCCDDEEFFGGHH}))
+  $(docker run --rm toolbelt/oathtool --totp -b ${S2S_SECRET_WORKFLOW_API:-AABBCCDDEEFFGGHH}))
 filepath="$(realpath $workspace)/camunda"
 
 for file in $(find ${filepath} -name '*.bpmn')

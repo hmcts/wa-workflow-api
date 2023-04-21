@@ -5,10 +5,10 @@ workspace=${1}
 tenant_id=${2}
 product=${3}
 
-s2sSecret=${S2S_SECRET:-AABBCCDDEEFFGGHH}
+s2sSecret=${S2S_SECRET_WORKFLOW_API:-AABBCCDDEEFFGGHH}
 
 #if [[ "${env}" == 'prod' ]]; then
-#  s2sSecret=${S2S_SECRET_PROD}
+#  s2sSecret=${S2S_SECRET_WORKFLOW_API_PROD}
 #fi
 
 serviceToken=$($(realpath $workspace)/bin/utils/idam-lease-service-token.sh wa_workflow_api \
