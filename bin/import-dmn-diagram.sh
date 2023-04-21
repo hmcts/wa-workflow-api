@@ -16,6 +16,8 @@ serviceToken=$($(realpath $workspace)/bin/utils/idam-lease-service-token.sh wa_w
 
 dmnFilepath="$(realpath $workspace)/resources"
 
+echo "${CAMUNDA_BASE_URL} import-dmn-diagram.sh line 19"
+
 for file in $(find ${dmnFilepath} -name '*.dmn')
 do
   uploadResponse=$(curl --insecure -v --silent -w "\n%{http_code}" --show-error -X POST \
