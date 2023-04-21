@@ -24,21 +24,22 @@ java:
 
 wa:
   enabled: true
-  taskManagement:
-    enabled: false
-  taskMonitor:
-    enabled: false
-  eventHandler:
-    enabled: false
-  workflow:
-    enabled: false
-  taskBatchCron:
-    enabled: false
-  messageCron:
-    enabled: false
-  camunda:
-    enabled: true
-  postgresql:
-    enabled: true
-  servicebus:
-    enabled: false
+  wa:
+    taskManagement:
+      enabled: false
+    taskMonitor:
+      enabled: false
+    eventHandler:
+      enabled: false
+    workflow:
+      enabled: false
+    taskBatchCron:
+      enabled: false
+    messageCron:
+      enabled: false
+    camunda:
+      enabled: true
+    postgresql:
+      enabled: true
+    servicebus:
+      enabled: false
