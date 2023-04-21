@@ -22,28 +22,23 @@ java:
     auth:
       database: wa_workflow_api
 
-
 wa:
   enabled: true
-  wa:
-    postgresql:
-      enabled: false
-    wa-task-management-api:
-      enabled: false
-    wa-task-monitor:
-      enabled: false
-    wa-case-event-handler:
-      enabled: false
-    wa-workflow-api:
-      enabled: false
-    wa-task-batch-service:
-      enabled: false
-    wa-message-cron-service:
-      enabled: false
-    servicebus:
-      enabled: false
-    camunda:
-      java:
-        environment:
-          CAMUNDA_DB_USER_NAME: POSTGRES_USERNAME
-          CAMUNDA_DB_PASSWORD: POSTGRES_PASSWORD
+  taskManagement:
+    enabled: false
+  taskMonitor:
+    enabled: false
+  eventHandler:
+    enabled: false
+  workflow:
+    enabled: false
+  taskBatchCron:
+    enabled: false
+  messageCron:
+    enabled: false
+  camunda:
+    enabled: true
+  postgresql:
+    enabled: true
+  servicebus:
+    enabled: false
