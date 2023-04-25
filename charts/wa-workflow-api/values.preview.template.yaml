@@ -36,6 +36,6 @@ wa:
     camunda:
       enabled: true
     postgresql:
-      enabled: true
+      enabled: false
     servicebus:
       enabled: false

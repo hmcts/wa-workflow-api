@@ -1,3 +1,17 @@
 targets:
   instance: ${TEST_URL:http://localhost:8099}
   camunda: ${CAMUNDA_URL:http://camunda-bpm/engine-rest}
+
+spring.flyway.enabled: false
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:wa_workflow_api
+    username: hmcts
+    password: hmcts
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+      default_schema: wa_workflow_api
