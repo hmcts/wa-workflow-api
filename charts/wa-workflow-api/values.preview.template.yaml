@@ -33,9 +33,5 @@ wa:
       enabled: false
     messageCron:
       enabled: false
-    camunda:
-      enabled: true
-    postgresql:
-      enabled: true
     servicebus:
       enabled: false

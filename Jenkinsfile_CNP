@@ -62,17 +62,12 @@ withPipeline(type, product, component) {
   onMaster() {
     enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.PROVIDER])
     env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
-    env.POSTGRES_HOST = "wa-workflow-api-postgres-db-aat.postgres.database.azure.com"
   }
 
   onPR() {
     enableCleanupOfHelmReleaseOnSuccess()
     enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.PROVIDER])
     env.CAMUNDA_URL = "http://camunda-wa-workflow-api-pr-${CHANGE_ID}.preview.platform.hmcts.net"
-    env.POSTGRES_HOST = "postgres-wa-workflow-api-pr-${CHANGE_ID}.preview.platform.hmcts.net"
-    env.POSTGRES_USERNAME = "hmcts"
-    env.POSTGRES_PASSWORD = "hmcts"
-
   }
 
   afterSuccess('akschartsinstall') {
