@@ -11,8 +11,6 @@ def bpmnBranch = "master"
 
 def secrets = [
   'wa-${env}' : [
-    secret('workflow-api-POSTGRES-PASS', 'POSTGRES_PASSWORD'),
-    secret('workflow-api-POSTGRES-USER', 'POSTGRES_USERNAME'),
     secret('ld-secret', 'LAUNCH_DARKLY_SDK_KEY'),
   ],
   's2s-${env}': [
