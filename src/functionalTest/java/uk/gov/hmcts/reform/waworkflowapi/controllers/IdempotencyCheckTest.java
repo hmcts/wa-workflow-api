@@ -8,12 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
-import uk.gov.hmcts.reform.waworkflowapi.clients.service.idempotency.IdempotencyKeysRepository;
 import uk.gov.hmcts.reform.waworkflowapi.services.AuthorizationHeadersProvider;
 
 import java.time.ZonedDateTime;
@@ -35,17 +33,12 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
-    @Autowired
-    private IdempotencyKeysRepository idempotencyKeysRepository;
 
     private String caseId;
     private String idempotencyKey;
     private Map<String, DmnValue<?>> processVariables;
 
     private Header authenticationHeaders;
-
-    @Autowired
-    WorkflowApiTestingController workflowApiTestingController;
 
     @Before
     public void setUp() {
