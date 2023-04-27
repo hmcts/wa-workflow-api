@@ -160,12 +160,12 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
                 log.info("assertNewIdempotentKeyIsAddedToDb idempotencyKey:{} jurisdiction:{}",
                     idempotencyKey, jurisdiction);
 
-                ResponseEntity result =
-                    workflowApiTestingController.checkIdempotencyKey(idempotencyKey, jurisdiction);
+                String idempotencyEndPoint = String.format("/workflow/idempotency/%s/%s", idempotencyKey, jurisdiction);
+                Response result = restApiActions.get(idempotencyEndPoint, authenticationHeaders);
 
                 log.info("assertNewIdempotentKeyIsAddedToDb result body:{}", result.getBody());
 
-                return HttpStatus.OK.equals(result.getStatusCode());
+                return HttpStatus.OK.value() == result.getStatusCode();
             });
         log.info("assertNewIdempotentKeyIsAddedToDb idempotentId[{}] found in DB.",
             new IdempotentId(idempotencyKey, jurisdiction));
