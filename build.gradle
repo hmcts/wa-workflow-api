@@ -273,12 +273,12 @@ repositories {
 }
 
 def versions = [
-  junit         : '5.9.2',
+  junit         : '5.9.0',
   junitPlatform : '1.9.2',
   reformLogging : '5.1.9',
   springDoc     : '1.7.0',
   serenity      : '3.2.0',
-  gradlePitest  : '1.9.0',
+  gradlePitest  : '1.9.11',
   pitest        : '1.12.0',
   sonarPitest   : '0.5',
   camunda       : '7.14.0',
@@ -286,7 +286,7 @@ def versions = [
   pactVersion   : '4.1.7',
   testcontainers: '1.18.0',
   log4j         : '2.19.0',
-  tomcat        : '9.0.73'
+  tomcat        : '9.0.74'
 ]
 
 ext.libraries = [
@@ -323,7 +323,7 @@ dependencies {
   implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.2'
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.3'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.16.3'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
@@ -337,7 +337,7 @@ dependencies {
 
   implementation group: 'javax.xml', name: 'jaxb-api', version: '2.1'
 
-  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.6'
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.1.0'
 
   testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
