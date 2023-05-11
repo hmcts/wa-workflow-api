@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -50,6 +51,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
+    @Order(100)
     public void given_two_tasks_with_the_same_idempotentKey_and_different_tenantId_should_not_be_deemed_as_duplicated() {
 
         sendMessage(processVariables);
@@ -72,6 +74,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
+    @Order(200)
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
 
         sendMessage(processVariables);
