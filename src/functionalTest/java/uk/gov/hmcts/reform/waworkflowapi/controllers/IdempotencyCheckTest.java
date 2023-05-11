@@ -4,8 +4,8 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -40,7 +40,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
     private Header authenticationHeaders;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         caseId = UUID.randomUUID().toString();
         idempotencyKey = UUID.randomUUID().toString();
