@@ -112,14 +112,14 @@ class IdempotencyKeysRepositoryTest {
             .pollInterval(1, TimeUnit.SECONDS)
             .atMost(10, TimeUnit.SECONDS)
             .until(() -> {
-                 Optional<IdempotencyKeys> actual = repository.findByIdempotencyKeyAndTenantId(
+                Optional<IdempotencyKeys> actual = repository.findByIdempotencyKeyAndTenantId(
                     idempotencyKeysWithRandomId.getIdempotencyKey(),
                     idempotencyKeysWithRandomId.getTenantId()
-                 );
+                );
 
-                 assertThat(actual.isPresent()).isTrue();
-                 assertThat(actual.get().getProcessId()).isNotEqualTo(FAIL_TO_UPDATE_THIS);
-                 return true;
+                assertThat(actual.isPresent()).isTrue();
+                assertThat(actual.get().getProcessId()).isNotEqualTo(FAIL_TO_UPDATE_THIS);
+                return true;
             });
 
         executorService.shutdown();
