@@ -346,7 +346,7 @@ dependencies {
   }
 
   testImplementation group: 'com.obsidiandynamics.pojotester', name: 'core', version: '0.9.0'
-  testImplementation group: 'com.google.guava', name: 'guava-testlib', version: '31.1-jre'
+  testImplementation group: 'com.google.guava', name: 'guava-testlib', version: '31.1.2-jre'
   testImplementation group: 'com.jparams', name: 'to-string-verifier', version: '1.4.8'
 
   integrationTestImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit

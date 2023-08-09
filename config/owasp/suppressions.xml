@@ -93,8 +93,4 @@
     <notes>Wait for spring boot 3.10 upgrades</notes>
     <cve>CVE-2023-34036</cve>
   </suppress>
-  <suppress until ="2023-11-30">
-    <notes>Wait for spring boot 3.10 upgrades and google guava upgrades</notes>
-    <cve>CVE-2020-8908</cve>
-  </suppress>
 </suppressions>
