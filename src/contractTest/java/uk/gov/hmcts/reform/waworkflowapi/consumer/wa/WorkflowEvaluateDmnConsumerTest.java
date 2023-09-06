@@ -24,11 +24,9 @@ public class WorkflowEvaluateDmnConsumerTest extends SpringBootContractBaseTest 
 
     private static final String WA_EVALUATE_DMN_URL = "/workflow/decision-definition/key/someKey/tenant-id/someTenant/evaluate";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Test
-    @PactTestFor(pactMethod = "evaluateDmn204")
-    void evaluateDmn204Test(MockServer mockServer)  {
+    @PactTestFor(pactMethod = "evaluateDmn200")
+    void evaluateDmn200Test(MockServer mockServer) throws JsonProcessingException {
         SerenityRest
             .given()
             .headers(getHttpHeaders())
@@ -36,11 +34,11 @@ public class WorkflowEvaluateDmnConsumerTest extends SpringBootContractBaseTest 
             .body(createMessage())
             .post(mockServer.getUrl() + WA_EVALUATE_DMN_URL)
             .then()
-            .statusCode(204);
+            .statusCode(200);
     }
 
     @Pact(provider = "wa_workflow_api_evaluate_dmn", consumer = "wa_workflow_api")
-    public RequestResponsePact evaluateDmn204(PactDslWithProvider builder) {
+    public RequestResponsePact evaluateDmn200(PactDslWithProvider builder) throws JsonProcessingException {
 
         return builder
             .given("evaluate dmn")
@@ -50,12 +48,14 @@ public class WorkflowEvaluateDmnConsumerTest extends SpringBootContractBaseTest 
             .body(createMessage(), String.valueOf(ContentType.JSON))
             .matchHeader(SERVICE_AUTHORIZATION, SERVICE_AUTH_TOKEN)
             .willRespondWith()
-            .status(HttpStatus.NO_CONTENT.value())
+            .status(HttpStatus.OK.value())
             .toPact();
     }
 
 
-    private String createMessage() {
+    private String createMessage() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         EvaluateDmnRequest evaluateDmnRequest = new EvaluateDmnRequest(
             Map.of(
                 "name", dmnStringValue("some name"),
@@ -65,12 +65,7 @@ public class WorkflowEvaluateDmnConsumerTest extends SpringBootContractBaseTest 
                 "caseId", dmnStringValue("some caseId")
             )
         );
-        try {
-            return objectMapper.writeValueAsString(evaluateDmnRequest);
-        } catch (JsonProcessingException jsonProcessingException) {
-            jsonProcessingException.printStackTrace();
-        }
-        return "";
+        return objectMapper.writeValueAsString(evaluateDmnRequest);
     }
 }
 
