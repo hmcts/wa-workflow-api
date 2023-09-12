@@ -6,6 +6,7 @@ import au.com.dius.pact.provider.junitsupport.IgnoreNoPactsToVerify;
 import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
+import au.com.dius.pact.provider.junitsupport.loader.PactFolder;
 import au.com.dius.pact.provider.junitsupport.loader.VersionSelector;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,19 +21,19 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.service.SendMessageService;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.CreateTaskController;
 import uk.gov.hmcts.reform.waworkflowapi.provider.service.WorkflowProviderTestConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue.dmnStringValue;
 
 
 @ExtendWith(SpringExtension.class)
 @Provider("wa_workflow_api_evaluate_dmn")
+//Uncomment this and comment the @PacBroker line to test WorkflowEvaluateDmnConsumerTest local consumer.
+//@PactFolder("target/pacts")
 @PactBroker(
     scheme = "${PACT_BROKER_SCHEME:http}",
     host = "${PACT_BROKER_URL:localhost}",
@@ -77,12 +78,15 @@ public class WorkflowEvaluateDmnProviderTest {
     }
 
     private void setInitMock() {
-        final DmnValue<?> dmnValue = mock(DmnValue.class);
-        final List<Map<String, DmnValue<?>>> evaluateDmnResponse = new ArrayList<Map<String, DmnValue<?>>>();
-        final Map<String, DmnValue<?>> map = new HashMap<String, DmnValue<?>>();
-        map.put("Key", dmnValue);
-        evaluateDmnResponse.add(map);
-
-        when(evaluateDmnService.evaluateDmn(any(), anyString(),anyString())).thenReturn(evaluateDmnResponse);
+        final List<Map<String, DmnValue<?>>> dmnValue = List.of(
+            Map.of(
+                "name", dmnStringValue("some name"),
+                "jurisdiction", dmnStringValue("WA"),
+                "caseType", dmnStringValue("WaCaseType"),
+                "taskId", dmnStringValue("some taskId"),
+                "caseId", dmnStringValue("some caseId")
+            )
+        );
+        when(evaluateDmnService.evaluateDmn(any(), anyString(), anyString())).thenReturn(dmnValue);
     }
 }
