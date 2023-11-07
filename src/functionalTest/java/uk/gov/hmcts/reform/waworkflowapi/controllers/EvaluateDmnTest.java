@@ -4,7 +4,6 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.waworkflowapi.SpringBootFunctionalBaseTest;
@@ -29,7 +28,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
         authenticationHeaders = authorizationHeadersProvider.getAuthorizationHeaders();
     }
 
-    //@Test @Ignore
+    @Test
     public void should_not_allow_requests_without_valid_service_authorisation_and_return_401_response_code() {
 
         Response result = restApiActions.post(
@@ -43,7 +42,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    //@Test @Ignore
+    @Test
     public void should_evaluate_and_return_dmn_results() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
@@ -71,33 +70,6 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    public void should_evaluate_and_return_dmn_results_prl() {
-
-        EvaluateDmnRequest body = new EvaluateDmnRequest(
-            Map.of(
-                "eventId", DmnValue.dmnStringValue("hmcCaseUpdDecOutcome"),
-                "postEventState", DmnValue.dmnStringValue("DECISION_OUTCOME")
-            ));
-
-        Response result = restApiActions.post(
-            format(ENDPOINT_BEING_TESTED, "wa-task-initiation-privatelaw-prlapps", TENANT_ID_WA),
-            null,
-            body,
-            authenticationHeaders
-        );
-
-        result.then().assertThat()
-            .statusCode(HttpStatus.OK.value())
-            .and()
-            .body("size()", equalTo(1))
-            .body("results[0].name.value", equalTo("Review Respondent Evidence"))
-            .body("results[0].workingDaysAllowed.value", equalTo(2))
-            .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
-            .body("results[0].processCategories.value", equalTo("caseProgression"));
-
-    }
-
-    //@Test @Ignore
     public void should_evaluate_json_data_and_return_dmn_results() {
 
         Map<String, Object> appealMap = new HashMap<>();
@@ -131,7 +103,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    //@Test @Ignore
+    @Test
     public void should_evaluate_json_data_and_return_dmn_results_makeAnApplication() {
 
         Map<String, Object> appealMap = new HashMap<>();
@@ -166,7 +138,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    //@Test @Ignore
+    @Test
     public void should_throw_an_error_when_dmn_table_does_not_exist() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
@@ -186,7 +158,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    //@Test @Ignore
+    @Test
     public void should_not_allow_requests_without_valid_service_authorisation_and_return_401_response_code_for_wa() {
 
         Response result = restApiActions.post(
@@ -200,7 +172,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    //@Test @Ignore
+    @Test
     public void should_evaluate_and_return_dmn_results_for_wa() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
@@ -227,7 +199,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    //@Test @Ignore
+    @Test
     public void should_evaluate_json_data_and_return_dmn_results_for_wa() {
 
         Map<String, Object> appealMap = new HashMap<>();
@@ -261,7 +233,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     }
 
 
-    //@Test @Ignore
+    @Test
     public void should_return_200_with_empty_list_when_event_id_does_not_exist() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
@@ -283,7 +255,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
 
     }
 
-    //@Test @Ignore
+    @Test
     public void should_return_200_with_empty_list_when_post_event_state_does_not_exist() {
 
         EvaluateDmnRequest body = new EvaluateDmnRequest(
@@ -304,7 +276,7 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             .body("results.size()", equalTo(0));
     }
 
- //   //@Test @Ignore
+    @Test
     public void should_evaluate_and_return_dmn_results_without_space() {
 
         String taskAttributes = "{\"taskType\":\"reviewAppealSkeletonArgument\"}";
