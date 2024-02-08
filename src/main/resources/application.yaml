@@ -27,6 +27,8 @@ wa-task-management-api:
 govUkHolidays:
   url: https://www.gov.uk/
 
+springdoc:
+  writer-with-order-by-keys: true
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/wa/"
@@ -52,6 +54,9 @@ spring:
     enabled: true
     baselineOnMigrate: true
     schemas: ${POSTGRES_NAME:wa_workflow_api}
+    placeholders:
+      dbReaderUserName: ${DB_READER_USERNAME:postgres}
+
 security:
   anonymousPaths:
     - "/"
@@ -98,3 +103,4 @@ feign:
 logbook:
   include: /workflow/**
 
+environment: ${ENVIRONMENT:local}
