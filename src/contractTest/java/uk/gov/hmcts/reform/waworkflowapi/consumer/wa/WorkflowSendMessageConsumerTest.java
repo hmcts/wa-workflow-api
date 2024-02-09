@@ -66,7 +66,8 @@ public class WorkflowSendMessageConsumerTest extends SpringBootContractBaseTest 
                 "caseId", dmnStringValue("some caseId")
             ),
             null,
-            false
+            false,
+            "wa"
         );
         try {
             return objectMapper.writeValueAsString(sendMessageRequest);
