@@ -28,7 +28,6 @@ import uk.gov.hmcts.reform.waworkflowapi.exceptions.enums.ErrorMessages;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
 
 import static java.util.Collections.emptySet;
@@ -56,13 +55,15 @@ class ApplicationProblemControllerAdviceTest {
     @Test
     void should_handle_feign_bad_gateway_exception() {
         Request request = Request.create(Request.HttpMethod.GET, "url",
-            new HashMap<>(), null, new RequestTemplate());
+                                         new HashMap<>(), null, new RequestTemplate()
+        );
 
         FeignException exception = new FeignException.BadGateway(
             "Bad Gateway",
             request,
             null,
-            null);
+            null
+        );
 
         ResponseEntity<ThrowableProblem> response = feignApplicationProblemControllerAdvice
             .handleFeignBadGatewayException(exception);
@@ -192,41 +193,35 @@ class ApplicationProblemControllerAdviceTest {
     }
 
     @ParameterizedTest
-    @MethodSource("genericExceptionProvider")
-    void should_handle_exceptions_in_handleApplicationProblemExceptions(GenericExceptionScenario scenario) {
+    @MethodSource("exceptionDataProvider")
+    void should_handle_exceptions_in_handleApplicationProblemExceptions(GenericExceptionScenario expected) {
 
         ResponseEntity<Problem> response = applicationProblemControllerAdvice
-            .handleApplicationProblemExceptions(scenario.exception);
+            .handleApplicationProblemExceptions(expected.exception);
 
-        assertEquals(scenario.expectedStatus.getStatusCode(), response.getStatusCode().value());
+        assertEquals(expected.expectedStatus.getStatusCode(), response.getStatusCode().value());
         assertNotNull(response.getBody());
-        assertEquals(scenario.expectedType, response.getBody().getType());
-        assertEquals(scenario.expectedTitle, response.getBody().getTitle());
-        assertEquals(scenario.expectedStatus, response.getBody().getStatus());
+        assertEquals(expected.expectedType, response.getBody().getType());
+        assertEquals(expected.expectedTitle, response.getBody().getTitle());
+        assertEquals(expected.expectedStatus, response.getBody().getStatus());
     }
 
-    private static Stream<GenericExceptionScenario> genericExceptionProvider() {
+    private static List<GenericExceptionScenario> exceptionDataProvider() {
 
-        GenericExceptionScenario genericForbiddenException = GenericExceptionScenario.builder()
-            .exception(new GenericForbiddenException(ErrorMessages.GENERIC_FORBIDDEN_ERROR))
-            .expectedTitle("Forbidden")
-            .expectedStatus(FORBIDDEN)
-            .expectedType(URI.create("https://github.com/hmcts/wa-workflow-api/problem/forbidden"))
-            .build();
+        return List.of(
+            GenericExceptionScenario.builder()
+                .exception(new GenericForbiddenException(ErrorMessages.GENERIC_FORBIDDEN_ERROR))
+                .expectedTitle("Forbidden")
+                .expectedStatus(FORBIDDEN)
+                .expectedType(URI.create("https://github.com/hmcts/wa-workflow-api/problem/forbidden"))
+                .build(),
 
-
-
-        GenericExceptionScenario genericServerErrorException = GenericExceptionScenario.builder()
-            .exception(new GenericServerErrorException(ErrorMessages.EVALUATE_DMN_ERROR))
-            .expectedTitle("Generic Server Error")
-            .expectedStatus(INTERNAL_SERVER_ERROR)
-            .expectedType(URI.create("https://github.com/hmcts/wa-workflow-api/problem/generic-server-error"))
-            .build();
-
-
-        return Stream.of(
-            genericForbiddenException,
-            genericServerErrorException
+            GenericExceptionScenario.builder()
+                .exception(new GenericServerErrorException(ErrorMessages.EVALUATE_DMN_ERROR))
+                .expectedTitle("Generic Server Error")
+                .expectedStatus(INTERNAL_SERVER_ERROR)
+                .expectedType(URI.create("https://github.com/hmcts/wa-workflow-api/problem/generic-server-error"))
+                .build()
         );
     }
 
