@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.waworkflowapi.controllers.advice;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.google.common.collect.ImmutableList;
 import feign.FeignException;
 import feign.Request;
 import feign.RequestTemplate;
@@ -194,7 +195,7 @@ class ApplicationProblemControllerAdviceTest {
 
     @ParameterizedTest
     @MethodSource("exceptionDataProvider")
-    void should_handle_exceptions_in_handleApplicationProblemExceptions(GenericExceptionScenario expected) {
+    void should_handle_exceptions_in_handleApplicationProblemExceptions(final GenericExceptionScenario expected) {
 
         ResponseEntity<Problem> response = applicationProblemControllerAdvice
             .handleApplicationProblemExceptions(expected.exception);
@@ -208,7 +209,7 @@ class ApplicationProblemControllerAdviceTest {
 
     private static List<GenericExceptionScenario> exceptionDataProvider() {
 
-        return List.of(
+        return ImmutableList.of(
             GenericExceptionScenario.builder()
                 .exception(new GenericForbiddenException(ErrorMessages.GENERIC_FORBIDDEN_ERROR))
                 .expectedTitle("Forbidden")
