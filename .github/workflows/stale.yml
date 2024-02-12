@@ -30,4 +30,5 @@ jobs:
             This pull request has been automatically marked as stale because it has not had
             recent activity. It will be closed if no further activity occurs. Thank you
             for your contributions.
+          days-before-stale: 30
           exempt-pr-labels: 'pinned,dependencies,DO-NOT-MERGE,WIP'
