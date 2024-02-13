@@ -284,7 +284,7 @@ def versions = [
   springDoc     : '1.7.0',
   serenity      : '3.2.0',
   gradlePitest  : '1.9.11',
-  pitest        : '1.12.0',
+  pitest        : '1.15.8',
   sonarPitest   : '0.5',
   camunda       : '7.14.0',
   logbook       : '2.16.0',
