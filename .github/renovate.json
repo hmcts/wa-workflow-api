@@ -39,7 +39,7 @@
       "prPriority": 10,
       "automerge": false,
       "groupName": "Terraform Upgrades",
-      "automergeSchedule": "fifth day of the month after 8am and before 11am"
+      "automergeSchedule": "after 8am and before 11am every fifth of Month"
     },
     {
       "matchPackagePrefixes": [
@@ -53,7 +53,7 @@
       "prPriority": 80,
       "automerge": false,
       "groupName": "Spring Upgrade (Non Major)",
-      "automergeSchedule": "every Tuesday after 8am and before 11am"
+      "automergeSchedule": "after 8am and before 11am every Tuesday"
     },
     {
       "matchPackagePatterns": [
@@ -68,7 +68,7 @@
       "prPriority": 20,
       "automerge": false,
       "groupName": "QA & Nightly Checks (Non Major)",
-      "automergeSchedule": "first day of the month after 8am and before 11am"
+      "automergeSchedule": "after 8am and before 11am every first day of month"
     },
     {
       "matchPackagePatterns": [
@@ -92,7 +92,7 @@
       ],
       "prPriority": 20,
       "groupName": "Automated Checks (Non Major)",
-      "automergeSchedule": "first day of the month after 8am and before 11am"
+      "automergeSchedule": "after 8am and before 11am every first day of month"
     },
     {
       "matchPackagePrefixes": [
@@ -108,7 +108,7 @@
       ],
       "prPriority": 20,
       "groupName": "Testing Dependencies (Non Major)",
-      "automergeSchedule": "every Monday after 8am and before 11am"
+      "automergeSchedule": "after 8am and before 11am every Monday"
     }
   ]
 }
