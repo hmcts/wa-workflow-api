@@ -238,7 +238,7 @@ dependencyManagement {
       entry 'guava'
     }
 
-    dependencySet(group: 'ch.qos.logback', version: '1.2.13') {
+    dependencySet(group: 'ch.qos.logback', version: '1.5.0') {
       entry 'logback-classic'
       entry 'logback-core'
     }
@@ -290,7 +290,7 @@ def versions = [
   logbook       : '2.16.0',
   pactVersion   : '4.1.7',
   testcontainers: '1.19.5',
-  log4j         : '2.22.1',
+  log4j         : '2.23.0',
   tomcat        : '9.0.86'
 ]
 
