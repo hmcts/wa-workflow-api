@@ -15,6 +15,7 @@ public class SendMessageRequest {
     private final Map<String, DmnValue<?>> processVariables;
     private final Map<String, DmnValue<?>> correlationKeys;
     private final boolean all;
+    private final boolean withoutTenantId = true;
 
     @JsonCreator
     public SendMessageRequest(@JsonProperty("messageName") String messageName,
@@ -43,4 +44,6 @@ public class SendMessageRequest {
     public boolean isAll() {
         return all;
     }
+
+    public boolean isWithoutTenantId() { return withoutTenantId; }
 }
