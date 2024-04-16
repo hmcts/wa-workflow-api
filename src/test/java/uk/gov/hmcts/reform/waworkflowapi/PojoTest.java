@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.Transition;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -121,5 +122,17 @@ class PojoTest {
     @Test
     void verifyToStringTest() {
         ToStringVerifier.forClasses(classesToTest).verify();
+    }
+
+    @Test
+    void verifySendMessageReqWithoutTenantIdAlwaysTrue() {
+        SendMessageRequest body = new SendMessageRequest(
+            "createTaskMessage",
+            emptyMap(),
+            null,
+            false
+        );
+
+        assertThat("withoutTenantId must always be true",body.isWithoutTenantId(),is(true));
     }
 }
