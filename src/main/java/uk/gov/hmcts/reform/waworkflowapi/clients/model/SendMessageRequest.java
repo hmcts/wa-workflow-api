@@ -46,5 +46,7 @@ public class SendMessageRequest {
         return all;
     }
 
-    public boolean isWithoutTenantId() { return withoutTenantId; }
+    public boolean isWithoutTenantId() {
+        return withoutTenantId;
+    }
 }
