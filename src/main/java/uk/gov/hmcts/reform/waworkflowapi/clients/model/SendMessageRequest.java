@@ -15,7 +15,7 @@ public class SendMessageRequest {
     private final Map<String, DmnValue<?>> processVariables;
     private final Map<String, DmnValue<?>> correlationKeys;
     private final boolean all;
-    private final boolean withoutTenantId = true;
+    private final boolean withoutTenantId;
 
     @JsonCreator
     public SendMessageRequest(@JsonProperty("messageName") String messageName,
@@ -26,6 +26,7 @@ public class SendMessageRequest {
         this.processVariables = processVariables;
         this.correlationKeys = correlationKeys;
         this.all = all;
+        this.withoutTenantId = true;
     }
 
     public String getMessageName() {
