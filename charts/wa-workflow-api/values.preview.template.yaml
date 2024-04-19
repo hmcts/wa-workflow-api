@@ -65,6 +65,10 @@ wa:
       enabled: false
     camunda:
       enabled: false
+    reconfigurationBatchCron:
+      enabled: false
+    terminationBatchCron:
+      enabled: false
 
 camunda-bpm:
   enabled: true
