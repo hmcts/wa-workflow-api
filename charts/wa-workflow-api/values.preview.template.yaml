@@ -63,7 +63,7 @@ wa:
       enabled: false
     postgresql:
       enabled: false
-    camunda-bpm:
+    camunda:
       enabled: false
 
 camunda-bpm:
