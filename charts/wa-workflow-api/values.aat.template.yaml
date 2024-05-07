@@ -27,7 +27,7 @@ java:
   postgresql:
     releaseNameOverride: "{{ .Release.Name }}-postgresql"
     enabled: true
-    ingressHost: "postgres-{{ .Release.Name }}.preview.platform.hmcts.net"
+    ingressHost: "postgres-{{ .Release.Name }}.staging.platform.hmcts.net"
     image:
       registry: hmctspublic.azurecr.io
       repository: imported/bitnami/postgresql
