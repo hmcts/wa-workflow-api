@@ -12,8 +12,8 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.Idempotenc
 import uk.gov.hmcts.reform.waworkflowapi.clients.model.idempotencykey.IdempotentId;
 
 import java.util.Optional;
-import javax.persistence.LockModeType;
-import javax.persistence.QueryHint;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 
 @Repository
 @RepositoryRestResource(collectionResourceRel = "idempotencyKeys", path = "idempotencyKeys")
