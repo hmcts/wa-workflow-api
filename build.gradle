@@ -150,7 +150,7 @@ task fortifyScan(type: JavaExec) {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '10.16.0'
+  toolVersion = '10.17.0'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -278,8 +278,8 @@ repositories {
 }
 
 def versions = [
-  junit         : '5.10.2',
-  junitPlatform : '1.10.2',
+  junit         : '5.10.3',
+  junitPlatform : '1.10.3',
   reformLogging : '6.1.5',
   springDoc     : '1.7.0',
   serenity      : '3.4.2',
