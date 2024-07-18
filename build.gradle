@@ -11,7 +11,7 @@ plugins {
   id 'org.sonarqube' version '4.4.1.3373'
   id 'info.solidsoft.pitest' version '1.15.0'
   id 'io.freefair.lombok' version '6.6.3'
-  id 'org.flywaydb.flyway' version '9.22.3'
+  id 'org.flywaydb.flyway' version '10.16.0'
   // If Pact version is changed, make sure serenity report works.
   id 'net.serenity-bdd.serenity-gradle-plugin' version '3.2.3'
   id 'au.com.dius.pact' version '4.1.8'
@@ -331,7 +331,7 @@ dependencies {
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.2.1'
 
   implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
-  implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.3'
+  implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.16.0'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
