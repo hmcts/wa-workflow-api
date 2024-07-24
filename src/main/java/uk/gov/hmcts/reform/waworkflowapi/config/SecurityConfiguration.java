@@ -45,7 +45,7 @@ public class SecurityConfiguration {
 
         http
             .addFilterBefore(serviceAuthFilter, AbstractPreAuthenticatedProcessingFilter.class)
-            .sessionManagement().sessionCreationPolicy(STATELESS)
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(STATELESS))
             .and()
             .httpBasic().disable()
             .formLogin().disable()
