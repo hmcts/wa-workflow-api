@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.waworkflowapi.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -46,7 +45,6 @@ public class RestApiActions {
                     (type, s) -> {
                         ObjectMapper objectMapper = new ObjectMapper();
                         objectMapper.setPropertyNamingStrategy(propertyNamingStrategy);
-                        objectMapper.configure(DeserializationFeature.FAIL_ON_TRAILING_TOKENS, false);
                         objectMapper.registerModule(new Jdk8Module());
                         objectMapper.registerModule(new JavaTimeModule());
                         return objectMapper;
