@@ -188,7 +188,7 @@ public class RestApiActions {
                 .contentType(contentType)
                 .accept(accept)
                 .headers(headers)
-                .body(body)
+                .body(body).log().all()
                 .when()
                 .post(path, resourceId);
         } else {
@@ -197,7 +197,7 @@ public class RestApiActions {
                 .contentType(contentType)
                 .accept(accept)
                 .headers(headers)
-                .body(body)
+                .body(body).log().all()
                 .when()
                 .post(path);
         }
@@ -214,7 +214,7 @@ public class RestApiActions {
             return given()
                 .contentType(contentType)
                 .accept(accept)
-                .headers(headers)
+                .headers(headers).log().all()
                 .when()
                 .post(path, resourceId);
         } else {
@@ -222,7 +222,7 @@ public class RestApiActions {
             return given()
                 .contentType(contentType)
                 .accept(accept)
-                .headers(headers)
+                .headers(headers).log().all()
                 .when()
                 .post(path);
         }
