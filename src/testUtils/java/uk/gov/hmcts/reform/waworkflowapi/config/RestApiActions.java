@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.waworkflowapi.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -45,6 +46,7 @@ public class RestApiActions {
                     (type, s) -> {
                         ObjectMapper objectMapper = new ObjectMapper();
                         objectMapper.setPropertyNamingStrategy(propertyNamingStrategy);
+                        objectMapper.configure(DeserializationFeature.FAIL_ON_TRAILING_TOKENS, false);
                         objectMapper.registerModule(new Jdk8Module());
                         objectMapper.registerModule(new JavaTimeModule());
                         return objectMapper;
@@ -178,8 +180,10 @@ public class RestApiActions {
                                   String contentType,
                                   String accept,
                                   Headers headers) {
+        log.info("Calling POST {} with resource id: {} and body {}, content-type {}", path, resourceId, body, contentType);
+
         if (resourceId != null) {
-            log.info("Calling POST {} with resource id: {}", path, resourceId);
+            log.info("Calling POST {} with resource id: {} and body {}, content-type {}", path, resourceId, body, contentType);
             return given()
                 .contentType(contentType)
                 .accept(accept)
