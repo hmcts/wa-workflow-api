@@ -85,10 +85,14 @@ public abstract class SpringBootFunctionalBaseTest {
     public void cleanUpTask(String taskId, String reason) {
         log.info("Cleaning task {}", taskId);
         Header authorizationHeaders = authorizationHeadersProvider.getAuthorizationHeaders();
-        camundaApiActions.post(
+        Response response = camundaApiActions.post(
             ENDPOINT_COMPLETE_TASK, taskId,
             new Headers(authorizationHeaders)
         );
+
+        log.info("Cleanup response{}", response);
+        log.info("Cleanup response-body:{}", response.then().extract().body().asString());
+        result.prettyPrint();
 
         Response result = camundaApiActions.get(
             ENDPOINT_HISTORY_TASK,
