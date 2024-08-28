@@ -72,6 +72,23 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
+    public void given_two_tasks_with_the_same_idempotentKey_test() {
+
+
+        String taskId = "6cfb9f0c-6516-11ef-964b-f2e94fa6e6cb";
+
+        log.info("Cleaning task {}", taskId);
+        Header authorizationHeaders = authorizationHeadersProvider.getAuthorizationHeaders();
+        Response result = camundaApiActions.post(
+            "task/{task-id}/complete", taskId,
+            new Headers(authorizationHeaders)
+        );
+        log.info("Cleanup response{}", result);
+        log.info("Cleanup response-body:{}", result.then().extract().body().asString());
+        result.prettyPrint();
+    }
+
+    @Test
     public void given_two_tasks_with_the_same_idempotentId_should_tag_one_as_duplicated() {
 
         sendMessage(processVariables);
