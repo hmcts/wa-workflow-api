@@ -178,10 +178,8 @@ public class RestApiActions {
                                   String contentType,
                                   String accept,
                                   Headers headers) {
-        log.info("Calling POST {} with resource id: {} and body {}, content-type {}", path, resourceId, body, contentType);
-
         if (resourceId != null) {
-            log.info("Calling POST {} with resource id: {} and body {}, content-type {}", path, resourceId, body, contentType);
+            log.info("Calling POST {} with resource id: {}", path, resourceId);
             return given()
                 .contentType(contentType)
                 .accept(accept)
