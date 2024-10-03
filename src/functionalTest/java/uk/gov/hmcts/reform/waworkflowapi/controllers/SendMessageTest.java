@@ -56,7 +56,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             "createTaskMessage",
             emptyMap(),
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(
@@ -86,7 +87,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             "createTaskMessage",
             processVariables,
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(
@@ -262,7 +264,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             "createTaskMessage",
             processVariables,
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(
@@ -327,7 +330,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             "createTaskMessage",
             processVariables,
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(
@@ -391,7 +395,8 @@ public class SendMessageTest extends SpringBootFunctionalBaseTest {
             "invalidMessageName",
             processVariables,
             null,
-            false
+            false,
+            "wa"
         );
 
         Response response = restApiActions.post(

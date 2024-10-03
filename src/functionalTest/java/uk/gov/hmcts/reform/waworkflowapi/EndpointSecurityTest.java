@@ -82,7 +82,7 @@ public class EndpointSecurityTest extends SpringBootFunctionalBaseTest {
                 "createTaskMessage",
                 emptyMap(),
                 null,
-                false
+                false, "wa"
             ))
             .baseUri(testUrl)
             .basePath("/workflow/message")
