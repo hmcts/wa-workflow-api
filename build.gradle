@@ -13,7 +13,7 @@ plugins {
   id 'org.flywaydb.flyway' version '10.19.0'
   id 'io.freefair.lombok' version '8.10'
   // If Pact version is changed, make sure serenity report works.
-  id 'net.serenity-bdd.serenity-gradle-plugin' version '4.1.14'
+  id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.1'
   id 'au.com.dius.pact' version '4.6.14'
 }
 
@@ -284,9 +284,9 @@ def versions = [
   junitPlatform : '1.11.1',
   reformLogging : '6.1.6',
   springDoc     : '1.7.0',
-  serenity      : '4.2.0',
+  serenity      : '4.2.3',
   gradlePitest  : '1.15.0',
-  pitest        : '1.16.3',
+  pitest        : '1.17.0',
   sonarPitest   : '0.5',
   camunda       : '7.14.0',
   logbook       : '3.9.0',
