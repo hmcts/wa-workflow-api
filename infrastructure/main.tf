@@ -55,12 +55,6 @@ module "wa_workflow_api_database_flex" {
   email_address_key           = var.email_address_key
   email_address_key_vault_id  = data.azurerm_key_vault.wa_key_vault.id
 
-  pgsql_databases = [
-    {
-      name : var.postgresql_database_name
-    }
-  ]
-
   pgsql_server_configuration = [
     {
       name  = "azure.extensions"

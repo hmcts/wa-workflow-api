@@ -2,7 +2,9 @@ variable "product" {
   default = "wa"
 }
 
-variable "component" {}
+variable "component" {
+  default = "workflow-api"
+}
 
 variable "location" {
   default = "UK South"
@@ -18,15 +20,6 @@ variable "deployment_namespace" {
 
 variable "common_tags" {
   type = map(string)
-}
-
-
-variable "postgresql_database_name" {
-  default = "wa_workflow_api"
-}
-
-variable "postgresql_user" {
-  default = "wa_wa"
 }
 
 variable "jenkins_AAD_objectId" {
