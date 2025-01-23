@@ -51,9 +51,6 @@ module "wa_workflow_api_database_flex" {
   location                    = var.location
   business_area               = "cft"
   env                         = var.env
-  action_group_name           = join("-", [local.db_name, var.action_group_name])
-  email_address_key           = var.email_address_key
-  email_address_key_vault_id  = data.azurerm_key_vault.wa_key_vault.id
 
   pgsql_databases = [
     {
