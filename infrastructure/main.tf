@@ -34,6 +34,10 @@ resource "azurerm_key_vault_secret" "s2s_secret_workflow_api" {
   key_vault_id = data.azurerm_key_vault.wa_key_vault.id
 }
 
+locals {
+  db_name = "${var.product}-${var.component}-postgres-db-flex"
+}
+
 //Azure Flexible Server DB
 module "wa_workflow_api_database_flex" {
   providers = {
@@ -50,6 +54,7 @@ module "wa_workflow_api_database_flex" {
   action_group_name           = join("-", [local.db_name, var.action_group_name])
   email_address_key           = var.email_address_key
   email_address_key_vault_id  = data.azurerm_key_vault.wa_key_vault.id
+
 
   pgsql_databases = [
     {
