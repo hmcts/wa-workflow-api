@@ -2,9 +2,7 @@ variable "product" {
   default = "wa"
 }
 
-variable "component" {
-  default = "workflow-api"
-}
+variable "component" {}
 
 variable "location" {
   default = "UK South"
