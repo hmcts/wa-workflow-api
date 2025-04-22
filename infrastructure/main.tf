@@ -64,7 +64,7 @@ module "wa_workflow_api_database_flex" {
   pgsql_server_configuration = [
     {
       name  = "azure.extensions"
-      value = "pg_stat_statements,pg_buffercache"
+      value = "plpgsql,pg_stat_statements,pg_buffercache,dblink"
     }
   ]
 
