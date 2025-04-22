@@ -10,7 +10,7 @@ Last reviewed on: **18/04/2025**
 
 Provides endpoints to:
 
-- Evaluate DMN configuration deployed in Camunda
+- Evaluate DMN configuration deployed in Camunda test
 - Correlate messages to Camunda that will either initiate or cancel Camunda BPMN processes
 
 <!--
