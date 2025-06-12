@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -55,9 +56,9 @@ class CreateTaskControllerTest extends SpringBootIntegrationBaseTest {
 
     @Autowired
     private transient MockMvc mockMvc;
-    @MockBean
+    @Mock
     private AuthTokenGenerator authTokenGenerator;
-    @MockBean
+    @Mock
     private CamundaClient camundaClient;
 
     @Captor

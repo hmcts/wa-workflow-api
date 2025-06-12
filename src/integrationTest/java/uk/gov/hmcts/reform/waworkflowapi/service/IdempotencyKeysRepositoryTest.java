@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,7 +48,7 @@ class IdempotencyKeysRepositoryTest {
         .withDatabaseName("wa_workflow_api")
         .withUsername("postgres")
         .withPassword("pass");
-    
+
     @DynamicPropertySource
     static void registerPgProperties(DynamicPropertyRegistry registry) {
         registry.add(
@@ -68,7 +69,7 @@ class IdempotencyKeysRepositoryTest {
     private IdempotentId randomIdempotentId;
 
     //because of the workers polling camunda at start-up
-    @MockBean
+    @Mock
     private ExternalTaskWorker externalTaskWorker;
 
     @BeforeEach
