@@ -176,6 +176,7 @@ jacocoTestReport {
 
 pitest {
   junit5PluginVersion = '1.2.1'
+  pitestVersion = '1.19.5'
   targetClasses = ['uk.gov.hmcts.reform.waworkflowapi.*']
   excludedClasses = [
     'uk.gov.hmcts.reform.waworkflowapi.config.*',
