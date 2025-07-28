@@ -14,19 +14,19 @@ public class CreateTaskRequest {
     private final ServiceDetails serviceDetails;
     @Schema(
         example = "abc1234567890",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "The case id in CCD"
     )
     private final String caseId;
     @Schema(
         description = "Transition",
-        required = true
+        requiredMode = Schema.RequiredMode.REQUIRED
     )
     private final Transition transition;
     @JsonInclude(Include.NON_NULL)
     @Schema(
         example = "2020-09-05T14:47:01.250542+01:00",
-        required = false,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED,
         description = "Optional due date for the task that will be created"
     )
     private final ZonedDateTime dueDate;

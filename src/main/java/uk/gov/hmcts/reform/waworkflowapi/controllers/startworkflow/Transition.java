@@ -8,19 +8,19 @@ public class Transition {
 
     @Schema(
         example = "caseCreated",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "The state the case was in before the event fired"
     )
     private final String preState;
     @Schema(
         example = "submitCaseEvent",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "The event that triggered the transition"
     )
     private final String eventId;
     @Schema(
         example = "caseSubmitted",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "The state the case was in after the event fired"
     )
     private final String postState;

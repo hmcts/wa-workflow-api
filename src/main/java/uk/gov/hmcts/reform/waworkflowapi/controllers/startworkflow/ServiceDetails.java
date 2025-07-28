@@ -8,13 +8,13 @@ import java.util.Objects;
 public class ServiceDetails {
     @Schema(
         example = "WA",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "Service jurisdiction"
     )
     private final String jurisdiction;
     @Schema(
         example = "WaCaseType",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "Service case type"
     )
     private final String caseType;

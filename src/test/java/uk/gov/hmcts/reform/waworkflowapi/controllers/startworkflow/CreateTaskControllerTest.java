@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.waworkflowapi.clients.model.SendMessageRequest;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.EvaluateDmnService;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.SendMessageService;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
