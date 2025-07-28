@@ -13,7 +13,7 @@ public class EvaluateDmnResponse {
 
     @Schema(
         example = "List[HashMap<String,DmnValue> }]",
-        required = true,
+        requiredMode = Schema.RequiredMode.REQUIRED,
         description = "Service jurisdiction"
     )
     private List<Map<String, DmnValue<?>>> results;
