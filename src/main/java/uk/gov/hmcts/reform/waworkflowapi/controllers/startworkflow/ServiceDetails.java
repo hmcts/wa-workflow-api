@@ -2,19 +2,20 @@ package uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 import java.util.Objects;
 
 public class ServiceDetails {
     @Schema(
         example = "WA",
-        requiredMode = Schema.RequiredMode.REQUIRED,
+        requiredMode = RequiredMode.REQUIRED,
         description = "Service jurisdiction"
     )
     private final String jurisdiction;
     @Schema(
         example = "WaCaseType",
-        requiredMode = Schema.RequiredMode.REQUIRED,
+        requiredMode = RequiredMode.REQUIRED,
         description = "Service case type"
     )
     private final String caseType;
