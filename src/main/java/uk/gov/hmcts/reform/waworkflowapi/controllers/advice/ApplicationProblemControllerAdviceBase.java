@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
-public interface ApplicationProblemControllerAdviceBase {
+public interface
+    ApplicationProblemControllerAdviceBase {
 
     String EXCEPTION_OCCURRED = "Exception occurred: {}";
 
@@ -43,8 +44,7 @@ public interface ApplicationProblemControllerAdviceBase {
      */
     default String extractErrors(HttpMessageNotReadableException exception) {
         Throwable cause = exception.getCause();
-        if (cause instanceof JsonParseException) {
-            JsonParseException jpe = (JsonParseException) cause;
+        if (cause instanceof JsonParseException jpe) {
             return jpe.getOriginalMessage();
         }
         return processInputException(cause).orElseGet(() -> "Invalid request message");
