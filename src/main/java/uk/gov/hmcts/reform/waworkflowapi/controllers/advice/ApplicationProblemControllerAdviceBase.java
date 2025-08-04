@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
-public interface
-    ApplicationProblemControllerAdviceBase {
+public interface ApplicationProblemControllerAdviceBase {
 
     String EXCEPTION_OCCURRED = "Exception occurred: {}";
 
