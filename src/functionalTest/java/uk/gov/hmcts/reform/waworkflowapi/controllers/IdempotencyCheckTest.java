@@ -96,7 +96,7 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         await()
             .ignoreException(AssertionError.class)
             .pollInterval(POLL_INTERVAL, TimeUnit.SECONDS)
-            .atMost(FT_STANDARD_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .atMost(120, TimeUnit.SECONDS)
             .until(() -> {
 
                 Response result = camundaApiActions.get(
