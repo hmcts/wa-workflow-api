@@ -17,6 +17,10 @@ plugins {
   id 'au.com.dius.pact' version '4.6.17'
 }
 
+application {
+  mainClass = 'uk.gov.hmcts.reform.waworkflowapi.Application'
+}
+
 group = 'uk.gov.hmcts.reform'
 version = '0.0.1'
 
@@ -159,10 +163,18 @@ checkstyle {
 pmd {
   toolVersion = "7.16.0"
   sourceSets = [sourceSets.main]
-  reportsDir = layout.buildDirectory.dir("reports/pmd").get().asFile
   // https://github.com/pmd/pmd/issues/876
   ruleSets = []
   ruleSetFiles = files("config/pmd/ruleset.xml")
+}
+
+tasks.withType(Pmd).configureEach {
+  reports {
+    xml.required = true
+    html.required = true
+    xml.outputLocation = layout.buildDirectory.file("reports/pmd/pmd.xml").get().asFile
+    html.outputLocation = layout.buildDirectory.file("reports/pmd/pmd.html").get().asFile
+  }
 }
 
 jacocoTestReport {
@@ -170,7 +182,7 @@ jacocoTestReport {
   reports {
     xml.required = true
     csv.required = false
-    xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"))
+    xml.outputLocation = layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile
   }
 }
 
@@ -465,7 +477,6 @@ runProviderPactVerification.dependsOn contract
 
 runProviderPactVerification.finalizedBy pactVerify
 
-mainClassName = 'uk.gov.hmcts.reform.waworkflowapi.Application'
 
 bootJar {
   getArchiveFileName().set(provider {
