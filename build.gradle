@@ -82,22 +82,6 @@ sourceSets {
   }
 }
 
-idea {
-  module {
-    // Gradle 9+: use sources/testSources/resources/testResources instead of deprecated *SourceDirs properties
-    sources.from(project.sourceSets.testUtils.java.srcDirs)
-    resources.from(project.sourceSets.testUtils.resources.srcDirs)
-
-    testSources.from(project.sourceSets.integrationTest.java.srcDirs)
-    testResources.from(project.sourceSets.integrationTest.resources.srcDirs)
-
-    testSources.from(project.sourceSets.functionalTest.java.srcDirs)
-    testResources.from(project.sourceSets.functionalTest.resources.srcDirs)
-
-    testSources.from(project.sourceSets.smokeTest.java.srcDirs)
-    testResources.from(project.sourceSets.smokeTest.resources.srcDirs)
-  }
-}
 
 tasks.withType(JavaCompile) {
   options.compilerArgs << "-Xlint:unchecked" << "-Werror"
