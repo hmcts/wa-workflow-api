@@ -84,14 +84,18 @@ sourceSets {
 
 idea {
   module {
-    sourceDirs += project.sourceSets.testUtils.java.srcDirs
-    resourceDirs += project.sourceSets.testUtils.resources.srcDirs
-    testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
-    testResourceDirs += project.sourceSets.integrationTest.resources.srcDirs
-    testSourceDirs += project.sourceSets.functionalTest.java.srcDirs
-    testResourceDirs += project.sourceSets.functionalTest.resources.srcDirs
-    testSourceDirs += project.sourceSets.smokeTest.java.srcDirs
-    testResourceDirs += project.sourceSets.smokeTest.resources.srcDirs
+    // Gradle 9+: use sources/testSources/resources/testResources instead of deprecated *SourceDirs properties
+    sources.from(project.sourceSets.testUtils.java.srcDirs)
+    resources.from(project.sourceSets.testUtils.resources.srcDirs)
+
+    testSources.from(project.sourceSets.integrationTest.java.srcDirs)
+    testResources.from(project.sourceSets.integrationTest.resources.srcDirs)
+
+    testSources.from(project.sourceSets.functionalTest.java.srcDirs)
+    testResources.from(project.sourceSets.functionalTest.resources.srcDirs)
+
+    testSources.from(project.sourceSets.smokeTest.java.srcDirs)
+    testResources.from(project.sourceSets.smokeTest.resources.srcDirs)
   }
 }
 
