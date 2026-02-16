@@ -55,7 +55,7 @@ module "wa_workflow_api_database_flex" {
   email_address_key          = var.email_address_key
   email_address_key_vault_id = data.azurerm_key_vault.wa_key_vault.id
 
-  auto_grow_enabled          = true
+  auto_grow_enabled = true
 
   pgsql_databases = [
     {
