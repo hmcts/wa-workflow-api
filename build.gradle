@@ -248,7 +248,7 @@ dependencyManagement {
 
     dependency group: 'commons-io', name: 'commons-io', version: '2.21.0'
 
-    dependencySet( group: 'org.springframework.security', version: '6.5.7'){
+    dependencySet( group: 'org.springframework.security', version: '6.5.8'){
       entry 'spring-boot-starter-security'
       entry 'spring-security-core'
       entry 'spring-security-acl'
