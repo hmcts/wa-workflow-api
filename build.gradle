@@ -285,7 +285,7 @@ repositories {
 def versions = [
   junit         : '6.0.3',
   junitPlatform : '6.0.3',
-  reformLogging : '7.0.0',
+  reformLogging : '8.0.0',
   springDoc     : '1.7.0',
   serenity      : '4.3.4',
   gradlePitest  : '1.15.0',
