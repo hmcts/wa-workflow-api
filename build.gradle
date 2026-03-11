@@ -311,6 +311,12 @@ ext.libraries = [
 
 ext['snakeyaml.version'] = '2.0'
 
+dependencyManagement {
+  imports {
+    mavenBom "org.testcontainers:testcontainers-bom:${versions.testcontainers}"
+  }
+}
+
 dependencies {
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
