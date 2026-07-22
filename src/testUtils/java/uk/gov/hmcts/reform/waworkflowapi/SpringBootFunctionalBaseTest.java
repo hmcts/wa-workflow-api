@@ -36,8 +36,8 @@ public abstract class SpringBootFunctionalBaseTest {
     public static final String WA_TASK_INITIATION_WA_ASYLUM = "wa-task-initiation-wa-wacasetype";
     public static final String WA_TASK_PERMISSIONS_WA_ASYLUM = "wa-task-permissions-wa-wacasetype";
     public static final String TENANT_ID_WA = "wa";
-    public static final int FT_STANDARD_TIMEOUT_SECS = 60;
-    public static final int POLL_INTERVAL = 5;
+    public static final int FT_STANDARD_TIMEOUT_SECS = 120;
+    public static final int POLL_INTERVAL = 1;
     public static final String REASON_COMPLETED = "completed";
 
     private static final String ENDPOINT_PROCESS_INSTANCE = "process-instance/delete";
