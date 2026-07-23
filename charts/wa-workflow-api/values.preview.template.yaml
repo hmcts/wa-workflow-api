@@ -86,3 +86,11 @@ camunda-bpm:
       CAMUNDA_BPM_DATABASE_SCHEMAUPDATE: true
       RELEASE_REVISION: "{{ .Release.Revision }}"
       CAMUNDA_API_AUTH_ENABLED: false
+
+wa-initiation-batch:
+  job:
+    releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
+
+wa-message-cron-service:
+  job:
+    releaseNameOverride: "{{ .Release.Name }}-wa-message-cron"
