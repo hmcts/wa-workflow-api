@@ -96,6 +96,7 @@ wa-message-cron-service:
     job:
       schedule: "*/1 * * * *"
       releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
+      Suspend:  False
     global:
       disableActiveClusterCheck: true
 
