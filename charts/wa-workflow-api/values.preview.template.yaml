@@ -87,10 +87,22 @@ camunda-bpm:
       RELEASE_REVISION: "{{ .Release.Revision }}"
       CAMUNDA_API_AUTH_ENABLED: false
 
-wa-initiation-batch:
-  job:
-    releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
-
 wa-message-cron-service:
   job:
+    schedule: "*/1 * * * *"
     releaseNameOverride: "{{ .Release.Name }}-wa-message-cron"
+
+  wa-initiation-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
+
+  wa-reconfiguration-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-reconfiguration"
+
+  wa-termination-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-termination-batch"
