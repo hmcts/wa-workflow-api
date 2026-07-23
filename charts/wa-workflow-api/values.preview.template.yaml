@@ -96,13 +96,19 @@ wa-message-cron-service:
     job:
       schedule: "*/1 * * * *"
       releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
+    global:
+      disableActiveClusterCheck: true
 
   wa-reconfiguration-batch:
     job:
       schedule: "*/1 * * * *"
       releaseNameOverride: "{{ .Release.Name }}-reconfiguration"
+    global:
+      disableActiveClusterCheck: true
 
   wa-termination-batch:
     job:
       schedule: "*/1 * * * *"
       releaseNameOverride: "{{ .Release.Name }}-termination-batch"
+    global:
+      disableActiveClusterCheck: true
