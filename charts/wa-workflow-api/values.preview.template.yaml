@@ -56,9 +56,9 @@ wa:
     workflow:
       enabled: false
     taskBatchCron:
-      enabled: false
+      enabled: true
     messageCron:
-      enabled: false
+      enabled: true
     servicebus:
       enabled: false
     postgresql:
