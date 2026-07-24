@@ -56,9 +56,9 @@ wa:
     workflow:
       enabled: false
     taskBatchCron:
-      enabled: false
+      enabled: true
     messageCron:
-      enabled: false
+      enabled: true
     servicebus:
       enabled: false
     postgresql:
@@ -86,3 +86,23 @@ camunda-bpm:
       CAMUNDA_BPM_DATABASE_SCHEMAUPDATE: true
       RELEASE_REVISION: "{{ .Release.Revision }}"
       CAMUNDA_API_AUTH_ENABLED: false
+
+wa-message-cron-service:
+  job:
+    schedule: "*/1 * * * *"
+    releaseNameOverride: "{{ .Release.Name }}-wa-message-cron"
+
+  wa-initiation-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-wa-task-batch"
+
+  wa-reconfiguration-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-reconfiguration"
+
+  wa-termination-batch:
+    job:
+      schedule: "*/1 * * * *"
+      releaseNameOverride: "{{ .Release.Name }}-termination-batch"
