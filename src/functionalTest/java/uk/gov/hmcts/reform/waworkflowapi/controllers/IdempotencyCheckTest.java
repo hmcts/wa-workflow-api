@@ -93,27 +93,27 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
     private List<String> getProcessIdsForGivenIdempotencyKey(String idempotencyKey) {
         AtomicReference<List<String>> processIdsResponse = new AtomicReference<>();
         await().untilAsserted(() -> {
-                Response result = camundaApiActions.get(
-                    "/history/process-instance",
-                    new Headers(authenticationHeaders),
-                    Map.of(
-                        "variables", "idempotencyKey_eq_" + idempotencyKey
-                    )
-                );
-                log.info("getProcessIdsForGivenIdempotencyKey-body:{}", result.then().extract().body().asString());
-                result.prettyPrint();
+            Response result = camundaApiActions.get(
+                "/history/process-instance",
+                new Headers(authenticationHeaders),
+                Map.of(
+                    "variables", "idempotencyKey_eq_" + idempotencyKey
+                )
+            );
+            log.info("getProcessIdsForGivenIdempotencyKey-body:{}", result.then().extract().body().asString());
+            result.prettyPrint();
 
-                //number of messages sent, equivalent to processes created
-                result.then().assertThat()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .body("size()", is(2));
+            //number of messages sent, equivalent to processes created
+            result.then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(APPLICATION_JSON_VALUE)
+                .body("size()", is(2));
 
-                processIdsResponse.set(
-                    result.then()
-                        .extract().body().path("id")
-                );
-            });
+            processIdsResponse.set(
+                result.then()
+                    .extract().body().path("id")
+            );
+        });
 
         return processIdsResponse.get();
     }
@@ -140,8 +140,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
         await()
             .untilAsserted(() -> {
 
-                log.info("assertNewIdempotentKeyIsAddedToDb idempotencyKey:{} jurisdiction:{}",
-                    idempotencyKey, jurisdiction);
+                log.info(
+                    "assertNewIdempotentKeyIsAddedToDb idempotencyKey:{} jurisdiction:{}",
+                    idempotencyKey, jurisdiction
+                );
 
                 String idempotencyEndPoint = String.format("/workflow/idempotency/%s/%s", idempotencyKey, jurisdiction);
                 Response result = restApiActions.get(idempotencyEndPoint, authenticationHeaders);
@@ -150,8 +152,10 @@ public class IdempotencyCheckTest extends SpringBootFunctionalBaseTest {
 
                 assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK.value());
             });
-        log.info("assertNewIdempotentKeyIsAddedToDb idempotentId[{}] found in DB.",
-            new IdempotentId(idempotencyKey, jurisdiction));
+        log.info(
+            "assertNewIdempotentKeyIsAddedToDb idempotentId[{}] found in DB.",
+            new IdempotentId(idempotencyKey, jurisdiction)
+        );
     }
 
     private String assertTaskIsCreated(String caseId) {

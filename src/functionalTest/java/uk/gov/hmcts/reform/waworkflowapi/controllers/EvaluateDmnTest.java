@@ -53,19 +53,19 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .and()
-                .body("size()", equalTo(1))
-                .body("results[0].name.value", equalTo("Review Respondent Evidence"))
-                .body("results[0].workingDaysAllowed.value", equalTo(2))
-                .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
-                .body("results[0].processCategories.value", equalTo("caseProgression"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .and()
+                                      .body("size()", equalTo(1))
+                                      .body("results[0].name.value", equalTo("Review Respondent Evidence"))
+                                      .body("results[0].workingDaysAllowed.value", equalTo(2))
+                                      .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
+                                      .body("results[0].processCategories.value", equalTo("caseProgression"))
         );
 
     }
@@ -86,18 +86,18 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("results[0].name.value", equalTo("Review Respondent Evidence"))
-                .body("results[0].workingDaysAllowed.value", equalTo(2))
-                .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
-                .body("results[0].processCategories.value", equalTo("caseProgression"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .body("size()", equalTo(1))
+                                      .body("results[0].name.value", equalTo("Review Respondent Evidence"))
+                                      .body("results[0].workingDaysAllowed.value", equalTo(2))
+                                      .body("results[0].taskId.value", equalTo("reviewRespondentEvidence"))
+                                      .body("results[0].processCategories.value", equalTo("caseProgression"))
         );
 
     }
@@ -106,9 +106,12 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
     public void should_evaluate_json_data_and_return_dmn_results_makeAnApplication() {
 
         Map<String, Object> appealMap = new HashMap<>();
-        appealMap.put("lastModifiedApplication", Map.of(
-            "type", "Adjourn",
-            "decision", ""));
+        appealMap.put(
+            "lastModifiedApplication", Map.of(
+                "type", "Adjourn",
+                "decision", ""
+            )
+        );
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("Data", appealMap);
 
@@ -119,18 +122,21 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("results[0].name.value", equalTo("processDummyApplication"))
-                .body("results[0].workingDaysAllowed.value", equalTo(2))
-                .body("results[0].taskId.value", equalTo("processDummyApplication"))
-                .body("results[0].processCategories.value", equalTo("caseProgression,followUpOverdue"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .body("size()", equalTo(1))
+                                      .body("results[0].name.value", equalTo("processDummyApplication"))
+                                      .body("results[0].workingDaysAllowed.value", equalTo(2))
+                                      .body("results[0].taskId.value", equalTo("processDummyApplication"))
+                                      .body(
+                                          "results[0].processCategories.value",
+                                          equalTo("caseProgression,followUpOverdue")
+                                      )
         );
 
     }
@@ -179,19 +185,19 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .and()
-                .body("size()", equalTo(1))
-                .body("results[0].name.value", equalTo("Review Appeal Skeleton Argument"))
-                .body("results[0].workingDaysAllowed.value", equalTo(2))
-                .body("results[0].taskId.value", equalTo("reviewAppealSkeletonArgument"))
-                .body("results[0].processCategories.value", equalTo("caseProgression"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .and()
+                                      .body("size()", equalTo(1))
+                                      .body("results[0].name.value", equalTo("Review Appeal Skeleton Argument"))
+                                      .body("results[0].workingDaysAllowed.value", equalTo(2))
+                                      .body("results[0].taskId.value", equalTo("reviewAppealSkeletonArgument"))
+                                      .body("results[0].processCategories.value", equalTo("caseProgression"))
         );
 
     }
@@ -212,19 +218,19 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("results[0].name.value", equalTo("Attend Cma"))
-                .body("results[0].workingDaysAllowed.value", equalTo(2))
-                .body("results[0].taskId.value", equalTo("attendCma"))
-                .body("results[0].taskType.value", equalTo("attendCma"))
-                .body("results[0].processCategories.value", equalTo("caseProgression"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .body("size()", equalTo(1))
+                                      .body("results[0].name.value", equalTo("Attend Cma"))
+                                      .body("results[0].workingDaysAllowed.value", equalTo(2))
+                                      .body("results[0].taskId.value", equalTo("attendCma"))
+                                      .body("results[0].taskType.value", equalTo("attendCma"))
+                                      .body("results[0].processCategories.value", equalTo("caseProgression"))
         );
 
     }
@@ -240,14 +246,14 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("results.size()", equalTo(0))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .body("size()", equalTo(1))
+                                      .body("results.size()", equalTo(0))
         );
 
     }
@@ -262,14 +268,14 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("results.size()", equalTo(0))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_INITIATION_WA_ASYLUM, TENANT_ID_WA),
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .body("size()", equalTo(1))
+                                      .body("results.size()", equalTo(0))
         );
     }
 
@@ -284,20 +290,23 @@ public class EvaluateDmnTest extends SpringBootFunctionalBaseTest {
             ));
 
         await().untilAsserted(() ->
-            restApiActions.post(
-                format(ENDPOINT_BEING_TESTED, WA_TASK_PERMISSIONS_WA_ASYLUM, TENANT_ID_WA),
-                null,
-                body,
-                authenticationHeaders
-            ).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .and()
-                .body("size()", equalTo(1))
-                .body("results.size()", equalTo(2))
-                .body("results[0].name.value", equalTo("task-supervisor"))
-                .body("results[0].value.value", equalTo("Read,Manage,Cancel,Assign,Unassign,Complete"))
-                .body("results[1].name.value", equalTo("ctsc"))
-                .body("results[1].value.value", equalTo("Read,Own,Cancel"))
+                                  restApiActions.post(
+                                          format(ENDPOINT_BEING_TESTED, WA_TASK_PERMISSIONS_WA_ASYLUM, TENANT_ID_WA),
+                                          null,
+                                          body,
+                                          authenticationHeaders
+                                      ).then().assertThat()
+                                      .statusCode(HttpStatus.OK.value())
+                                      .and()
+                                      .body("size()", equalTo(1))
+                                      .body("results.size()", equalTo(2))
+                                      .body("results[0].name.value", equalTo("task-supervisor"))
+                                      .body(
+                                          "results[0].value.value",
+                                          equalTo("Read,Manage,Cancel,Assign,Unassign,Complete")
+                                      )
+                                      .body("results[1].name.value", equalTo("ctsc"))
+                                      .body("results[1].value.value", equalTo("Read,Own,Cancel"))
         );
 
     }
