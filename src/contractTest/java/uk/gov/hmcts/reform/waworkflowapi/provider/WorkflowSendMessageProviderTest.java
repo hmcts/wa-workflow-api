@@ -7,32 +7,24 @@ import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import au.com.dius.pact.provider.junitsupport.loader.VersionSelector;
-import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
+import au.com.dius.pact.provider.spring.spring7.Spring7MockMvcTestTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.waworkflowapi.clients.model.DmnValue;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.EvaluateDmnService;
 import uk.gov.hmcts.reform.waworkflowapi.clients.service.SendMessageService;
 import uk.gov.hmcts.reform.waworkflowapi.controllers.startworkflow.CreateTaskController;
 import uk.gov.hmcts.reform.waworkflowapi.provider.service.WorkflowProviderTestConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 @Provider("wa_workflow_api_send_message")
 //Uncomment this and comment the @PacBroker line to test WorkflowSendMessageConsumerTest local consumer.
 //@PactFolder("target/pacts")
@@ -63,7 +55,7 @@ public class WorkflowSendMessageProviderTest {
 
     @BeforeEach
     void beforeCreate(PactVerificationContext context) {
-        MockMvcTestTarget testTarget = new MockMvcTestTarget();
+        Spring7MockMvcTestTarget testTarget = new Spring7MockMvcTestTarget();
         testTarget.setControllers(new CreateTaskController(
             evaluateDmnService,
             sendMessageService
@@ -80,13 +72,6 @@ public class WorkflowSendMessageProviderTest {
     }
 
     private void setInitMock() {
-        final DmnValue<?> dmnValue = mock(DmnValue.class);
-        final List<Map<String, DmnValue<?>>> evaluateDmnResponse = new ArrayList<Map<String, DmnValue<?>>>();
-        final Map<String, DmnValue<?>> map = new HashMap<String, DmnValue<?>>();
-        map.put("Key", dmnValue);
-        evaluateDmnResponse.add(map);
-
-        when(evaluateDmnService.evaluateDmn(any(), anyString(),anyString())).thenReturn(evaluateDmnResponse);
         doNothing().when(sendMessageService).createMessage(any());
     }
 }
