@@ -368,7 +368,7 @@ dependencies {
 
   integrationTestImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
 
-  testImplementation group: 'com.h2database', name: 'h2', version: '2.4.240'
+  testImplementation group: 'com.h2database', name: 'h2', version: '2.5.252'
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: versions.testcontainers
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: versions.testcontainers
 
